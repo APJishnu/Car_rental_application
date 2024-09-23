@@ -1,0 +1,118 @@
+
+.navbar {
+  height: var(--navbar-height);
+  width: 100%;
+  display: flex;
+  justify-content: center; /* Center the content horizontally */
+  align-items: center; /* Center the content vertically */
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: var(--color-background);
+  padding: 0 var(--spacing);
+  z-index: 100;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px; /* Centering within a max-width container */
+  position: relative; /* Needed for proper alignment */
+}
+
+.logoContainer {
+  position: absolute; /* Position absolute for better centering control */
+  left: 50%;
+  
+  transform: translateX(-50%); /* Center logo horizontally */
+ 
+}
+
+.logo {
+  height: 50px; /* Adjust as needed */
+  width: auto;
+  color: var(--color-accent);
+  letter-spacing: 10px;
+  font-weight: 200;
+  font-size: 2rem;
+}
+
+.menuIcon {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--color-accent);
+  z-index: 100; /* Ensure it's above the menu */
+}
+
+.menu {
+  display: none; /* Hide menu initially */
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: var(--navbar-height);
+  right: 0;
+  background-color: var(--color-background);
+  width: 100%;
+  padding: var(--spacing);
+  z-index: 99; /* Lower than menuIcon */
+}
+
+.showMenu {
+  display: flex; /* Show menu when toggled */
+}
+
+.navLink {
+  margin: var(--spacing) 0;
+  color: var(--color-accent);
+  text-align: center;
+  transition: color 0.3s;
+}
+
+.navLink:hover {
+  color: var(--color-background);
+  background-color: var(--color-accent);
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+.btnContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loginBtn {
+  background: none;
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  transition: background-color 0.3s;
+}
+
+.loginBtn:hover {
+  background-color: var(--color-accent);
+  color: var(--color-background);
+}
+
+@media (min-width: 769px) {
+  .menu {
+    position: fixed; /* Keep the menu fixed */
+    width: 300px; /* Adjust width for desktop */
+    height: 100vh; /* Full height */
+    top: 0;
+    left: 0;
+    flex-direction: column;
+    padding-top: var(--navbar-height);
+    border-right: 1px solid white;
+  }
+
+  .navLink {
+    margin: 1rem 0;
+  }
+
+  .loginBtn {
+    margin-top: 0rem;
+  }
+}

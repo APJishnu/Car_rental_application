@@ -1,0 +1,61 @@
+.carCollection {
+    text-align: center;
+    padding: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color:#f0f0f0;
+  }
+
+  .carCollectionSecondDiv{
+    max-width: 1440px;
+   
+  }
+  
+  .carCollection h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+  
+  .subheading {
+    color: #555;
+    margin-bottom: 30px;
+  }
+  
+  .filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  
+  .filterButton {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .carsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    
+  }
+  
+  .viewMore {
+    margin-top: 30px;
+  }
+  
+  .viewMoreButton {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 30px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+  }
+  

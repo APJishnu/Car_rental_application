@@ -1,0 +1,37 @@
+.mainContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var(--secondary-color);
+
+}
+
+.container {
+  width: 100%;
+  max-width: 350px;
+  background-color: var(--primary-color);
+  border-radius: 16px;
+  padding: 28px;
+  
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.heading {
+  text-align: center;
+  font-size: 23px;
+  font-weight:bold;
+  color: var(--heading-color);
+  padding-bottom: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.error {
+  color: #ff6b6b; /* Red for error messages */
+  text-align: center;
+}
