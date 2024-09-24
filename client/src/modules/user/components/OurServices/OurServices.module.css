@@ -1,0 +1,83 @@
+/* OurServices.module.css */
+
+.ourServices {
+    background-color: #111; /* Dark background */
+    color: #fff; /* White text */
+    padding: 60px 30px;
+    text-align: center;
+  }
+  
+  .heading {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+  
+  .description {
+    font-size: 18px;
+    color: #aaa; /* Light gray for description text */
+    margin-bottom: 40px;
+    max-width: 800px;
+    margin: 0 auto; /* Center the description text */
+  }
+  
+  .servicesContainer {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding-top: 50px;
+  }
+  
+  .service {
+    background-color: #111; /* Slightly lighter background for service cards */
+    border-radius: 10px;
+    padding: 20px;
+    width: 320px;
+    text-align: center;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .service:hover {
+    transform: translateY(-10px); /* Hover effect for service cards */
+  }
+  
+  .iconWrapper {
+    margin-bottom: 15px;
+    display: inline-block;
+  }
+  
+  .icon {
+    font-size: 30px;
+    color: #fff; /* White icons */
+  }
+  
+  .serviceTitle {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  
+  .serviceDescription {
+    font-size: 16px;
+    color: #ccc; /* Light gray for description text */
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3; /* Limit to 3 lines */
+    overflow: hidden; /* Hide overflow content */
+    text-overflow: ellipsis; /* Add ellipsis (...) at the end */
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .servicesContainer {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .service {
+      width: 100%;
+      max-width: 400px; /* Restrict the width of service cards on smaller screens */
+    }
+  }
+  

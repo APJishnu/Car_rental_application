@@ -1,0 +1,198 @@
+@keyframes scaleIn {
+  0% {
+    transform: scale(0.7);
+    /* Start smaller */
+    opacity: 0;
+    /* Initially invisible */
+  }
+
+  100% {
+    transform: scale(1);
+    /* End at full size */
+    opacity: 1;
+    /* Fully visible */
+  }
+}
+
+@keyframes opacity {
+  0% {
+    transform: opacity(0);
+    /* Start smaller */
+    opacity: 0;
+    /* Initially invisible */
+  }
+
+  100% {
+    transform: opacity(1);
+    /* End at full size */
+    opacity: 1;
+    /* Fully visible */
+  }
+}
+
+.mainDiv {
+  background-color: black;
+}
+
+.heroSection {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  /* Full viewport height */
+  display: flex;
+  justify-content: center;
+  background: url('/carImages/Hero-section.svg') no-repeat center center;
+  background-size: cover;
+  /* Ensures the image covers the entire section */
+  padding-top: 150px;
+  animation: scaleIn 0.5s ease-in-out, opacity 0.9s ease-in-out;
+  /* Apply the animation */
+
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.178);
+  /* Dark overlay */
+  z-index: 1;
+  /* Ensure the overlay is above the image */
+
+}
+
+.content {
+  position: relative;
+  z-index: 2;
+  /* Ensure content is above overlay */
+  text-align: center;
+
+}
+
+.title {
+  font-size: 2rem;
+  color: var(--color-accent);
+  line-height: 1.5;
+  letter-spacing: 7px;
+  max-width: 1000px;
+  /* Restrict width of text */
+  margin: 0 auto;
+  padding: 0 var(--spacing);
+  font-weight: 100;
+  animation: opacity 3.9s ease-in-out;
+  /* Apply the animation */
+
+}
+
+.description {
+  position: absolute;
+  font-size: 1rem;
+  /* Adjust as needed */
+  color: #fff;
+  /* Change to your preferred color */
+  margin-top: -40px;
+  /* Space above the description */
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  letter-spacing: 4px;
+  animation: opacity 1.1s ease-in-out;
+  /* Apply the animation */
+  font-weight: 100;
+}
+
+@media (max-width: 768px) {
+  .mainDiv {
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: 500px;
+  }
+
+
+  .heroSection {
+    position: relative;
+    width: 100%;
+    max-width: 768px;
+    height: 100vh;
+    /* Full viewport height */
+    display: flex;
+    justify-content: center;
+    background: url('/carImages/Hero-section.svg') no-repeat center center;
+    background-size: contain;
+    /* Ensures the image covers the entire section */
+    padding-top: 165px;
+    animation: scaleIn 0.5s ease-in-out, opacity 0.9s ease-in-out;
+    /* Apply the animation */
+
+  }
+
+  .title {
+    font-size: 1.5rem;
+    /* Smaller font size for the title */
+    padding: 0 1rem;
+    /* Add some horizontal padding */
+    letter-spacing: 4px;
+  }
+
+  .description {
+    font-size: 0.875rem;
+    /* Smaller font size for the description */
+    margin-top: 60%;
+    /* Add space above the description */
+    letter-spacing: 2px;
+    /* Adjust letter-spacing for smaller screens */
+    animation: opacity 0.4s ease-in-out;
+    /* Apply the animation */
+  }
+
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.196);
+    /* Darker overlay for better contrast */
+    max-height: 400px;
+  }
+}
+
+@media (max-width: 486px) {
+  .mainDiv {
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; /* Set height to 100vh */
+  }
+
+  .heroSection {
+    position: relative;
+    width: 100%;
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    justify-content: center;
+    background: url('/carImages/Hero-section.svg') no-repeat center center;
+    background-size: contain; /* Ensures the image covers the entire section */
+    padding-top: 205px; /* Consider adjusting this if needed */
+    animation: scaleIn 0.5s ease-in-out, opacity 0.9s ease-in-out; /* Apply the animation */
+  }
+
+  .title {
+    font-size: 0.7rem; /* Smaller font size for the title */
+    padding: 0 1rem; /* Add some horizontal padding */
+    letter-spacing: 2px;
+  }
+
+  .description {
+    font-size: 0.875rem; /* Smaller font size for the description */
+    margin-top: 60%; /* Add space above the description */
+    letter-spacing: 2px; /* Adjust letter-spacing for smaller screens */
+    animation: opacity 0.4s ease-in-out; /* Apply the animation */
+  }
+
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.196); /* Darker overlay for better contrast */
+    height: 100vh; /* Optional: make the overlay also full height */
+    max-height: 400px; /* This might not be necessary anymore */
+  }
+}

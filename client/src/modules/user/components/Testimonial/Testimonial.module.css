@@ -1,0 +1,89 @@
+.testimonialContainer {
+  text-align: center;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 100px;
+}
+
+.mainHeadingDiv{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.heading {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.testimonial{
+    width: 90%;
+    padding-top: 40px;
+    text-align:left;
+}
+
+.message {
+  font-size: 18px;
+  font-style: italic;
+  line-height: 1.6;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.profileContainer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 30px;
+}
+
+.profileImage {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  margin-right: 15px;
+}
+
+.name {
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.location {
+  color: gray;
+  font-size: 14px;
+}
+
+.navigation {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.arrowButton {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.arrowButton:first-child {
+  background-color: #fff;
+  border: 1px solid #000;
+}
+
+.arrowButton:last-child {
+  background-color: #000;
+  color: #fff;
+}
+
+@media(max-width:768px){
+
+  .testimonialContainer {
+    
+    padding: 20px;
+  }
+}

@@ -12,7 +12,6 @@
   padding: 0 var(--spacing);
   z-index: 100;
 }
-
 .container {
   display: flex;
   justify-content: space-between;
@@ -31,17 +30,24 @@
 }
 
 .logo {
-  height: 50px; /* Adjust as needed */
   width: auto;
-  color: var(--color-accent);
-  letter-spacing: 10px;
-  font-weight: 200;
-  font-size: 2rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo img{
+  width: 100%;
+  height: 40px;
+  margin-top: 10px;
 }
 
 .menuIcon {
   font-size: 1.5rem;
-  cursor: pointer;
+  cursor: none;
+  background-color: black;
+  border: none;
   color: var(--color-accent);
   z-index: 100; /* Ensure it's above the menu */
 }
@@ -99,7 +105,7 @@
 @media (min-width: 769px) {
   .menu {
     position: fixed; /* Keep the menu fixed */
-    width: 300px; /* Adjust width for desktop */
+    width: 300; /* Adjust width for desktop */
     height: 100vh; /* Full height */
     top: 0;
     left: 0;
@@ -114,5 +120,83 @@
 
   .loginBtn {
     margin-top: 0rem;
+  }
+
+  .mobileLoginContainer{
+    display: none;
+  }
+}
+
+/* Mobile styles (max-width: 768px) */
+@media (max-width: 768px) {
+  .navbar {
+    height: auto;
+    padding: 0.6rem;
+    padding-bottom: 0rem;
+    
+  }
+
+  .container {
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+  }
+
+  .menuIcon {
+    position: absolute;
+    right: 0rem;
+    
+    top: 0.7rem;
+  }
+
+  .logoContainer {
+    position: relative;
+    left: 0;
+    transform: none;
+    margin-bottom: 1rem;
+    width: 200px;
+  }
+
+  .menu {
+    display: none; /* Show menu by default */
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    top: 0;
+    right: 0;
+    background-color: transparent;
+    width: 100%;
+    padding: 0;
+    height: 100vh;
+  }
+
+  .showMenu {
+    display: flex;
+  }
+
+  .navLink {
+    margin: 0.5rem 0;
+    padding: 0.5rem 1rem;
+    width: 100%;
+  }
+
+  .btnContainer {
+    display: none; /* Hide on mobile */
+  }
+
+  .mobileLoginContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+   
+  }
+
+  .loginBtn {
+   
+    margin: 1rem 0;
+    padding: 0.5rem 0.95rem;
+    text-align: center;
+   
   }
 }

@@ -1,0 +1,137 @@
+/* HowItWorks.module.css */
+
+.howItWorks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 50px;
+  background: #fff;
+ 
+  
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  gap: 60px;
+}
+
+.HeadingDiv {
+  width: 100%;
+  text-align: center;
+}
+
+.stepsSection {
+  width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px; /* Add space between steps and car image */
+  padding-right: 80px;
+}
+
+.steps {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 45%; /* Restrict the width to fit within the image overlap */
+  z-index: 2; /* Ensure steps appear above car image */
+  right: -7%; /* Overlap the steps to the right side on the image */
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  border: 2px solid #f0f0f0;
+}
+
+.iconDiv{
+  width: 60px;
+  height: 80px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  width: 55px;
+  height: 25px;
+  padding: 0px;
+}
+
+.stepContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.stepTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.stepDescription {
+  font-size: 14px;
+  color: #666;
+}
+
+.carImage {
+  position: relative; /* Allows absolute positioning of steps */
+  flex: 1;
+  width: 55%; /* Restrict the width to leave space for the steps */
+  height: 480px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  border-radius: 20px;
+}
+
+.jeepImage {
+  width: 70%;
+  height: 100%;
+  border-radius: 8px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .howItWorks {
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .stepsSection {
+    flex-direction: column; /* Stack the steps and car image */
+    margin-bottom: 30px;
+    align-items: center; /* Center the steps and car image */
+    padding-right: 0px;
+  }
+
+  .steps {
+    position: static;
+    transform: none;
+    width: 100%;
+    max-width: none;
+    right: 0; /* Remove overlap effect */
+    margin-bottom: 20px;
+  }
+
+  .step {
+    flex-direction: row;
+    align-items: center;
+    text-align: left;
+    gap: 10px;
+  }
+
+  .carImage {
+    width: 100%;
+    max-width: none;
+  }
+}

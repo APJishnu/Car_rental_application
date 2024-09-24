@@ -1,0 +1,332 @@
+/* General Styles */
+.bookingContainer {
+ 
+  width: 100%;
+  padding: 50px 120px;
+
+  background-color: #efeeee;
+  margin-top: -25px;
+ 
+}
+
+.secondMainDiv{
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 50px;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0;
+  background-color: #ffffff;
+  border-radius: 10px;
+  position: relative;
+  padding: 30px 30px;
+  
+  
+}
+
+/* Left Section: Car Image */
+.leftSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+.carImage {
+  width: 100%;
+  max-width: 600px;
+  height: auto;
+  border-radius: 10px;
+  
+
+}
+
+/* Right Section: Car Details */
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.rightSection h2 {
+  font-size: 20px;
+  color: #000;
+  margin-bottom: 0px;
+  border-bottom: 1px solid rgb(52, 52, 52);
+}
+
+.price {
+  font-size: 24px;
+  font-weight: bold;
+  color: #5b6982;
+  margin-top: 10px;
+  margin-bottom: 0px;
+}
+
+.specifications {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Three equal columns */
+  grid-template-rows: repeat(2, auto);  /* Two rows with automatic height */
+  gap: 5px;
+  border: 1px solid#adadadd7;
+  padding: 20px;
+  border-radius: 5px;
+  max-width: 500px;
+  margin-top: 10px;
+  
+}
+
+.specifications p {
+  font-size: 13px;
+  color: #333;
+}
+
+.description {
+  margin-top: 5px;
+  color: #666;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+.ownerSection {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.ownerInfo {
+  display: flex;
+  align-items: center;
+}
+
+.ownerImage {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 10px;
+  
+}
+
+.ownerInfo p {
+  color: #000;
+  font-size: 16px;
+}
+
+/* Rent Now Button */
+.expandButton {
+  background-color: #000;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.expandButton:hover {
+  background-color: #333;
+}
+
+
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.inputField {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.bookButton {
+  background-color: #000;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.bookButton:hover {
+  background-color: #333;
+}
+
+/* Desktop Styles */
+@media (min-width: 769px) {
+
+  /* Overlay */
+  .overlay {
+    position: fixed;
+    top: 0;
+    /* Fill the screen from the top */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* Fill the full height */
+    background-color: rgba(0, 0, 0, 0.7);
+    /* Semi-transparent background */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .overlayContent {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px;
+    /* Fixed width for the popup */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Mobile Booking Overlay */
+
+  .overlay.visible {
+    display: flex;
+  }
+
+
+}
+
+@media (max-width:1200px){
+  .bookingContainer{
+    padding: 40px;
+  }
+
+  
+  .carImage {
+    width: 350px;
+  
+    height: auto;
+    border-radius: 10px;
+  
+  }
+  
+  .price {
+   font-size: 30px;
+  }  
+  .rightSection h2 {
+    font-size: 16px;
+  }
+  .specifications,
+  .specifications p{
+    font-size: 12px;
+    padding: 2px 8px;
+    margin: 0;
+  }
+
+  .description{
+    font-size: 12px;
+  }
+  
+
+  .ownerImage {
+   
+    width: 30px;
+    height: 30px;
+  }
+
+  .expandButton {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
+
+}
+
+/* Responsive Styles for max-width: 786px */
+@media (max-width: 786px) {
+
+  .bookingContainer {
+    padding: 20px;
+  }
+  .secondMainDiv {
+    grid-template-columns: 1fr; /* Single column layout */
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+   
+  }
+
+  .carImage {
+   width: 100%;/* Reduce image size */
+  }
+
+  
+  .rightSection{
+    max-width: 350px;
+
+  }
+  .rightSection h2 ,
+  .price {
+   text-align: center;
+  }  
+  .rightSection h2 {
+    font-size: 30px;
+  }
+
+  .specifications {
+    grid-template-columns: 1fr 1fr; /* Two columns */
+    grid-template-rows: repeat(3, auto); /* Three rows */
+  }
+
+  .ownerSection {
+    flex-direction: column; /* Stack owner info */
+    align-items: flex-start;
+  }
+
+  .ownerImage {
+    margin-bottom: 10px; /* Add space below image */
+  }
+
+  .expandButton {
+    width: 100%; /* Full width for button */
+  }
+
+  .bookButton {
+    width: 100%; /* Full width for button */
+  }
+  /* Mobile Booking Overlay */
+  .overlay {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: #fff;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
+    width: 100%;
+    border-radius: 20px;
+    /* Full width */
+  }
+  .overlay.visible {
+    transform: translateY(30px);
+    /* Slide up */
+  }
+  .overlayContent {
+    padding: 20px 40px;
+    padding-bottom: 40px;
+  }
+}

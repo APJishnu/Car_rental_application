@@ -1,0 +1,81 @@
+.testimonialContainer {
+    text-align: left;
+    width: 100%;
+    margin: 0 auto;
+    padding: 40px;
+    background-color: #ffffff;
+  }
+  
+  .heading {
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 30px;
+    color: #333;
+  }
+  
+  .message {
+    font-size: 20px;
+    font-style: italic;
+    line-height: 1.8;
+    margin-bottom: 40px;
+    color: #333;
+  }
+  
+  .profileContainer {
+    display: flex;
+    align-items: center;
+    margin-top: 40px;
+  }
+  
+  .profileImage {
+    border-radius: 50%;
+    width: 70px;
+    height: 70px;
+    margin-right: 20px;
+  }
+  
+  .name {
+    font-weight: bold;
+    font-size: 18px;
+  }
+  
+  .location {
+    color: gray;
+    font-size: 14px;
+  }
+  
+  .navigation {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .arrowButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .arrowCircle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    background-color: #000000;
+    color: #ffffff;
+  }
+  
+  .arrowCircle:first-child {
+    background-color: #ffffff;
+    border: 1px solid #000000;
+  }
+  
+  .arrow {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  

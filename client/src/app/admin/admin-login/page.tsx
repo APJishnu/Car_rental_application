@@ -1,7 +1,7 @@
 // admin-login/page.tsx
 'use client'; // Add this directive
 
-import LoginForm from '../components/AdminLoginForm/LoginForm'; // Adjust the path if needed
+import LoginForm from '@/modules/admin/components/AdminLoginForm/LoginForm'; // Adjust the path if needed
 
 const AdminLoginPage = () => {
   return (

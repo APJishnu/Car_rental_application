@@ -1,0 +1,118 @@
+@keyframes opacity {
+  0% {
+    transform: opacity(0); /* Start smaller */
+    opacity: 0; /* Initially invisible */
+  }
+  100% {
+    transform: opacity(1); /* End at full size */
+    opacity: 1; /* Fully visible */
+  }
+}
+
+.carCard {
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  padding: 5px;
+  text-align: left;
+  background-color: #fff;
+  padding-bottom: 30px;
+  animation: opacity 2.9s ease-in-out; /* Apply the animation */
+}
+
+.carImage {
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+.carDetials {
+  width: 100%;
+  padding: 0px 10px;
+}
+
+.carCard h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.price {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.features {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #888;
+  background-color: #f0f0f0;
+  margin-bottom: 20px;
+  padding: 20px;
+  border-radius: 15px;
+}
+
+.rentButton {
+  background-color: #fff;
+  color: #000;
+  border: 1px solid #000;
+  width: 100%;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.5s;
+}
+
+.rentButton:hover {
+  background-color: #000;
+  color: #fff;
+  border: 1px solid #fff;
+
+}
+
+@media (max-width: 768px) {
+/* CarCards.module.css */
+
+.carCard {
+  border: 1px solid #e0e0e0;
+  border-radius: 20px;
+  padding: 5px;
+  text-align: left;
+  background-color: #fff;
+  padding-bottom: 30px;
+  animation: opacity 2.9s ease-in-out; /* Apply the animation */
+  scroll-snap-align: start !important; /* Align each card at the start */
+  flex: 0 0 auto; /* Prevent flex items from growing or shrinking */
+  max-width: 260px; /* Ensure each card has a minimum width */
+  margin-right: 10px; /* Space between cards */
+}
+
+
+.carDetials {
+  width: 100%;
+  padding: 0px 10px;
+}
+
+.carCard h3 {
+  font-size: 13px;
+  margin-bottom: 0px;
+}
+
+.price {
+  font-size: 23px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.features {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #888;
+  background-color: #f0f0f0;
+  margin-bottom: 10px;
+  padding: 10px;
+  border-radius: 15px;
+}
+
+}

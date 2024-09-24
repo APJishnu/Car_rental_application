@@ -6,9 +6,10 @@ interface CarCardProps {
   model: string;
   price: string;
   features: { passengers: string, transmission: string, fuelType: string };
+  onRentNow: () => void; // Add callback for "Rent Now" button click
 }
 
-const CarCard: React.FC<CarCardProps> = ({ image, model, price, features }) => {
+const CarCard: React.FC<CarCardProps> = ({ image, model, price, features ,onRentNow}) => {
   return (
     <div className={styles.carCard}>
       <img src={image} alt={model} className={styles.carImage} />
@@ -21,7 +22,9 @@ const CarCard: React.FC<CarCardProps> = ({ image, model, price, features }) => {
         <span>{features.fuelType}</span>
       </div>
       
-      <button className={styles.rentButton}>Rent Now</button>
+      <button className={styles.rentButton} onClick={onRentNow}>
+          Rent Now
+        </button>
       </div>
     </div>
   );

@@ -1,0 +1,129 @@
+.footer {
+    background-color: #0f0f0f;
+    padding: 50px 120px;
+    color: #ffffff;
+    
+  }
+  
+  .downloadSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .downloadContent {
+    max-width: 400px;
+  }
+  
+  .heading {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+  .description {
+    font-size: 16px;
+    color: #aaaaaa;
+    line-height: 1.5;
+  }
+  
+  .storeButtons {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .storeLink {
+    display: inline-block;
+  }
+  
+  .storeImage {
+    width: 150px;
+    height: auto;
+  }
+  
+  .footerBottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 30px;
+  }
+  
+  .logoImage {
+    width: 150px;
+    height: auto;
+  }
+  
+  .footerLinks {
+    display: flex;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .footerLinks li {
+    font-size: 14px;
+  }
+  
+  .footerLinks li a {
+    text-decoration: none;
+    color: #ffffff;
+    transition: color 0.3s ease;
+  }
+  
+  .footerLinks li a:hover {
+    color: #ffdd57; /* Optional hover effect */
+  }
+  
+  .socialIcons {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .socialIcons a img {
+    width: 24px;
+    height: auto;
+  }
+  
+
+
+  @media (max-width: 768px) {
+    .footer {
+      padding: 50px 20px; /* Reduce padding for smaller screens */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .downloadSection {
+      flex-direction: column;
+     
+    }
+
+    .downloadContent{
+        text-align: center;
+    }
+  
+    .storeButtons {
+      margin-top: 20px; /* Add margin between text and store buttons */
+      
+    }
+  
+    .footerBottom {
+      flex-direction: column; /* Stack logo, links, and social icons vertically */
+      
+    }
+  
+    .footerLinks {
+      margin-top: 20px; /* Add space between logo and links */
+      flex-direction: row; /* Stack links vertically */
+    }
+  
+    .socialIcons {
+      margin-top: 20px; /* Add space between links and social icons */
+    }
+  }
+  

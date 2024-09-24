@@ -1,0 +1,120 @@
+.carCollection {
+    text-align: center;
+    padding: 40px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color:#f0f0f0;
+  }
+
+  .carCollectionSecondDiv{
+    max-width: 1440px;
+  }
+  
+  .carCollection h2 {
+    font-size: 36px;
+    margin-bottom: 10px;
+  }
+  
+  .subheading {
+    color: #555;
+    margin-bottom: 30px;
+  }
+  
+  .filters {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  
+  .filterButton {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .carsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    
+  }
+  
+  .viewMore {
+    margin-top: 30px;
+  }
+  
+  .viewMoreButton {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 30px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+  }
+
+/* Responsive Styles for screens 768px and below */
+@media (max-width: 768px) {
+  .carCollection{
+    width: 100%;
+    padding: 0px;
+    padding-bottom: 40px;
+    padding-left: 0px;
+  
+  }
+  .carCollectionSecondDiv{
+    width: 100%;
+    padding-left: 0px;
+   
+  
+  }
+
+  
+  .filters {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 40px;
+    padding: 0px 50px;
+  }
+  
+  .filterButton {
+    background-color: #000;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .carsGrid {
+    display: flex; /* Use flex for a horizontal layout */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding:10px 0; /* Optional padding */
+    scroll-behavior: smooth; /* Smooth scrolling effect */
+    gap: 10px; /* Adjust the gap between items */
+    scroll-snap-type: x mandatory; /* Enable scroll snap for better UX */
+  
+
+  }
+
+  .carsGrid::-webkit-scrollbar {
+    display: none; /* Hide scrollbar for better aesthetics */
+  }
+
+  .viewMore {
+    margin-top: 20px; /* Add margin for spacing below */
+  }
+
+  .viewMoreButton {
+    margin-left: 10px; /* Add left margin for spacing */
+    
+  }
+}
