@@ -1,4 +1,4 @@
-import AdminHelper from '../../helper/admin-helpers/auth-helper.js';
+import AdminHelper from '../../helpers/auth-helper.js';
 
 const authResolvers = {
   Query: {

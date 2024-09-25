@@ -2,9 +2,7 @@ import Vehicle from '../../models/vehicle-models.js';
 import { validateVehicle } from '../../utils/vechicle-validators.js'; // Assume you implement validation logic
 
 class VehicleHelper {
-    constructor() {
-        // Initialization if needed
-    }
+    
 
     async getVehicles() {
         return await Vehicle.findAll();

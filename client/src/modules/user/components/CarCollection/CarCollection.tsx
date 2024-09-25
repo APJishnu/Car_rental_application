@@ -55,7 +55,6 @@ const CarCollection: React.FC = () => {
 
   const router = useRouter();
 
-
   const handleRentNow = (carId: string) => {
     router.push(`/user/car-booking?carId=${carId}`); // Navigates to dynamic car booking page
   };

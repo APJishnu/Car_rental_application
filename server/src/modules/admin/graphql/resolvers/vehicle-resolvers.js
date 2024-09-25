@@ -1,6 +1,6 @@
 // vehicle-resolvers.js
 import vehicleHelper from '../../helper/admin-helpers/vehicle-helper.js';
-import upload from '../../utils/uploads.js';
+
 
 const vehicleResolvers = {
   Query: {

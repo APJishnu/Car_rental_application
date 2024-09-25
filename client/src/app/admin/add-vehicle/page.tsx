@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react';
-import { useMutation, useQuery } from '@apollo/client';
+import { useMutation} from '@apollo/client';
 import { ADD_VEHICLE } from '@/graphql/admin-mutations/vehicles'; // Ensure this is the correct path
 // import { ADD_VEHICLE, GET_MANUFACTURERS } from '@/graphql/admin-mutations/vehicles';
 import Input from '@/themes/InputField/InputField'; // Update with the correct path
@@ -19,7 +19,7 @@ const AddVehicle = () => {
     manufacturerId: '',
   });
 
-//   const { data: manufacturersData } = useQuery(GET_MANUFACTURERS);
+
 
   const [addVehicle] = useMutation(ADD_VEHICLE, {
     onCompleted: (data) => {
