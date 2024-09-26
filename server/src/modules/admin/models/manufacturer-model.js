@@ -13,8 +13,8 @@ Manufacturer.init({
     type: DataTypes.STRING,
     allowNull: true,
   },
-  imageUrl: {  // New field for storing the image URL
-    type: DataTypes.STRING,
+  imageUrl: {  // Allow longer URLs
+    type: DataTypes.STRING(1000), // Increase length to 1000 or use DataTypes.TEXT
     allowNull: true,
   },
 }, {

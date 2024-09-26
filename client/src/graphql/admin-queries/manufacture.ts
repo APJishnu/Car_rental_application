@@ -3,9 +3,11 @@ import { gql } from '@apollo/client';
 
 export const GET_MANUFACTURERS = gql`
   query {
-    manufacturers {
+    getManufacturers {
       id
       name
+      country
+      imageUrl
     }
   }
 `;

@@ -7,7 +7,7 @@ import authResolvers from './resolvers/auth-resolvers.js';
 import manufactureTypeDefs from './typeDefs/manufacture-type-defs.js';
 import manufacturerResolver from './resolvers/manufacture-resolvers.js';
 
-const typeDefs = [authTypeDefs, manufactureTypeDefs]; // Combine typeDefs
-const resolvers = [authResolvers, manufacturerResolver]; // Combine resolvers
+const adminTypeDefs = [authTypeDefs, manufactureTypeDefs]; // Combine typeDefs
+const adminResolvers = [authResolvers, manufacturerResolver]; // Combine resolvers
 
-export { typeDefs, resolvers };
+export { adminTypeDefs, adminResolvers };

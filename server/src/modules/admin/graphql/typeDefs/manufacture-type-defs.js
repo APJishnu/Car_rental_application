@@ -13,6 +13,7 @@ const manufactureTypeDefs = gql`
 
   type Query {
     getManufacturers: [Manufacturer!]!
+  
   }
 
   type Mutation {

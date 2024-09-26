@@ -1,12 +1,8 @@
+"use client";
 import React from 'react';
 import styles from './RentByCars.module.css';
-
-// Define the type for the brand
-interface Brand {
-  id: string;  // Unique identifier
-  name: string;
-  logo: string;
-}
+import { useQuery } from '@apollo/client';
+import { GET_MANUFACTURERS } from '@/graphql/admin-queries/manufacture'; 
 
 const FilterOptions: React.FC = () => {
   return (
@@ -34,35 +30,26 @@ const FilterOptions: React.FC = () => {
   );
 };
 
-
 const Brands: React.FC = () => {
+  const { loading, error, data } = useQuery(GET_MANUFACTURERS);
 
-    const brands: Brand[] = [
-      { id: '1', name: 'Toyota', logo: '/carImages/carBrands/toyota.svg' },
-      { id: '2', name: 'Ford', logo: '/carImages/carBrands/ford.svg' },
-      { id: '3', name: 'Tesla', logo: '/carImages/carBrands/tesla.svg' },
-      { id: '4', name: 'Volkswagen', logo: '/carImages/carBrands/volkswagen.svg' },
-      { id: '5', name: 'Honda', logo: '/carImages/carBrands/honda.svg' },
-      { id: '6', name: 'Nissan', logo: '/carImages/carBrands/nissan.svg' },
-      { id: '7', name: 'Chevrolet', logo: '/carImages/carBrands/chevrolet.svg' },
-      { id: '8', name: 'BMW', logo: '/carImages/carBrands/bmw.svg' },
-      { id: '9', name: 'Mercedes-Benz', logo: '/carImages/carBrands/mercedes-benz.svg' },
-      { id: '10', name: 'Hyundai', logo: '/carImages/carBrands/hyundai.svg' },
-      { id: '11', name: 'Audi', logo: '/carImages/carBrands/audi.svg' },
-      { id: '12', name: 'KIA', logo: '/carImages/carBrands/kia.svg' },
-  ];
+  if (loading) return <p>Loading manufacturers...</p>;
+  if (error) return <p>Error fetching manufacturers: {error.message}</p>;
+
+  // Limit to the first 12 manufacturers
+  const limitedManufacturers = data.getManufacturers.slice(0, 12);
 
   return (
     <div className={styles.rentSection}>
       <div className={styles.rentHeader}>
-        <h2>Rent by Brands</h2>
-        <a href="/all" className={styles.viewAll}>View all &rarr;</a>
+        <h2>Rent by Manufacturers</h2>
+        <a href="/admin/all-manufacturers" className={styles.viewAll}>View all &rarr;</a>
       </div>
       <div className={styles.brandGrid}>
-        {brands.map((brand) => (
-          <div key={brand.id} className={styles.brandCard}> {/* Use brand ID as the key */}
-            <img src={brand.logo} alt={brand.name} className={styles.brandLogo} />
-            <p>{brand.name}</p>
+        {limitedManufacturers.map((manufacturer: any) => (
+          <div key={manufacturer.id} className={styles.brandCard}>
+            <img src={manufacturer.imageUrl} alt={manufacturer.name} className={styles.brandLogo} />
+            <p>{manufacturer.name}</p>
           </div>
         ))}
       </div>

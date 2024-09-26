@@ -8,8 +8,10 @@ const uploadLink = createUploadLink({
 });
 
 
+
 const client = new ApolloClient({
   link: uploadLink,
+  uri: `${BASE_URL}/graphql`,
   cache: new InMemoryCache(),
 });
 

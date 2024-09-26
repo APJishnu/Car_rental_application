@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import Admin from './models/admin-models.js';
+import Admin from './modules/admin/models/admin-models.js';
 
 const seedAdmin = async () => {
   const hashedPassword = await bcrypt.hash('admin123', 10);

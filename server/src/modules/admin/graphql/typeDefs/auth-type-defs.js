@@ -18,10 +18,11 @@ const authTypeDefs = gql`
   type Query {
     getAdmin(id: ID!): Admin
   }
+    
+type Mutation {
+  adminLogin(email: String!, password: String!): AuthPayload!  # Ensure this matches the return type
+}
 
-  type Mutation {
-    adminLogin(email: String!, password: String!): AuthPayload!  # Returns a token and admin details
-  }
 `;
 
 export default authTypeDefs;

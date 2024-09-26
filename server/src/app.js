@@ -1,7 +1,7 @@
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import cors from 'cors';
-import { typeDefs, resolvers } from './modules/admin/graphql/index.js';
+import { typeDefs, resolvers } from './graphql/schema.js';
 import sequelize from './config/database.js';
 import { graphqlUploadExpress } from 'graphql-upload';
 import dotenv from 'dotenv';
@@ -33,6 +33,7 @@ app.use('/uploads', express.static('uploads'));
 const startServer = async () => {
   await server.start();
   server.applyMiddleware({ app });
+  
 
   app.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);
