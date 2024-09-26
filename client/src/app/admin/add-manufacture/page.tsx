@@ -1,90 +1,14 @@
-// pages/admin/add-manufacturer.tsx
-"use client";
 
-import React, { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import styles from './page.module.css'; // Import the CSS module
-import { ADD_MANUFACTURER } from '@/graphql/admin-mutations/manufacture';
+import React from 'react';
+import AddManufacturerForm from '../../../modules/admin/components/AddManufacturer/AddManufacturerForm'; // Adjust the path based on your folder structure
 
-
-const AddManufacturer: React.FC = () => {
-  const [name, setName] = useState('');
-  const [country, setCountry] = useState('');
-  const [image, setImage] = useState<File | null>(null);
-  const [addManufacturer] = useMutation(ADD_MANUFACTURER);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!image) {
-      console.error('No image selected');
-      return;
-    }
-  
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('country', country);
-    formData.append('image', image);
-  
-    try {
-      const response = await addManufacturer({
-        variables: {
-          name,
-          country,
-          image,
-        },
-        context: {
-          fetchOptions: {
-            formData,
-          },
-        },
-      });
-      console.log('Manufacturer added:', response.data);
-      // Optionally reset the form or show a success message
-      setName('');
-      setCountry('');
-      setImage(null);
-    } catch (error) {
-      console.error('Error adding manufacturer:', error);
-    }
-  };
-  
-
+const AddManufacturerPage: React.FC = () => {
   return (
-    <form onSubmit={handleSubmit} className={styles.form}>
-      <div className={styles.div}>
-        <label htmlFor="name" className={styles.label}>Name</label>
-        <input
-          type="text"
-          id="name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-          className={styles.inputText}
-        />
-      </div>
-      <div className={styles.div}>
-        <label htmlFor="country" className={styles.label}>Country</label>
-        <input
-          type="text"
-          id="country"
-          value={country}
-          onChange={(e) => setCountry(e.target.value)}
-          className={styles.inputText}
-        />
-      </div>
-      <div className={styles.div}>
-        <label htmlFor="image" className={styles.label}>Image</label>
-        <input
-          type="file"
-          id="image"
-          onChange={(e) => setImage(e.target.files ? e.target.files[0] : null)}
-          className={styles.inputFile}
-          required
-        />
-      </div>
-      <button type="submit" className={styles.button}>Add Manufacturer</button>
-    </form>
+    <div>
+      <h1>Add Manufacturer</h1>
+      <AddManufacturerForm />
+    </div>
   );
 };
 
-export default AddManufacturer;
+export default AddManufacturerPage;

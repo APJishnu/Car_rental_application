@@ -1,13 +1,13 @@
 // index.js
 import authTypeDefs from './typeDefs/auth-type-defs.js';
-// import vehicleTypeDefs from './vehicle-schema.js'; // Uncomment if needed
 import authResolvers from './resolvers/auth-resolvers.js';
-// import vehicleResolvers from '../resolvers/admin-resolvers/vehicle-resolvers.js'; // Create this file as needed
 
 import manufactureTypeDefs from './typeDefs/manufacture-type-defs.js';
 import manufacturerResolver from './resolvers/manufacture-resolvers.js';
+import vehicleTypeDefs from './typeDefs/add-vehicles-type-defs.js';
+import vehicleResolver from './resolvers/add-vehicles-resolvers.js';
 
-const adminTypeDefs = [authTypeDefs, manufactureTypeDefs]; // Combine typeDefs
-const adminResolvers = [authResolvers, manufacturerResolver]; // Combine resolvers
+const adminTypeDefs = [authTypeDefs, manufactureTypeDefs,vehicleTypeDefs]; // Combine typeDefs
+const adminResolvers = [authResolvers, manufacturerResolver,vehicleResolver]; // Combine resolvers
 
 export { adminTypeDefs, adminResolvers };

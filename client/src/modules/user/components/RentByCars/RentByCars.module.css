@@ -4,6 +4,7 @@
   padding: 20px;
   display: flex;
   justify-content: center;
+
 }
 
 
@@ -62,6 +63,7 @@
   flex-direction: column;
   align-items: center;
   padding-bottom: 60px;
+  padding-top: 40px;
 }
 
 .rentHeader {
@@ -75,6 +77,8 @@
 }
 
 .rentHeader h2 {
+  width: 100%;
+  text-align: center;
   font-size: 24px;
   font-weight: 600;
 }
@@ -89,9 +93,9 @@
 .brandGrid {
   display: grid;
   /* Default to grid layout for desktop */
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px,1fr));
   /* Responsive grid */
-  gap: 20px;
+
   /* Spacing between items */
   max-width: 1200px;
   /* Maximum width for the grid */
@@ -104,12 +108,12 @@
   flex-direction: column;
   align-items: center;
   padding: 20px;
-  background: linear-gradient(180deg, #f0f0f0, #ffffff);
+
   border-radius: 8px;
   transition: transform 0.3s ease;
   flex: 1;
   /* Allow cards to grow and shrink equally */
-  min-width: 160px;
+  width: max-content;
   /* Set a minimum width for cards */
 }
 
@@ -133,9 +137,9 @@
   .brandGrid {
     display: grid;
     /* Default to grid layout for desktop */
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     /* Responsive grid */
-    gap: 20px;
+    gap: auto;
     /* Spacing between items */
     max-width: 1000px;
     /* Maximum width for the grid */
@@ -144,7 +148,7 @@
   }
 
   .brandCard {
-    width: 200px;
+    width: max-content;
   }
 }
 
@@ -155,6 +159,7 @@
     padding: 15px;
     /* Slightly reduced padding */
    padding-top: 50%;
+  
   }
 
   .filterWrapper {
@@ -208,20 +213,11 @@
   }
 
   .brandGrid {
-    display: flex;
-    /* Use flex for a horizontal layout */
-    overflow-x: auto;
-    /* Enable horizontal scrolling */
-    padding: 10px 0;
-    /* Optional padding */
-    padding-left: 10px;
-    /* Ensure space for the first card */
-    scroll-behavior: smooth;
-    /* Smooth scrolling effect */
-    gap: 10px;
-    /* Adjust the gap between items */
-    scroll-snap-type: x mandatory;
-    /* Enable scroll snap for better UX */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    justify-items: center;
+    width: 100%;
+
 
   }
 
@@ -230,17 +226,15 @@
     /* Ensure each card aligns at the start when scrolling */
     flex: 0 0 auto;
     /* Prevent flex items from growing and shrinking */
-    width: 160px;
+    width: max-content;
     /* Fixed width for the cards */
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
-    background: linear-gradient(180deg, #f0f0f0, #ffffff);
     /* Adjust the colors as needed */
     border-radius: 8px;
     transition: transform 0.3s ease;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     /* Optional shadow for better visibility */
   }
 

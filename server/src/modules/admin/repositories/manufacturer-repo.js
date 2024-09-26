@@ -27,6 +27,22 @@ class ManufacturerRepository {
       throw new Error('Failed to fetch manufacturers from repository');
     }
   }
+
+  // Method to find a manufacturer by ID
+  static async findManufacturerById(manufacturerId) {
+    try {
+      const manufacturer = await Manufacturer.findOne({
+        where: { id: manufacturerId },
+      });
+      if (!manufacturer) {
+        throw new Error(`Manufacturer with ID ${manufacturerId} not found`);
+      }
+      return manufacturer;
+    } catch (error) {
+      console.error('Error fetching manufacturer by ID:', error);
+      throw new Error('Failed to fetch manufacturer');
+    }
+  }
 }
 
 export default ManufacturerRepository;

@@ -1,0 +1,263 @@
+/* Filter Section Styles */
+.filterSection {
+    background: linear-gradient(180deg, #000000 50%, #ffffff 50%);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+
+.filterWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(180deg, #f0f0f0, #ffffff);
+    /* Adjust the colors as needed */
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 1200px;
+}
+
+
+.filterItem {
+    display: flex;
+    flex-direction: column;
+    margin-right: 15px;
+}
+
+.filterItem label {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.filterItem input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.findVehicleBtn {
+    margin-top: 25px;
+    padding: 12px 20px;
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 29px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+}
+
+.findVehicleBtn:hover {
+    background-color: #444;
+}
+
+/* Rent by Brands Styles */
+.rentSection {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 60px;
+    padding-top: 120px;
+}
+
+.rentHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between !important;
+    margin-bottom: 20px;
+    width: 100%;
+    max-width: 1200px;
+
+}
+
+.rentHeader h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.viewAll {
+    text-decoration: none;
+    color: #000;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.brandGrid {
+    display: grid;
+    /* Default to grid layout for desktop */
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    /* Responsive grid */
+    gap: 20px;
+    /* Spacing between items */
+    max-width: 1200px;
+    /* Maximum width for the grid */
+    margin: 0 auto;
+    /* Center the grid */
+}
+
+.brandCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    padding: 20px;
+    background: linear-gradient(180deg, #f0f0f0, #ffffff);
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    flex: 1;
+    /* Allow cards to grow and shrink equally */
+    min-width: 160px;
+    /* Set a minimum width for cards */
+}
+
+.brandCard:hover {
+    transform: translateY(-5px);
+}
+
+.brandLogo {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.brandCard p {
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}
+
+@media (max-width:1100px) {
+    .brandGrid {
+        display: grid;
+        /* Default to grid layout for desktop */
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        /* Responsive grid */
+        gap: 20px;
+        /* Spacing between items */
+        max-width: 1000px;
+        /* Maximum width for the grid */
+        margin: 0 auto;
+        /* Center the grid */
+    }
+
+    .brandCard {
+        width: 200px;
+    }
+}
+
+
+/* Responsive Styles for screens 768px and below */
+@media (max-width: 768px) {
+    .filterSection {
+        padding: 15px;
+        /* Slightly reduced padding */
+        padding-top: 50%;
+    }
+
+    .filterWrapper {
+        display: grid;
+        /* Use grid layout */
+        grid-template-columns: repeat(2, 1fr);
+        /* One column for small screens */
+        gap: 10px;
+        /* Spacing between grid items */
+        padding: 10px 20px;
+        /* Adjusted padding */
+        max-width: 580px;
+        margin: 0 auto;
+
+        /* Center the filter section */
+    }
+
+    .filterItem {
+        margin: 0;
+        /* Remove margin since we have gap in grid */
+    }
+
+    .filterItem input {
+        width: 100%;
+        /* Full width input fields */
+    }
+
+    .findVehicleBtn {
+        width: 100%;
+        /* Full width button */
+        margin-top: 15px;
+        /* Adjusted margin */
+        padding: 12px;
+        /* Consistent padding */
+    }
+
+    .rentHeader {
+        flex-direction: row;
+        /* Stack header elements */
+        align-items: flex-start;
+        /* Align left */
+        margin-bottom: 15px;
+        /* Spacing below header */
+        padding: 15px;
+        max-width: 380px;
+    }
+
+    .rentHeader h2 {
+        font-size: 20px;
+        /* Slightly smaller heading */
+    }
+
+    .brandGrid {
+        display: grid;
+        width: 100%;
+        padding: 10px 0;
+        justify-items: center;
+
+
+        /* Enable scroll snap for better UX */
+
+    }
+
+    .brandCard {
+        scroll-snap-align: start !important;
+        /* Ensure each card aligns at the start when scrolling */
+        flex: 0 0 auto;
+        /* Prevent flex items from growing and shrinking */
+        width: 160px;
+        /* Fixed width for the cards */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        background: linear-gradient(180deg, #f0f0f0, #ffffff);
+        /* Adjust the colors as needed */
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        /* Optional shadow for better visibility */
+    }
+
+    .brandCard:hover {
+        transform: translateY(-5px);
+        /* Hover effect */
+    }
+
+    .brandGrid::-webkit-scrollbar {
+        display: none;
+    }
+
+    .brandLogo {
+        width: 40px;
+        /* Smaller logo */
+        height: 40px;
+        /* Smaller logo */
+    }
+
+    .brandCard p {
+        font-size: 12px;
+        /* Smaller text */
+    }
+}

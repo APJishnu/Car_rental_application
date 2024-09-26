@@ -1,38 +1,14 @@
-// graphql/vehicles.js
 import { gql } from '@apollo/client';
 
 export const ADD_VEHICLE = gql`
-  mutation addVehicle($input: VehicleInput!) {
-    addVehicle(input: $input) {
+  mutation AddVehicle($manufacturerId: ID!, $name: String!, $year: String!) {
+    addVehicle(manufacturerId: $manufacturerId, name: $name, year: $year) {
       id
       name
-      description
-      price
-      primaryImage
-      otherImages
-      quantity
-      manufacturerId
+      year
+      manufacturer {
+        name
+      }
     }
-  }
-`;
-
-export const GET_VEHICLES = gql`
-  query getVehicles {
-    getVehicles {
-      id
-      name
-      description
-      price
-      primaryImage
-      otherImages
-      quantity
-      manufacturerId
-    }
-  }
-`;
-
-export const DELETE_VEHICLE = gql`
-  mutation deleteVehicle($id: ID!) {
-    deleteVehicle(id: $id)
   }
 `;

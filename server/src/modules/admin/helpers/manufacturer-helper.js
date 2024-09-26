@@ -21,7 +21,11 @@ class ManufacturerHelper {
             'Content-Type': contentType, // Set the content type for the uploaded file
             'Content-Disposition': 'inline', // Allow inline rendering in the browser
           }, (error) => {
-          if (error) return reject(error);
+            if (error) {
+              console.error("Error uploading to MinIO:", error);
+              return reject(new Error('MinIO upload failed'));
+            }
+      
           resolve();
         });
       });

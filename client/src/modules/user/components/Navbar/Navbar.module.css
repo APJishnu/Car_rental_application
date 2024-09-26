@@ -60,7 +60,7 @@
   top: var(--navbar-height);
   right: 0;
   background-color: var(--color-background);
-  width: 100%;
+  width: 300px;
   padding: var(--spacing);
   z-index: 99; /* Lower than menuIcon */
 }

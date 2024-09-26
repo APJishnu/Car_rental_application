@@ -33,7 +33,7 @@ const HeroSection: React.FC = () => {
         className={styles.heroSection} 
         style={{ transform: `scale(${scale})`, transition: 'transform 0.2s ease-out' }}
       >
-        <div className={styles.overlay}></div>
+        <span className={styles.overlay}></span>
         <div className={styles.content}>
           <h1 className={styles.title}>
             Discover the world on wheels <br /> with our car rental service

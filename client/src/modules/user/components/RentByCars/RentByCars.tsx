@@ -37,13 +37,13 @@ const Brands: React.FC = () => {
   if (error) return <p>Error fetching manufacturers: {error.message}</p>;
 
   // Limit to the first 12 manufacturers
-  const limitedManufacturers = data.getManufacturers.slice(0, 12);
+  const limitedManufacturers = data.getManufacturers.slice(0, 8);
 
   return (
     <div className={styles.rentSection}>
       <div className={styles.rentHeader}>
         <h2>Rent by Manufacturers</h2>
-        <a href="/admin/all-manufacturers" className={styles.viewAll}>View all &rarr;</a>
+        
       </div>
       <div className={styles.brandGrid}>
         {limitedManufacturers.map((manufacturer: any) => (
@@ -53,6 +53,7 @@ const Brands: React.FC = () => {
           </div>
         ))}
       </div>
+      <a href="/user/all-manufacturers" className={styles.viewAll}>View all &rarr;</a>
     </div>
   );
 };
@@ -60,7 +61,7 @@ const Brands: React.FC = () => {
 const RentByBrands: React.FC = () => {
   return (
     <>
-      <FilterOptions />
+      {/* <FilterOptions /> */}
       <Brands />
     </>
   );

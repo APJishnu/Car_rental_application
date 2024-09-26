@@ -1,0 +1,63 @@
+/* AddVehicleForm.module.css */
+
+.form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px; /* Set a maximum width for the form */
+    margin: 0 auto; /* Center the form horizontally */
+    padding: 20px;
+    border: 1px solid #ddd; /* Light gray border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    background-color: #ffffff; /* White background */
+    margin-top: 120px;
+    margin-bottom: 20px;
+  }
+  
+  .div {
+    margin-bottom: 15px; /* Space between form elements */
+  }
+  
+  .label {
+    font-size: 16px; /* Font size for labels */
+    margin-bottom: 5px; /* Space between label and input */
+    font-weight: bold; /* Bold text for labels */
+  }
+  
+  .inputText,
+  .select {
+    padding: 10px; /* Padding inside inputs */
+    border: 1px solid #ccc; /* Light gray border for inputs */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 14px; /* Font size for inputs */
+    width: 100%; /* Full width of the container */
+    box-sizing: border-box; /* Include padding in width */
+  }
+  
+  .inputText:focus,
+  .select:focus {
+    border-color: #007bff; /* Change border color on focus */
+    outline: none; /* Remove default outline */
+  }
+  
+  .button {
+    padding: 10px; /* Padding inside button */
+    background-color: #007bff; /* Bootstrap primary color */
+    color: #ffffff; /* White text color */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    font-size: 16px; /* Font size for button */
+    cursor: pointer; /* Change cursor to pointer */
+    transition: background-color 0.3s; /* Smooth background color transition */
+  }
+  
+  .button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  
+  @media (max-width: 480px) {
+    .form {
+      padding: 15px; /* Reduced padding on smaller screens */
+    }
+  }
+  

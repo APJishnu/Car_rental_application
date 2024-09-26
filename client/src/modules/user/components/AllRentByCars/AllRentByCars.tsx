@@ -4,9 +4,9 @@
 import React from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_MANUFACTURERS } from '@/graphql/admin-queries/manufacture';
-import styles from './page.module.css'; // Reuse styles
+import styles from './AllRentByCard.module.css'; // Reuse styles
 
-const AllManufacturers: React.FC = () => {
+const AllRentByBrands: React.FC = () => {
   const { loading, error, data } = useQuery(GET_MANUFACTURERS);
 
   if (loading) return <p>Loading all manufacturers...</p>;
@@ -27,4 +27,4 @@ const AllManufacturers: React.FC = () => {
   );
 };
 
-export default AllManufacturers;
+export default AllRentByBrands;
