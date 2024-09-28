@@ -26,7 +26,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <body>
         {isAdminRoute ? <AdminNavbar /> : <Navbar />}
           {children}
-          <Footer />
+          {isAdminRoute ? null : <Footer />}
           </body>
           
       </html>

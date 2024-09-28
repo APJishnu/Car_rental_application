@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from 'react';
-import useAdminLogin from '../../services/LoginServices/AdminLogin'; // Update with the correct path to your service
-import Input from '@/themes/InputField/InputField'; // Update with the correct path to your Input component
-import Button from '@/themes/Button/Button'; // Update with the correct path to your Button component
+import useAdminLogin from '../../services/LoginServices/AdminLogin';
+import Input from '@/themes/InputField/InputField'; 
+import Button from '@/themes/Button/Button'; 
 import styles from './LoginForm.module.css';
 
 // Define the type for your form state and error message

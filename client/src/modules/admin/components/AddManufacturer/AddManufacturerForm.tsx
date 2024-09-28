@@ -18,12 +18,12 @@ const AddManufacturerForm: React.FC = () => {
       console.error('No image selected');
       return;
     }
-
+    console.log("image",image)
     const formData = new FormData();
     formData.append('name', name);
     formData.append('country', country);
     formData.append('image', image);
-
+    
     try {
       const response = await addManufacturer({
         variables: {

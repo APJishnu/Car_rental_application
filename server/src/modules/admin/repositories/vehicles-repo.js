@@ -1,29 +1,41 @@
-// repositories/vehicles-repo.js
-import Vehicle from '../models/vehicles-model.js'; // Adjust the path according to your project structure
+import Vehicle from '../models/vehicles-model.js';
 
 class VehicleRepository {
-  // Add a method to find a vehicle by name and manufacturer ID
+  // Create a vehicle in the database
+  static async createVehicle(vehicleData) {
+    try {
+      const vehicle = await Vehicle.create(vehicleData);
+      return {
+        id: vehicle.id,
+        name: vehicle.name,
+        description: vehicle.description,
+        quantity: vehicle.quantity,
+        manufacturerId: vehicle.manufacturerId,
+        year: vehicle.year,
+        primaryImageUrl: vehicle.primaryImageUrl,
+        otherImageUrls: vehicle.otherImageUrls,
+      };
+    } catch (error) {
+      console.error('Error creating vehicle:', error);
+      throw new Error('Failed to create vehicle');
+    }
+  }
+
+  // Find a vehicle by name and manufacturer ID (to check for duplicates)
   static async findVehicleByNameAndManufacturer(name, manufacturerId) {
-    return await Vehicle.findOne({
-      where: {
-        name,
-        manufacturerId,
-      },
-    });
-  }
+    try {
+      const vehicle = await Vehicle.findOne({
+        where: {
+          name,
+          manufacturerId,
+        },
+      });
 
-  // Update the create method to include the year
-  static async createVehicle({ name, manufacturerId, year }) {
-    return await Vehicle.create({
-      name,
-      manufacturerId,
-      year,  // Add the year here
-    });
-  }
-
-  static async getVehicles() {
-    return await Vehicle.findAll();
+      return vehicle;
+    } catch (error) {
+      console.error('Error finding vehicle:', error);
+      throw new Error('Failed to find vehicle');
+    }
   }
 }
-
 export default VehicleRepository;

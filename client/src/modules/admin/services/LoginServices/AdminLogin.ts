@@ -22,26 +22,25 @@ interface AdminLoginResponse {
 const useAdminLogin = () => {
   const [adminLogin, { loading, error }] = useMutation<AdminLoginResponse, AdminLoginVariables>(ADMIN_LOGIN);
 
-  
-const login = async (email: string, password: string) => {
+
+  const login = async (email: string, password: string) => {
     try {
       const { data } = await adminLogin({
         variables: { email, password },
       });
-  
+
       if (data) {
         const { token, admin } = data.adminLogin;
-        // Store token and admin details (e.g., in localStorage or context)
+
         localStorage.setItem('token', token);
-        // Optionally return the admin details or token
+
         return { token, admin };
       }
-    } catch (err: unknown) { // Type 'err' as 'unknown'
-      // Check if 'err' is an instance of 'Error' before accessing 'message'
+    } catch (err: unknown) {
+
       if (err instanceof Error) {
         throw new Error(err.message);
       }
-      // If 'err' is not an instance of 'Error', throw a generic error
       throw new Error('An unexpected error occurred during login');
     }
   };

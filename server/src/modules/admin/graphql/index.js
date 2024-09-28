@@ -4,10 +4,10 @@ import authResolvers from './resolvers/auth-resolvers.js';
 
 import manufactureTypeDefs from './typeDefs/manufacture-type-defs.js';
 import manufacturerResolver from './resolvers/manufacture-resolvers.js';
-import vehicleTypeDefs from './typeDefs/add-vehicles-type-defs.js';
-import vehicleResolver from './resolvers/add-vehicles-resolvers.js';
+import vehicleTypeDefs from './typeDefs/vehicle-type-defs.js';
+import vehicleResolvers from './resolvers/vehicle-resolvers.js';
 
 const adminTypeDefs = [authTypeDefs, manufactureTypeDefs,vehicleTypeDefs]; // Combine typeDefs
-const adminResolvers = [authResolvers, manufacturerResolver,vehicleResolver]; // Combine resolvers
+const adminResolvers = [authResolvers, manufacturerResolver, vehicleResolvers]; // Combine resolvers
 
 export { adminTypeDefs, adminResolvers };
