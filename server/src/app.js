@@ -5,6 +5,7 @@ import { typeDefs, resolvers } from './graphql/schema.js';
 import sequelize from './config/database.js';
 import { graphqlUploadExpress } from 'graphql-upload';
 import dotenv from 'dotenv';
+import './modules/admin/models/assosiations.js'; // Import associations after models
 
 dotenv.config(); // Load environment variables from .env file
 
@@ -15,6 +16,21 @@ const PORT = process.env.PORT || 5000;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+
+
+  formatError:(err)=>{
+      console.log("error in formatError");
+
+      if(err){
+        console.log(err)
+        return {
+          
+          message: err.message,
+        }
+      }
+  },
+
+
   context: ({ req }) => {
     const token = req.headers.authorization || '';
     return { token }; // Make sure to handle this token in your resolvers
@@ -47,6 +63,7 @@ const startServer = async () => {
     }
   });
 };
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {

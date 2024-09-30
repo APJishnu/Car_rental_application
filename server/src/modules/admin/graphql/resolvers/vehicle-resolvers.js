@@ -15,9 +15,32 @@ const vehicleResolvers = {
         throw new Error('Failed to fetch manufacturers');
       }
     },
+
+    // Fetch list of vehicles
+    getVehicles: async () => {
+      try {
+        return await VehicleHelper.getVehicles(); // Create a helper function to fetch vehicles
+      } catch (error) {
+        console.error('Error fetching vehicles:', error);
+        throw new Error('Failed to fetch vehicles');
+      }
+    },
+
+     
+  getVehicleById: async (_, { id }) => {
+    try {
+      return await VehicleHelper.getVehicleById(id); // Fetch vehicle by ID
+    } catch (error) {
+      console.error("Error fetching vehicle:", error.message);
+      throw new Error("Failed to fetch vehicle");
+    }
   },
 
+  },
  
+
+
+
   Mutation: {
     addVehicle: async (_, { input, primaryImage, otherImages }) => {
       const { name, description, quantity, manufacturerId, year } = input;
@@ -41,7 +64,46 @@ const vehicleResolvers = {
         throw new Error(error.message || 'Failed to add vehicle');
       }
     },
+
+
+    // Your current deleteVehicle mutation
+    deleteVehicle: async (_, { id }) => {
+      const deleted = await VehicleHelper.deleteVehicleById(id);
+      if (!deleted) {
+        throw new Error("Vehicle not found");
+      }
+      return { id }; // Optionally return the ID of the deleted vehicle
+    },
+
+
+    updateVehicle: async (_, { id, input }) => {
+      const { name, description, quantity, year, primaryImage, otherImages } = input;
+
+      console.log("backend input",input)
+      try {
+        const updatedVehicle = await VehicleHelper.updateVehicle({
+          id,
+          name,
+          description,
+          primaryImage,
+          otherImages,
+          quantity,
+          year,
+        });
+        return updatedVehicle;
+      } catch (error) {
+        throw new Error(error.message || 'Failed to edit vehicle');
+      }
+    },
+
+
+    
+
   },
+
+
+
+
 };
 
 

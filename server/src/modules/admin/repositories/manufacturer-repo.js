@@ -1,5 +1,6 @@
 // repositories/ManufacturerRepository.js
 import Manufacturer from '../models/manufacturer-model.js'; // Adjust the import path as necessary
+import Vehicle from '../models/vehicles-model.js'; // Import the Vehicle model
 
 class ManufacturerRepository {
   static async createManufacturer({ name, country, imageUrl }) {
@@ -43,6 +44,61 @@ class ManufacturerRepository {
       throw new Error('Failed to fetch manufacturer');
     }
   }
+
+
+  // Find a vehicle by name and manufacturer ID (to check for duplicates)
+  static async findManufacturerByName(name) {
+    try {
+      const manufacture = await Manufacturer.findOne({
+        where: {
+          name,
+        },
+      });
+
+      return manufacture;
+    } catch (error) {
+      console.error('Error finding Manufacturer:', error);
+      throw new Error('Failed to find Manufacturer');
+    }
+  }
+
+
+  static async deleteManufacturer(id) {
+    try {
+      // Delete vehicles associated with the manufacturer
+      await Vehicle.destroy({
+        where: { manufacturerId: id },
+      });
+
+      // Now delete the manufacturer
+      const result = await Manufacturer.destroy({
+        where: { id },
+      });
+      return result > 0; // Return true if a manufacturer was deleted
+    } catch (error) {
+      console.error('Error deleting manufacturer from database:', error);
+      throw new Error('Failed to delete manufacturer');
+    }
+  }
+
+
+  static async updateManufacturer(id, updates) {
+    try {
+      const manufacturer = await Manufacturer.findByPk(id);
+      if (!manufacturer) {
+        throw new Error('Manufacture not found');
+      }
+
+      await manufacturer.update(updates);
+
+      return manufacturer;
+    } catch (error) {
+      console.error('Error updating manufacturer:', error);
+      throw new Error('Failed to update manufacturer in the repository');
+    }
+  }
+
+  
 }
 
 export default ManufacturerRepository;

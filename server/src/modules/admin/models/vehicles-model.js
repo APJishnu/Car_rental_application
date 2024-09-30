@@ -1,17 +1,18 @@
-// models/vehicles-model.js
+// src/models/vehicles-model.js
+
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../../../config/database.js';
-import Manufacturer from './manufacturer-model.js';
+import Manufacturer from './manufacturer-model.js'; // Import the Manufacturer model
 
 class Vehicle extends Model {}
 
-// Define the Vehicle model with associations
+// Define the Vehicle model
 Vehicle.init({
   manufacturerId: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Manufacturers',
+      model: 'Manufacturers', // This assumes you have a Manufacturers table
       key: 'id',
     },
   },
@@ -24,18 +25,16 @@ Vehicle.init({
     allowNull: true,
   },
   primaryImageUrl: {
-    type: DataTypes.STRING(1000), // Increase the length to 1000 characters
+    type: DataTypes.STRING(1000),
     allowNull: true,
   },
-  
   otherImageUrls: {
-    type: DataTypes.ARRAY(DataTypes.STRING(1000)), // Increase each string's length within the array
+    type: DataTypes.ARRAY(DataTypes.STRING(1000)),
     allowNull: true,
   },
-  
   quantity: {
     type: DataTypes.STRING,
-    allowNull: false, // Set it as required
+    allowNull: false,
   },
   year: {
     type: DataTypes.STRING,
@@ -49,7 +48,7 @@ Vehicle.init({
 // Define associations
 Vehicle.belongsTo(Manufacturer, {
   foreignKey: 'manufacturerId',
-  targetKey: 'id',
+  as: 'manufacturer', // Define the alias for easier access
 });
 
 export default Vehicle;

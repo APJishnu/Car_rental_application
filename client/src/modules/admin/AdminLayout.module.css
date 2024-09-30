@@ -1,0 +1,19 @@
+/* AdminLayout.module.css */
+.adminLayout {
+    display: flex;
+    height: 100vh; /* Full height */
+  }
+  
+  .childrenContainer {
+    flex-grow: 1; /* Take remaining space */
+    padding: 20px; /* Adjust padding as needed */
+    overflow-y: auto; /* Scroll if content overflows */
+  }
+  
+  /* Mobile Styles */
+  @media (max-width: 768px) {
+    .adminLayout {
+      flex-direction: column; /* Stack vertically on mobile */
+    }
+  }
+  

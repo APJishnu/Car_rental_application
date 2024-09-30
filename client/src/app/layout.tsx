@@ -1,34 +1,47 @@
-// src/app/layout.tsx
+// app/layout.tsx
+
 'use client';
 
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { ApolloProvider } from '@apollo/client';
 import client from '@/lib/apollo-client';
 import './globals.css';
-import Navbar from '../modules/user/components/Navbar/Navbar'
-import Footer from '../modules/user/components/Footer/Footer'
 import { usePathname } from 'next/navigation';
-import AdminNavbar from '../modules/admin/components/AdminNavbar/AdminNavbar'
+import AdminLayout from '../modules/admin/AdminLayout';
+import UserLayout from '../modules/user/UserLayout';
 
 interface RootLayoutProps {
   readonly children: ReactNode;
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
-
   const pathname = usePathname();
 
-  // Check if the current path includes "/admin"
+  // Check if the current path is an admin route
   const isAdminRoute = pathname.startsWith('/admin');
+  // Check if it's specifically the admin login route
+  const isAdminLogin = pathname === '/admin/admin-login';
+
+  // Define the layout to be used based on the route
+  let LayoutComponent;
+
+  if (isAdminLogin) {
+    // No layout for admin login
+    LayoutComponent = React.Fragment;
+  } else if (isAdminRoute) {
+    // Admin layout for other admin routes
+    LayoutComponent = AdminLayout;
+  } else {
+    // User layout for non-admin routes
+    LayoutComponent = UserLayout;
+  }
+
   return (
     <ApolloProvider client={client}>
       <html lang="en">
         <body>
-        {isAdminRoute ? <AdminNavbar /> : <Navbar />}
-          {children}
-          {isAdminRoute ? null : <Footer />}
-          </body>
-          
+          <LayoutComponent>{children}</LayoutComponent>
+        </body>
       </html>
     </ApolloProvider>
   );

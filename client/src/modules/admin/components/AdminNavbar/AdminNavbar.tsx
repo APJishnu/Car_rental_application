@@ -1,53 +1,75 @@
+// app/modules/admin/components/AdminNavbar/AdminNavbar.tsx
+
 'use client';
 
 import React, { useState } from 'react';
-import styles from './AdminNavbar.module.css'; // Create a CSS module for the admin navbar
-import { FaBars, FaTimes } from 'react-icons/fa'; // Import icons
+import Link from 'next/link'; // Update this based on your routing
+import { MenuOutlined, CloseOutlined, DashboardOutlined, UserOutlined, SettingOutlined, LogoutOutlined, CarOutlined, BuildOutlined } from '@ant-design/icons'; // Import Ant Design icons
+import styles from './AdminNavbar.module.css'; // Import CSS Module
 
 const AdminNavbar: React.FC = () => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleSidebar = () => {
+    setIsSidebarCollapsed(!isSidebarCollapsed);
   };
 
   return (
-    <nav className={styles.navbar}>
-      <div className={styles.container}>
-        {/* Hamburger Icon */}
-        <button className={styles.menuIcon} onClick={toggleMenu}>
-          {menuOpen ? <FaTimes /> : <FaBars />}
-        </button>
-
-        {/* Admin Logo */}
-        <div className={styles.logoContainer}>
+    <div className={`${styles.navbar} ${isSidebarCollapsed ? styles.collapsed : ''}`}>
+      <div className={styles.logoContainer}>
+        {!isSidebarCollapsed && (
           <div className={styles.logo}>
-            <img
-              src="/Navbar/Heading-logo.svg" // Replace with your actual admin logo
-              alt="Admin Logo"
-              className={styles.logoImage}
-            />
-            <p>.Admin</p>
+            <img src="/Navbar/Heading-logo.svg" alt="Logo" />
           </div>
-        </div>
-
-        {/* Menu Links */}
-        <div className={`${styles.menu} ${menuOpen ? styles.showMenu : ''}`}>
-          <a href="/admin/dashboard" className={styles.navLink}>Dashboard</a>
-          <a href="/admin/users" className={styles.navLink}>Users</a>
-          <a href="/admin/settings" className={styles.navLink}>Settings</a>
-           {/* Logout Button */}
-        <div className={styles.mobileLogoutContainer}>
-          <button className={styles.logoutButton}>Logout</button>
-        </div>
-        </div>
-
-        {/* Logout Button */}
-        <div className={styles.logoutButtonContainer}>
-          <button className={styles.logoutButton}>Logout</button>
+        )}
+        <div className={styles.toggleButtonDiv}>
+          <button className={styles.toggleIcon} onClick={toggleSidebar}>
+            {isSidebarCollapsed ? <MenuOutlined /> : <CloseOutlined />} {/* Ant Design icons */}
+          </button>
+          <button className={styles.menuIcon} onClick={toggleMenu}>
+            {isMenuOpen ? <CloseOutlined /> : <MenuOutlined />} {/* Use Ant Design icons */}
+          </button>
         </div>
       </div>
-    </nav>
+      <div className={`${styles.menu} ${isMenuOpen ? styles.showMenu : ''}`}>
+        <Link href="/admin/" className={styles.navLink}>
+          <DashboardOutlined className={styles.icon} />
+          {!isSidebarCollapsed && 'Admin Dashboard'}
+        </Link>
+        <Link href="/admin/users" className={styles.navLink}>
+          <UserOutlined className={styles.icon} />
+          {!isSidebarCollapsed && 'Users'}
+        </Link>
+        <Link href="/admin/manufacture-list" className={styles.navLink}>
+          <BuildOutlined className={styles.icon} />
+          {!isSidebarCollapsed && 'Makes'}
+        </Link>
+        <Link href="/admin/vehicles-list" className={styles.navLink}>
+          <CarOutlined className={styles.icon} />
+          {!isSidebarCollapsed && 'Vehicles'}
+        </Link>
+        <Link href="/admin/rentable-vehicles" className={styles.navLink}>
+          <CarOutlined className={styles.icon} />
+          {!isSidebarCollapsed && 'Rentable Vehicles'}
+        </Link>
+        <Link href="/admin/settings" className={styles.navLink}>
+          <SettingOutlined className={styles.icon} />
+          {!isSidebarCollapsed && 'Settings'}
+        </Link>
+        {/* Logout Button */}
+        <div className={styles.logoutButtonContainer}>
+          <Link href="/" className={styles.logoutButton}>
+            <LogoutOutlined className={styles.icon} />
+            {!isSidebarCollapsed && 'Logout'}
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 };
 

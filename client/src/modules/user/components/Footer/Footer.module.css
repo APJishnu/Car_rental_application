@@ -50,10 +50,17 @@
     padding-top: 30px;
   }
   
+
+  .logoButton{
+    background-color: transparent;
+    border: none;
+  }
   .logoImage {
     width: 150px;
     height: auto;
   }
+
+
   
   .footerLinks {
     display: flex;

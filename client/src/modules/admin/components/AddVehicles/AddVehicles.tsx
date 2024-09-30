@@ -142,6 +142,7 @@ const AddVehicles = () => {
         console.log("formDaaaaata", formData);
 
         console.log("vgfjsdvfva", primaryImage.file)
+        
 
         try {
             const response = await addVehicle({

@@ -1,0 +1,30 @@
+.cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px; /* Space between cards */
+  }
+  
+  .vehicleCard {
+    width: 300px; /* Adjust the width of the card */
+  }
+  
+  .imageContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Center the image */
+    margin-bottom: 16px; /* Space below the image */
+  }
+  
+  .displayImage {
+    max-width: 100%; /* Responsive image */
+    height: auto; /* Maintain aspect ratio */
+  }
+  
+  .scrollButton {
+    background: transparent; /* Transparent background */
+    border: none; /* Remove border */
+    font-size: 24px; /* Increase button size */
+    cursor: pointer; /* Pointer cursor on hover */
+    margin: 0 8px; /* Space around buttons */
+  }
+  

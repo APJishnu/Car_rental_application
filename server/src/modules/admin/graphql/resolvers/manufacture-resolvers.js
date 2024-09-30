@@ -21,12 +21,28 @@ const manufacturerResolver = {
   Mutation: {
     addManufacturer: async (_, { name, country, image }) => {
       try {
-        // Call the helper method to handle the image upload and manufacturer creation
-        const manufacturer = await ManufacturerHelper.addManufacturer(name, country, image);
-        return manufacturer; // Return the newly created manufacturer
+        return await ManufacturerHelper.addManufacturer(name, country, image);
       } catch (error) {
         console.error('Error in addManufacturer mutation:', error);
-        throw new Error('Failed to add manufacturer');
+        throw new Error(error.message || 'Failed to add manufacturer');
+      }
+    },
+
+    editManufacturer: async (_, { id, name, country, image }) => {
+      try {
+        return await ManufacturerHelper.editManufacturer(id, name, country, image);
+      } catch (error) {
+        console.error('Error editing manufacturer:', error);
+        throw new Error(error.message || 'Failed to edit manufacturer');
+      }
+    },
+
+    deleteManufacturer: async (_, { id }) => {
+      try {
+        return await ManufacturerHelper.deleteManufacturer(id); // Call the helper method
+      } catch (error) {
+        console.error('Error in deleteManufacturer mutation:', error);
+        throw new Error('Failed to delete manufacturer');
       }
     },
   },

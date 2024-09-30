@@ -45,7 +45,7 @@
 
 .menuIcon {
   font-size: 1.5rem;
-  cursor: none;
+  cursor: pointer;
   background-color: black;
   border: none;
   color: var(--color-accent);

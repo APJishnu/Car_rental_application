@@ -24,6 +24,19 @@ const vehicleTypeDefs = gql`
     manufacturerId: String!
     year: String!
   }
+  input EditVehicleInput {
+    name: String!
+    description: String
+    quantity: String!
+    primaryImage: Upload
+    otherImages: [Upload!]
+    year: String!
+  }
+
+  type Query {
+    getVehicles: [Vehicle!]!  # Query to fetch the list of vehicles
+    getVehicleById(id: String!): Vehicle
+  }
 
   # Mutation for adding a new vehicle
   type Mutation {
@@ -32,6 +45,11 @@ const vehicleTypeDefs = gql`
       primaryImage: Upload!, 
       otherImages: [Upload!]! # Accept multiple file uploads for otherImages
     ): Vehicle!
+
+     deleteVehicle(id: String!): Vehicle
+
+     updateVehicle(id: String!, input: EditVehicleInput!): Vehicle!  # Add this line for editing
+
   }
 `;
 

@@ -18,6 +18,8 @@ const manufactureTypeDefs = gql`
 
   type Mutation {
     addManufacturer(name: String!, country: String, image: Upload!): Manufacturer!
+    editManufacturer(id: ID!, name: String!, country: String, image: Upload): Manufacturer!  
+    deleteManufacturer(id: ID!): Boolean!  
   }
 `;
 
