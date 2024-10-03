@@ -3,10 +3,11 @@ import styles from './Button.module.css';
 
 interface ButtonProps {
   onClick?: () => void;
-  type?: 'button' | 'submit' | 'reset';
+  type?: 'button' | 'submit' | 'reset' ;
   children: React.ReactNode;
   className?: string;
   disabled?: boolean; // Add this line
+  loading?:boolean
 }
 
 const Button: React.FC<ButtonProps> = ({ onClick, type = 'button', children, className ,disabled}) => {

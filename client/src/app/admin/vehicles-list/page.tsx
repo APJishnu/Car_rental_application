@@ -6,13 +6,16 @@ import { Card, Button, Image, Space, Modal, Tooltip, Input, Select } from "antd"
 import Swal from "sweetalert2"; // SweetAlert2 for popups
 import styles from "./vehicle-list.module.css"; // Your CSS module
 import { useRouter } from 'next/navigation';
-import { EditOutlined, DeleteOutlined, PlusCircleOutlined, InfoCircleOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons'; // Import icons
+import { EditOutlined, DeleteOutlined, PlusCircleOutlined, InfoCircleOutlined, LeftOutlined, RightOutlined, CarOutlined, ToolOutlined, TeamOutlined, FireOutlined } from '@ant-design/icons';
 
 // Define the Vehicle type
 type Vehicle = {
   id: string;
   name: string;
   description?: string;
+  transmission: string;
+  fuelType: string;
+  numberOfSeats: string;
   quantity: string;
   year: string;
   primaryImageUrl?: string;
@@ -50,6 +53,9 @@ const GET_VEHICLES = gql`
       id
       name
       description
+      transmission
+      fuelType
+      numberOfSeats
       quantity
       year
       primaryImageUrl
@@ -165,7 +171,7 @@ const VehicleListPage: React.FC = () => {
       Swal.fire("Error!", "Please provide both price per day and available quantity.", "error");
     }
   };
-  
+
 
   console.log(selectedRentableVehicle)
 
@@ -234,8 +240,30 @@ const VehicleListPage: React.FC = () => {
               />
             </div>
             <Card.Meta title={vehicle.name} description={`Year: ${vehicle.year}`} />
+
+
+            {/* Vehicle Info (Transmission, Fuel Type, Number of Seats) */}
+            <div className={styles.vehicleInfo}>
+              <div className={styles.detailItem}>
+                <Tooltip title="Transmission">
+                  <CarOutlined /> {vehicle.transmission}
+                </Tooltip>
+              </div>
+              <div className={styles.detailItem}>
+                <Tooltip title="Fuel Type">
+                  <FireOutlined /> {vehicle.fuelType}
+                </Tooltip>
+              </div>
+              <div className={styles.detailItem}>
+                <Tooltip title="Number of Seats">
+                  <TeamOutlined /> {vehicle.numberOfSeats}
+                </Tooltip>
+              </div>
+            </div>
+
+
             <div className={styles.cardActions}>
-              <Space style={{ marginTop: '16px' }}>
+              <Space style={{ marginTop: '16px' }} className={styles.cardActions}>
                 <Tooltip title="Edit Vehicle">
                   <Button
                     icon={<EditOutlined />}
@@ -278,7 +306,7 @@ const VehicleListPage: React.FC = () => {
       {/* Vehicle Details Modal */}
       <Modal
         title={selectedVehicle?.name}
-        visible={!!selectedVehicle}
+        open={!!selectedVehicle}
         onCancel={handleModalClose}
         footer={null}
       >
@@ -291,7 +319,7 @@ const VehicleListPage: React.FC = () => {
       {/* Rentable Modal */}
       <Modal
         title={`Add ${selectedRentableVehicle?.name} to Rentable`}
-        visible={!!selectedRentableVehicle}
+        open={!!selectedRentableVehicle}
         onCancel={handleRentableModalClose}
         onOk={handleRentableSubmit}
       >

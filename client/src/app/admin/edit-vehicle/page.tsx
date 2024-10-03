@@ -16,6 +16,7 @@ const GET_VEHICLE_BY_ID = gql`
       id
       name
       description
+      
       quantity
       year
       primaryImageUrl

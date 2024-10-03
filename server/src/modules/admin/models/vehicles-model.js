@@ -24,6 +24,18 @@ Vehicle.init({
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  transmission:{
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  fuelType:{
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  numberOfSeats:{
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   primaryImageUrl: {
     type: DataTypes.STRING(1000),
     allowNull: true,

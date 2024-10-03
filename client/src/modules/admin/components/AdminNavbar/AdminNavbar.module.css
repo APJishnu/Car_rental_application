@@ -67,10 +67,10 @@
 
 /* Logout Button Styles */
 .logoutButton {
-  display: flex; /* Make it a flex container */
-  align-items: center; /* Center the icon */
-  color: var(--admin-accent-color); /* Adjust color */
-  text-align: left; /* Align text to left */
+  display: flex; 
+  align-items: center;
+  color: var(--admin-accent-color); 
+  text-align: left; 
   padding-top: var(--spacing);
   transition: color 0.3s;
 }

@@ -9,6 +9,9 @@ class VehicleRepository {
         id: vehicle.id,
         name: vehicle.name,
         description: vehicle.description,
+        transmission: vehicle.transmission,
+        fuelType: vehicle.fuelType,
+        numberOfSeats: vehicle.numberOfSeats,
         quantity: vehicle.quantity,
         manufacturerId: vehicle.manufacturerId,
         year: vehicle.year,
@@ -25,13 +28,13 @@ class VehicleRepository {
   static async findVehicleByNameAndManufacturer(name, manufacturerId) {
     try {
 
-      if(!manufacturerId){
+      if (!manufacturerId) {
         const vehicle = await Vehicle.findOne({
           where: {
             name,
           },
         });
-  
+
         return vehicle;
       }
       const vehicle = await Vehicle.findOne({
@@ -58,7 +61,6 @@ class VehicleRepository {
       throw new Error('Failed to fetch vehicles');
     }
   }
-
 
 
 
@@ -103,6 +105,6 @@ class VehicleRepository {
       throw new Error('Failed to fetch vehicle');
     }
   }
-
 }
+
 export default VehicleRepository;

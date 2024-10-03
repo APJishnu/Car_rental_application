@@ -1,6 +1,5 @@
 import ManufacturerRepository from '../repositories/manufacturer-repo.js';
 import minioClient from '../../../config/minio.js';
-import { v4 as uuidv4 } from 'uuid'; // To generate a unique filename
 import mime from 'mime-types'; // Import to get the content type
 
 import dotenv from 'dotenv';
@@ -19,7 +18,7 @@ class ManufacturerHelper {
 
       const { createReadStream, filename } = await image; // Get filename
       const stream = createReadStream();
-      const uniqueFilename = `manufacturer/${uuidv4()}-${filename}`; // Generate a unique filename
+      const uniqueFilename = `manufacturer/${filename}`; // Generate a unique filename
 
       const contentType = mime.lookup(filename) || 'application/octet-stream'; // Default to octet-stream
 
@@ -39,7 +38,9 @@ class ManufacturerHelper {
       });
 
       // Generate a presigned URL (expires in 24 hours)
-      const imageUrl = await minioClient.presignedGetObject(process.env.MINIO_BUCKET_NAME, uniqueFilename);
+      const imageUrl = `http://localhost:9000/${process.env.MINIO_BUCKET_NAME}/${uniqueFilename}`;
+
+      console.log(imageUrl)
 
       console.log("Image url", imageUrl)
       // Use the repository to create a new manufacturer in the database
@@ -85,12 +86,13 @@ class ManufacturerHelper {
       if (existingManufacture) {
         throw new Error('Manufacture with the same Details already exists');
       }
-      let imageUrl = null;
+      let imageUrl =null;
+     
       if (image) {
 
         const { createReadStream, filename } = await image; // Get filename
         const stream = createReadStream();
-        const uniqueFilename = `manufacturer/${uuidv4()}-${filename}`; // Generate a unique filename
+        const uniqueFilename = `manufacturer/${filename}`; // Generate a unique filename
         const contentType = mime.lookup(filename); // Default to octet-stream
 
         // Upload to MinIO
@@ -109,7 +111,7 @@ class ManufacturerHelper {
         });
 
         // Generate a presigned URL (expires in 24 hours)
-        imageUrl = await minioClient.presignedGetObject(process.env.MINIO_BUCKET_NAME, uniqueFilename);
+      imageUrl = `http://localhost:9000/${process.env.MINIO_BUCKET_NAME}/${uniqueFilename}`;
       }
 
       // Use the repository to update the manufacturer in the database

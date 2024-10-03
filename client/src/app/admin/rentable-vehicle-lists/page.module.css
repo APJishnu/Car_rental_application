@@ -1,0 +1,73 @@
+.container {
+  padding: 20px;
+  background-color: #f9f9f9; /* Light background for contrast */
+}
+
+.title {
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.cardContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Spacing between cards */
+  justify-content: flex-start; /* Align cards to the left */
+}
+
+.vehicleCard {
+  width: 300px; /* Fixed width for each card */
+  height: 350px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #ffffff; /* White background for cards */
+  position: relative; /* For positioning delete button */
+}
+
+.vehicleImage {
+  object-fit: contain;
+  height: 150px; /* Fixed height for images */
+  border-radius: 8px 8px 0 0; /* Round top corners */
+}
+
+.manufacturerLogoContainer {
+  position: absolute; /* Position logo inside the card */
+  top: 10px;
+  left: 10px;
+}
+
+.manufacturerLogo {
+  width: 40px; /* Fixed size for manufacturer logo */
+  border-radius: 50%; /* Round logo */
+  border: 2px solid #fff; /* White border around logo */
+}
+
+.description {
+  margin: 0px 0; /* Margin for description */
+}
+
+.details {
+  font-weight: bold; /* Bold font for details */
+  color: #0c0c0c; /* Dark text for visibility */
+}
+.details .price{
+  font-weight: 400;
+  font-size: 13px;
+}
+.details span{
+  font-weight: 600; /* Bold font for details */
+  font-size: 25px;
+  color: #0618a2; /* Dark text for visibility */
+}
+
+.deleteButton {
+  position: absolute; /* Position button inside the card */
+  bottom: 10px;
+  right: 10px;
+  border: 2px solid #FF4C4C; /* Red border for delete button */
+  color: #FF4C4C; /* Red text color */
+  background-color: white; /* White background for button */
+  border-radius: 5px; /* Rounded corners */
+}

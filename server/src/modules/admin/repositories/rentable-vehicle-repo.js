@@ -29,7 +29,23 @@ class RentableRepo {
             throw new Error('Database error occurred while adding rentable vehicle');
         }
     }
+
+    // Add the delete method
+    static async deleteRentable(id) {
+        try {
+            const deletedRentable = await Rentable.destroy({
+                where: { id },
+            });
+
+            if (deletedRentable === 0) {
+                throw new Error('Vehicle not found');
+            }
+
+            return deletedRentable; // Optionally, you can return a success message or the ID of the deleted vehicle
+        } catch (error) {
+            throw new Error('Database error occurred while deleting rentable vehicle: ' + error.message);
+        }
+    }
 }
 
 export default RentableRepo;
-    

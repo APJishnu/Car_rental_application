@@ -36,6 +36,7 @@ const RentableTypeDefs = gql`
 
   type Mutation {
     addRentable(vehicleId: ID!, pricePerDay: Float!, availableQuantity: Int!): Rentable
+    deleteRentableVehicle(id: ID!): Rentable 
   }
 `;
 

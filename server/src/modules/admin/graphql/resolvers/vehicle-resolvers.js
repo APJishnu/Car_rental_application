@@ -43,13 +43,14 @@ const vehicleResolvers = {
 
   Mutation: {
     addVehicle: async (_, { input, primaryImage, otherImages }) => {
-      const { name, description, quantity, manufacturerId, year } = input;
+      const { name, description,transmission,fuelType,numberOfSeats, quantity, manufacturerId, year } = input;
 
       try {
         // Use helper method to handle image uploads and vehicle creation
         const vehicle = await VehicleHelper.createVehicle({
           name,
           description,
+          transmission,fuelType,numberOfSeats,
           primaryImage,
           otherImages,
           quantity,

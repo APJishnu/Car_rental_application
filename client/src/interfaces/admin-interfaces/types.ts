@@ -6,9 +6,13 @@ export interface Manufacturer {
 }
 
 export interface FormData {
-  primaryImage: ImageFile | null; // This can be an ImageFile object or null
+ 
   name: string;
   description: string;
+  transmission:string;
+  numberOfSeats:string;
+  fuelType:string;
+  primaryImage: ImageFile | null; // This can be an ImageFile object or null
   otherImages: ImageFile[];
   quantity: string;
   manufacturerId: string;

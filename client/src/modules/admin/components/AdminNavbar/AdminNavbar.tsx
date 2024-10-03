@@ -53,7 +53,7 @@ const AdminNavbar: React.FC = () => {
           <CarOutlined className={styles.icon} />
           {!isSidebarCollapsed && 'Vehicles'}
         </Link>
-        <Link href="/admin/rentable-vehicles" className={styles.navLink}>
+        <Link href="/admin/rentable-vehicle-lists" className={styles.navLink}>
           <CarOutlined className={styles.icon} />
           {!isSidebarCollapsed && 'Rentable Vehicles'}
         </Link>

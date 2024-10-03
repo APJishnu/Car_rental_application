@@ -17,12 +17,16 @@
   background-color: #fff;
   padding-bottom: 30px;
   animation: opacity 2.9s ease-in-out; /* Apply the animation */
+  max-width: 350px;
+  padding: 20px;
 }
 
 .carImage {
   width: 100%;
+  object-fit: contain;
   border-radius: 10px;
   margin-bottom: 15px;
+  padding: 20px;
 }
 
 .carDetials {
@@ -32,13 +36,14 @@
 
 .carCard h3 {
   font-size: 20px;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .price {
   font-size: 24px;
   font-weight: bold;
   margin-bottom: 15px;
+  color: rgb(17, 17, 154);
 }
 
 .features {

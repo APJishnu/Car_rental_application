@@ -3,12 +3,16 @@ import { gql } from 'apollo-server-express';
 const vehicleTypeDefs = gql`
   # Scalar for handling file uploads
   scalar Upload
+  scalar Int
 
   # Vehicle Type for GraphQL schema
   type Vehicle {
     id: ID!
     name: String!
     description: String
+    transmission:String!
+    fuelType: String!
+    numberOfSeats:String!
     quantity: String!
     manufacturerId: String!
     year: String!
@@ -17,13 +21,17 @@ const vehicleTypeDefs = gql`
   }
 
   # Input for adding vehicle details
-  input VehicleInput {
+  input AdminVehicleInput {
     name: String!
     description: String
+    transmission:String!
+    fuelType: String!
+    numberOfSeats:String!
     quantity: String!
     manufacturerId: String!
     year: String!
   }
+
   input EditVehicleInput {
     name: String!
     description: String
@@ -41,14 +49,14 @@ const vehicleTypeDefs = gql`
   # Mutation for adding a new vehicle
   type Mutation {
     addVehicle(
-      input: VehicleInput!, 
+      input: AdminVehicleInput!, 
       primaryImage: Upload!, 
       otherImages: [Upload!]! # Accept multiple file uploads for otherImages
     ): Vehicle!
 
      deleteVehicle(id: String!): Vehicle
 
-     updateVehicle(id: String!, input: EditVehicleInput!): Vehicle!  # Add this line for editing
+     updateVehicle(id: String!, input: EditVehicleInput!): Vehicle!  
 
   }
 `;

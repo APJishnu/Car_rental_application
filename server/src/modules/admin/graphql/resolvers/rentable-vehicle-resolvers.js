@@ -1,5 +1,6 @@
 import RentableVehicleHelper from '../../helpers/rentable-vehicle-helper.js';
 import { ApolloError } from 'apollo-server-express';
+import Rentable from '../../models/rentable-vehicle-model.js'
 
 const RentableResolvers = {
   Query: {
@@ -18,6 +19,13 @@ const RentableResolvers = {
       } catch (error) {
         throw new ApolloError(error.message || 'Error adding rentable vehicle', 'ADD_RENTABLE_ERROR');
       }
+    },
+    deleteRentableVehicle: async (_, { id }) => {
+      const deletedVehicle = await Rentable.destroy({where:{id}});
+      if (!deletedVehicle) {
+        throw new Error('Vehicle not found');
+      }
+      return deletedVehicle.id; // Return the deleted vehicle data if needed
     },
   },
 };

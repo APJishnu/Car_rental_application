@@ -1,30 +1,62 @@
 .cardContainer {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px; /* Space between cards */
-  }
-  
-  .vehicleCard {
-    width: 300px; /* Adjust the width of the card */
-  }
-  
-  .imageContainer {
-    display: flex;
-    align-items: center;
-    justify-content: center; /* Center the image */
-    margin-bottom: 16px; /* Space below the image */
-  }
-  
-  .displayImage {
-    max-width: 100%; /* Responsive image */
-    height: auto; /* Maintain aspect ratio */
-  }
-  
-  .scrollButton {
-    background: transparent; /* Transparent background */
-    border: none; /* Remove border */
-    font-size: 24px; /* Increase button size */
-    cursor: pointer; /* Pointer cursor on hover */
-    margin: 0 8px; /* Space around buttons */
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  /* Space between cards */
+}
+
+.vehicleCard {
+  width: 300px;
+  /* Adjust the width of the card */
+}
+
+.imageContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Center the image */
+  margin-bottom: 16px;
+  /* Space below the image */
+}
+
+.displayImage {
+  max-width: 100%;
+  /* Responsive image */
+  height: auto;
+  /* Maintain aspect ratio */
+}
+
+.scrollButton {
+  background: transparent;
+  /* Transparent background */
+  border: none;
+  /* Remove border */
+  font-size: 24px;
+  /* Increase button size */
+  cursor: pointer;
+  /* Pointer cursor on hover */
+  margin: 0 8px;
+  /* Space around buttons */
+}
+
+
+.vehicleInfo {
+  display: flex;
+  padding: 5px 5px;
+  border: 0.5px solid rgba(0, 0, 0, 0.097);
+  justify-content: space-between;
+  margin-top: 12px;
+  border-radius: 5px;
+  background-color: rgba(0, 0, 0, 0.019);
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+}
+
+.cardActions{
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}

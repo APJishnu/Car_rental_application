@@ -1,6 +1,7 @@
 /* AdminLayout.module.css */
 .adminLayout {
     display: flex;
+  
     height: 100vh; /* Full height */
   }
   

@@ -17,6 +17,9 @@ const AddVehicles = () => {
     const [formData, setFormData] = useState<FormData>({
         name: '',
         description: '',
+        transmission: '', // Added transmission to formData
+        numberOfSeats: '',
+        fuelType: '',
         primaryImage: null,
         otherImages: [],
         quantity: '',
@@ -30,6 +33,9 @@ const AddVehicles = () => {
             setFormData({
                 name: "",
                 description: "",
+                transmission: "",
+                numberOfSeats: "",
+                fuelType: "",
                 primaryImage: null,
                 otherImages: [],
                 quantity: "",
@@ -142,13 +148,16 @@ const AddVehicles = () => {
         console.log("formDaaaaata", formData);
 
         console.log("vgfjsdvfva", primaryImage.file)
-        
+
 
         try {
             const response = await addVehicle({
                 variables: {
                     name: vehicleInput.name,
                     description: vehicleInput.description,
+                    transmission: vehicleInput.transmission,
+                    fuelType: vehicleInput.fuelType,
+                    numberOfSeats:vehicleInput.numberOfSeats,
                     quantity: vehicleInput.quantity,
                     manufacturerId: vehicleInput.manufacturerId,
                     year: vehicleInput.year,
@@ -164,6 +173,9 @@ const AddVehicles = () => {
         console.log("Submitting vehicle data:", {
             name: vehicleInput.name,
             description: vehicleInput.description,
+            transmission: vehicleInput.transmission,
+            fuelType: vehicleInput.fuelType,
+            numberOfSeats:vehicleInput.numberOfSeats,
             quantity: vehicleInput.quantity,
             manufacturerId: vehicleInput.manufacturerId,
             year: vehicleInput.year,
@@ -251,6 +263,42 @@ const AddVehicles = () => {
                 placeholder="Available Quantity"
                 required
             />
+
+            <div className={styles.radioGroup}>
+                <label>Transmission:</label>
+                <label>
+                    <input type="radio" name="transmission" value="Automatic" onChange={handleChange} /> Automatic
+                </label>
+                <label>
+                    <input type="radio" name="transmission" value="Manual" onChange={handleChange} /> Manual
+                </label>
+            </div>
+
+                    <div className={styles.selectDiv}>
+            {/* Number of Seats */}
+            <div className={styles.selectDiv}>
+                <select name="numberOfSeats"  value={formData.numberOfSeats} onChange={handleChange} required>
+                    <option value="" disabled>Select Number of Seats</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="7">7</option>
+                    <option value="7">8</option>
+                </select>
+            </div>
+            
+
+            <div className={styles.selectDiv}>
+                <select name="fuelType" value={formData.fuelType} onChange={handleChange} required>
+                    <option value="" disabled>Select the vehicle fuel type</option>
+                    <option value="Petrol">petrol</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Electric">Electric</option>
+
+                </select>
+            </div>
+            </div>
 
             {/* Custom file input for primary image */}
             <label className={styles.custumFileUpload} htmlFor="primaryImage">

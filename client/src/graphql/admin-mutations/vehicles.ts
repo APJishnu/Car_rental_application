@@ -4,6 +4,9 @@ export const ADD_VEHICLE = gql`
   mutation AddVehicle(
     $name: String!
     $description: String
+    $transmission: String!
+    $fuelType: String!
+    $numberOfSeats: String!
     $quantity: String!
     $manufacturerId: String!
     $year: String!
@@ -14,6 +17,9 @@ export const ADD_VEHICLE = gql`
       input: {
         name: $name
         description: $description
+        transmission: $transmission
+        fuelType: $fuelType
+        numberOfSeats: $numberOfSeats
         quantity: $quantity
         manufacturerId: $manufacturerId
         year: $year
@@ -24,6 +30,9 @@ export const ADD_VEHICLE = gql`
       id
       name
       description
+      transmission
+      fuelType
+      numberOfSeats
       quantity
       manufacturerId
       year

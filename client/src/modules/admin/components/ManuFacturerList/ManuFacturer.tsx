@@ -23,6 +23,8 @@ const Manufacturer: React.FC = () => {
   const [isEditVisible, setIsEditVisible] = useState<boolean>(false);
   const [currentManufacturer, setCurrentManufacturer] = useState<Manufacturer | null>(null);
 
+  console.log(data)
+
   const handleEdit = (manufacturer: Manufacturer) => {
     setCurrentManufacturer(manufacturer);
     setIsEditVisible(true);

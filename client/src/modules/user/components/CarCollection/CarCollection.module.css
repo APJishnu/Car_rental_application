@@ -58,6 +58,19 @@
     cursor: pointer;
   }
 
+
+  .searchSection{
+    display: flex;
+    padding-bottom: 20px;
+    justify-content: center;
+  }
+
+  .searchSection .inputField{
+    border-radius: 0px;
+    border: 0px;
+    width: 100%;
+  }
+
 /* Responsive Styles for screens 768px and below */
 @media (max-width: 768px) {
   .carCollection{
