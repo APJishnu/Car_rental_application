@@ -12,7 +12,6 @@ class VehicleHelper {
         throw new Error('Vehicle with the same name and manufacturer already exists');
       }
 
-      // Upload the primary image to MinIO
       const primaryImageUrl = await this.uploadToMinio(primaryImage, `vehicle/${name}/primary`);
 
       // Upload the other images to MinIO
@@ -88,6 +87,8 @@ class VehicleHelper {
 
     const filePath = imageUrl.replace(`http://localhost:9000/${process.env.MINIO_BUCKET_NAME}/`, '');
 
+    console.log("minio extrated file path",filePath)
+
       await new Promise((resolve, reject) => {
         minioClient.removeObject(process.env.MINIO_BUCKET_NAME, filePath, (error) => {
           if (error) {
@@ -104,7 +105,6 @@ class VehicleHelper {
   }
 
 
-  
   // Delete vehicle and its images from MinIO
   static async deleteVehicleById(id) {
     try {
@@ -113,12 +113,14 @@ class VehicleHelper {
         throw new Error('Vehicle not found');
       }
 
-      // Delete images from MinIO
-      await this.deleteFromMinio(vehicle.primaryImageUrl);
-      await Promise.all(vehicle.otherImageUrls.map(imageUrl => this.deleteFromMinio(imageUrl)));
 
       // Delete the vehicle from the database
       const deletedVehicle = await VehicleRepository.deleteVehicleById(id);
+
+      // Delete images from MinIO
+      await this.deleteFromMinio(vehicle.primaryImageUrl);
+      await Promise.all(vehicle.otherImageUrls.map(imageUrl => this.deleteFromMinio(imageUrl)));
+      
       return deletedVehicle;
     } catch (error) {
       console.error('Error deleting vehicle:', error.message);

@@ -5,7 +5,7 @@ import styles from "./CarBooking.module.css";
 import { gql, useQuery } from "@apollo/client";
 import { Tooltip, Rate, Input, Button, Progress } from "antd";
 
-import { CarOutlined, TeamOutlined, FireOutlined } from '@ant-design/icons';
+import { CarOutlined, TeamOutlined, FireOutlined,LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 interface Vehicle {
   id: string;
@@ -117,7 +117,7 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
   const [isBookingSectionVisible, setIsBookingSectionVisible] = useState<boolean>(false);
   const [currentPrimaryImage, setCurrentPrimaryImage] = useState<string>(car?.vehicle.primaryImageUrl || ""); // Default to empty string
 
-
+  const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
 
   // Set the primary image on initial load
@@ -154,6 +154,19 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
   const ratingDistribution = getRatingDistribution();
 
 
+  const handlePrevImage = () => {
+    if (currentImageIndex > 0) {
+      setCurrentImageIndex((prevIndex) => prevIndex - 1);
+    }
+  };
+
+  const handleNextImage = () => {
+    if (currentImageIndex < (car?.vehicle.otherImageUrls.length || 0)) {
+      setCurrentImageIndex((prevIndex) => prevIndex + 1);
+    }
+  };
+
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -171,28 +184,45 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
       <div className={styles.secondMainDiv}>
         {/* Left Section with Car Image */}
         <div className={styles.leftSection}>
+        <div className={styles.imageContainer}>
 
-       
-          <div>
-            {/* Primary Image */}
             <img
-              src={currentPrimaryImage || "path/to/placeholder-image.jpg"} // Use a placeholder if null
+              src={
+                currentImageIndex === 0
+                  ? car.vehicle.primaryImageUrl
+                  : car.vehicle.otherImageUrls[currentImageIndex - 1] // Show other image if index is greater than 0
+              }
               alt={car.vehicle.name}
-              className={styles.carImage}
+              className={styles.displayImage}
             />
+           
           </div>
-             {/* Additional Images Section */}
-             <div className={styles.additionalImages}>
+<div className={styles.additionalImagesDiv}>
+          <Button
+              className={styles.scrollButton}
+              onClick={handlePrevImage} // Scroll left
+              icon={<LeftOutlined />}
+              disabled={currentImageIndex === 0} // Disable if showing primary image
+            />
+          {/* Additional Images Section */}
+          <div className={styles.additionalImages}>
             {car.vehicle.otherImageUrls.map((imageUrl, index) => (
               <img
                 key={index}
                 src={imageUrl}
                 alt={`${car.vehicle.name} additional ${index + 1}`}
                 className={styles.additionalImage}
-                onClick={() => handleImageClick(imageUrl)} // Change primary image on click
+                onClick={() => setCurrentImageIndex(index + 1)} // Change current index on click
               />
             ))}
           </div>
+          <Button
+              className={styles.scrollButton}
+              onClick={handleNextImage} // Scroll right
+              icon={<RightOutlined />}
+              disabled={currentImageIndex >= car.vehicle.otherImageUrls.length} // Disable if no other images
+            />
+        </div>
         </div>
 
         {/* Right Section with Car Details and Booking */}
@@ -328,17 +358,6 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
             <button className={styles.bookButton}>Rent Car</button>
           </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
 
 
 

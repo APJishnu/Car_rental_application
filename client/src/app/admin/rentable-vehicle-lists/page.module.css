@@ -1,73 +1,138 @@
 .container {
   padding: 20px;
-  background-color: #f9f9f9; /* Light background for contrast */
-}
-
-.title {
-  text-align: left;
-  margin-bottom: 20px;
+  background-color: #f9f9f9;
 }
 
 .cardContainer {
   display: flex;
   flex-wrap: wrap;
-  gap: 20px; /* Spacing between cards */
-  justify-content: flex-start; /* Align cards to the left */
+  gap: 20px;
+
+  justify-content: flex-start;
+}
+
+
+.title {
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: 24px;
+  color: #333;
+}
+
+.searchSection {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.inputContainer {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+}
+
+.searchIcon {
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+  cursor: pointer;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+
+.inputField {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+  font-size: 14px;
+  width: 100%;
+  max-width: 500px;
 }
 
 .vehicleCard {
-  width: 300px; /* Fixed width for each card */
-  height: 350px;
+  width: 300px;
+  height: 360px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #ffffff; /* White background for cards */
-  position: relative; /* For positioning delete button */
+  background-color: #ffffff;
+  position: relative;
 }
 
 .vehicleImage {
   object-fit: contain;
-  height: 150px; /* Fixed height for images */
-  border-radius: 8px 8px 0 0; /* Round top corners */
+  height: 150px;
+  border-radius: 8px 8px 0 0;
 }
 
 .manufacturerLogoContainer {
-  position: absolute; /* Position logo inside the card */
+  position: absolute;
   top: 10px;
   left: 10px;
 }
 
 .manufacturerLogo {
-  width: 40px; /* Fixed size for manufacturer logo */
-  border-radius: 50%; /* Round logo */
-  border: 2px solid #fff; /* White border around logo */
+  width: 40px;
+  border-radius: 50%;
+  border: 2px solid #fff;
 }
 
 .description {
-  margin: 0px 0; /* Margin for description */
+  color: #555;
 }
 
 .details {
-  font-weight: bold; /* Bold font for details */
-  color: #0c0c0c; /* Dark text for visibility */
+  font-size: 12px;
 }
-.details .price{
-  font-weight: 400;
-  font-size: 13px;
+
+.specifications {
+  display: flex;
 }
-.details span{
-  font-weight: 600; /* Bold font for details */
-  font-size: 25px;
-  color: #0618a2; /* Dark text for visibility */
+
+.price {
+  font-weight: bold;
+  font-size: 20px;
+  color: #e74c3c;
+  /* Highlight price with a different color */
 }
 
 .deleteButton {
-  position: absolute; /* Position button inside the card */
-  bottom: 10px;
+  position: absolute;
+  top: 10px;
   right: 10px;
-  border: 2px solid #FF4C4C; /* Red border for delete button */
-  color: #FF4C4C; /* Red text color */
-  background-color: white; /* White background for button */
-  border-radius: 5px; /* Rounded corners */
+  color: #d9534f;
+}
+
+.deleteButton:hover {
+  color: #c9302c;
+}
+.specifications {
+  display: flex;
+  justify-content: space-between;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 5px;
+  border: 1px solid#adadad4a;
+  border-radius: 5px 5px 0px 0px;
+  max-width: 400px;
+  margin-top: 5px;
+  background-color: #efeeee7c;
+  padding: 5px;
+}
+
+.availableQuantity{
+  display: flex;
+  background-color: rgba(4, 3, 3, 0.908);
+  color: rgb(240, 240, 240);
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
 }

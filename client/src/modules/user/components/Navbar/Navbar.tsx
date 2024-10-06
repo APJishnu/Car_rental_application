@@ -12,6 +12,11 @@ const Navbar: React.FC = () => {
     setMenuOpen(!menuOpen);
   };
 
+
+  const handleSignUp = () => {
+    window.location.href = '/user/sign-up';
+  }
+
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
@@ -40,12 +45,12 @@ const Navbar: React.FC = () => {
             {/* Mobile Login/Register Button */}
           <div className={styles.mobileLoginContainer}>
       
-            <button className={styles.loginBtn}>Login / Register</button>
+            <button className={styles.loginBtn} onClick={handleSignUp}>Login / Register</button>
           </div>
        
         </div>
         <div className={styles.btnContainer}>
-          <button className={styles.loginBtn}>Login / Register</button>
+          <button className={styles.loginBtn} onClick={handleSignUp}>Login / Register</button>
         </div>
 
       </div>

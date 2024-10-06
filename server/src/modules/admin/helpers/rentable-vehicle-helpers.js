@@ -1,5 +1,6 @@
 import Vehicle from '../../models/vehicle-models.js';
 import { validateVehicle } from '../../utils/vechicle-validators.js'; // Assume you implement validation logic
+import { deleteVehicleFromTypesense } from '../../../config/typesense-config.js';
 
 class VehicleHelper {
     
@@ -41,13 +42,21 @@ class VehicleHelper {
         return await vehicle.update(input);
     }
 
-    async deleteVehicle(id) {
+   
+async deleteVehicle(id) {
+    try {
         const vehicle = await Vehicle.findByPk(id);
-        if (!vehicle) throw new Error('Vehicle not found');
-
-        await vehicle.destroy();
+        if (!vehicle) {
+            throw new Error('Vehicle not found');
+        }
+        await vehicle.destroy(); // Delete from the database
+        await deleteVehicleFromTypesense(id); 
         return true;
+    } catch (error) {
+        console.error(`Error deleting vehicle: ${error.message}`); // Log the error message
+        throw error;
     }
+}
 }
 
 export default new VehicleHelper(); // Export a singleton instance of VehicleHelper

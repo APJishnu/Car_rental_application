@@ -31,8 +31,13 @@ const RentableVehicleTypeDefs = gql`
     transmission: String
     fuelType: String
     manufacturer: String!
+    imageUrl:String
+    availableQuantity:Int
+    numberOfSeats:String
+    year: String!
+    description: String!
     primaryImageUrl: String
-      
+     
   }
 
 

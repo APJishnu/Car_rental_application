@@ -157,7 +157,7 @@ const AddVehicles = () => {
                     description: vehicleInput.description,
                     transmission: vehicleInput.transmission,
                     fuelType: vehicleInput.fuelType,
-                    numberOfSeats:vehicleInput.numberOfSeats,
+                    numberOfSeats: vehicleInput.numberOfSeats,
                     quantity: vehicleInput.quantity,
                     manufacturerId: vehicleInput.manufacturerId,
                     year: vehicleInput.year,
@@ -175,7 +175,7 @@ const AddVehicles = () => {
             description: vehicleInput.description,
             transmission: vehicleInput.transmission,
             fuelType: vehicleInput.fuelType,
-            numberOfSeats:vehicleInput.numberOfSeats,
+            numberOfSeats: vehicleInput.numberOfSeats,
             quantity: vehicleInput.quantity,
             manufacturerId: vehicleInput.manufacturerId,
             year: vehicleInput.year,
@@ -274,30 +274,30 @@ const AddVehicles = () => {
                 </label>
             </div>
 
-                    <div className={styles.selectDiv}>
-            {/* Number of Seats */}
             <div className={styles.selectDiv}>
-                <select name="numberOfSeats"  value={formData.numberOfSeats} onChange={handleChange} required>
-                    <option value="" disabled>Select Number of Seats</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="7">7</option>
-                    <option value="7">8</option>
-                </select>
-            </div>
-            
+                {/* Number of Seats */}
+                <div className={styles.selectDiv}>
+                    <select name="numberOfSeats" value={formData.numberOfSeats} onChange={handleChange} required>
+                        <option value="" disabled>Select Number of Seats</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="7">7</option>
+                        <option value="7">8</option>
+                    </select>
+                </div>
 
-            <div className={styles.selectDiv}>
-                <select name="fuelType" value={formData.fuelType} onChange={handleChange} required>
-                    <option value="" disabled>Select the vehicle fuel type</option>
-                    <option value="Petrol">petrol</option>
-                    <option value="Diesel">Diesel</option>
-                    <option value="Electric">Electric</option>
 
-                </select>
-            </div>
+                <div className={styles.selectDiv}>
+                    <select name="fuelType" value={formData.fuelType} onChange={handleChange} required>
+                        <option value="" disabled>Select the vehicle fuel type</option>
+                        <option value="Petrol">petrol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Electric">Electric</option>
+
+                    </select>
+                </div>
             </div>
 
             {/* Custom file input for primary image */}

@@ -5,6 +5,7 @@ import useAdminLogin from '../../services/LoginServices/AdminLogin';
 import Input from '@/themes/InputField/InputField'; 
 import Button from '@/themes/Button/Button'; 
 import styles from './LoginForm.module.css';
+import { useRouter } from 'next/navigation'; 
 
 // Define the type for your form state and error message
 interface LoginFormState {
@@ -18,14 +19,20 @@ const LoginForm: React.FC = () => {
   const [loginError, setLoginError] = useState<string>('');
 
   const { login, loading } = useAdminLogin();
+  const router = useRouter(); // Initialize router
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoginError(''); // Reset error
+    
 
     try {
       await login(email, password);
-      // Optionally, handle successful login (e.g., navigate to a different page)
+      // Wait for 2 seconds before navigating
+      setTimeout(() => {
+        router.push('/admin/dashboard'); // Navigate to dashboard after login
+      }, 1000)
+
       console.log('Logged in successfully');
     } catch (err) {
       if (err instanceof Error) {

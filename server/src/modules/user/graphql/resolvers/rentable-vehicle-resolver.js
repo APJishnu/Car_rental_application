@@ -25,8 +25,13 @@ const RentableVehicleResolvers = {
           pricePerDay:vehicle.pricePerDay,
           transmission: vehicle.transmission,
           fuelType: vehicle.fuelType,
+          year:vehicle.year,
+          availableQuantity:vehicle.availableQuantity,
           manufacturer:vehicle.manufacturer,
-          primaryImageUrl:vehicle.primaryImageUrl
+          imageUrl:vehicle.imageUrl,
+          numberOfSeats:vehicle.numberOfSeats,
+          primaryImageUrl:vehicle.primaryImageUrl,
+          description:vehicle.description
           
         };
 

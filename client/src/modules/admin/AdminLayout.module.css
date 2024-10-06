@@ -7,7 +7,7 @@
   
   .childrenContainer {
     flex-grow: 1; /* Take remaining space */
-    padding: 20px; /* Adjust padding as needed */
+    
     overflow-y: auto; /* Scroll if content overflows */
   }
   

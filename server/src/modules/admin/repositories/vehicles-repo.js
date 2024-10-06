@@ -1,4 +1,5 @@
 import Vehicle from '../models/vehicles-model.js';
+import { deleteVehicleFromTypesense } from '../../../config/typesense-config.js';
 
 class VehicleRepository {
   // Create a vehicle in the database
@@ -74,6 +75,7 @@ class VehicleRepository {
         // No rows were affected, meaning no vehicle was found with the given ID
         return null;
       }
+      await deleteVehicleFromTypesense(id); 
       return { id }; // Optionally return the ID of the deleted vehicle
     } catch (error) {
       console.error('Error deleting vehicle from database:', error);

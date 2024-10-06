@@ -22,13 +22,18 @@ const createSchema = async () => {
         fields: [
             { name: 'id', type: 'string', facet: false },
             { name: 'pricePerDay', type: 'int32', facet: false },
+            { name: 'availableQuantity', type: 'int32', facet: false },
             { name: 'vehicle', type: 'object', facet: false, fields: [
                 { name: 'name', type: 'string', facet: false },
+                { name: 'year', type: 'string', facet: false },
+                { name: 'description', type: 'string', facet: false },
+                { name: 'numberOfSeats', type: 'string', facet: false },
                 { name: 'transmission', type: 'string', facet: true },
                 { name: 'fuelType', type: 'string', facet: true },
                 { name: 'primaryImageUrl', type: 'string', facet: false },
                 { name: 'manufacturer', type: 'object', facet: false, fields: [
                     { name: 'name', type: 'string', facet: false },
+                    { name: 'imageUrl', type: 'string', facet: false },
                 ] },
             ] },
         ],
@@ -54,13 +59,19 @@ const addVehicleToTypesense = async (vehicle) => {
     const document = {
         id: vehicle.id,
         pricePerDay: vehicle.pricePerDay,
+        availableQuantity:vehicle.availableQuantity,
         vehicle:{
             name: vehicle.name,
             transmission: vehicle.transmission,
             fuelType: vehicle.fuelType,
+            year:vehicle.year,
+            numberOfSeats:vehicle.numberOfSeats,
+            description:vehicle.description,
+           
             primaryImageUrl: vehicle.primaryImageUrl,
             manufacturer:{
                 name: vehicle.manufacturer,
+                imageUrl:vehicle.imageUrl
             }  
         }  
        
@@ -75,4 +86,15 @@ const addVehicleToTypesense = async (vehicle) => {
 };
 
 
-export { typesense, createSchema, addVehicleToTypesense };
+// Function to delete a vehicle from Typesense
+const deleteVehicleFromTypesense = async (id) => {
+    try {
+        await typesense.collections('cars').documents(id).delete(); // Delete document from Typesense using the vehicle ID
+        console.log(`Vehicle with ID ${id} deleted from Typesense successfully.`);
+    } catch (error) {
+        console.error(`Error deleting vehicle from Typesense: ${error.message}`);
+    }
+};
+
+
+export { typesense, createSchema, addVehicleToTypesense , deleteVehicleFromTypesense  };

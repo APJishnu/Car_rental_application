@@ -1,6 +1,7 @@
 // repositories/ManufacturerRepository.js
 import Manufacturer from '../models/manufacturer-model.js'; // Adjust the import path as necessary
 import Vehicle from '../models/vehicles-model.js'; // Import the Vehicle model
+import { deleteVehicleFromTypesense } from '../../../config/typesense-config.js';
 
 class ManufacturerRepository {
   static async createManufacturer({ name, country, imageUrl }) {
@@ -74,6 +75,8 @@ class ManufacturerRepository {
       const result = await Manufacturer.destroy({
         where: { id },
       });
+
+      await deleteVehicleFromTypesense(id);       
       return result > 0; // Return true if a manufacturer was deleted
     } catch (error) {
       console.error('Error deleting manufacturer from database:', error);

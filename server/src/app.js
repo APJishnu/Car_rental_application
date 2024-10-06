@@ -6,11 +6,31 @@ import sequelize from './config/database.js';
 import { graphqlUploadExpress } from 'graphql-upload';
 import dotenv from 'dotenv';
 import './modules/admin/models/assosiations.js'; // Import associations after models
+import session from 'express-session';
+import cron from 'node-cron';
+import CleanupHelper from './utils/clean-up-otp.js';
+
 
 dotenv.config(); // Load environment variables from .env file
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+
+// Schedule a task to run every 10 minutes
+cron.schedule('*/10 * * * *', async () => {
+  await CleanupHelper.deleteExpiredOTPs();
+});
+
+
+// Session middleware configuration
+app.use(session({
+  secret: 'your-secret-key', // Change this to a random secret
+  resave: false,
+  saveUninitialized: true,
+  cookie: { maxAge: 5 * 60 * 1000 } // 5 minutes
+}));
+
 
 // Create Apollo Server instance
 const server = new ApolloServer({
@@ -31,14 +51,18 @@ const server = new ApolloServer({
   },
 
 
-  context: ({ req }) => {
+  context: ({ req ,res }) => {
     const token = req.headers.authorization || '';
-    return { token }; // Make sure to handle this token in your resolvers
+    return { token,req, res ,session: req.session }; // Make sure to handle this token in your resolvers
   },
 });
 
 // Middleware setup
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // Allow your front-end's origin
+  credentials: true, // Allow cookies or credentials (optional based on your session usage)
+  allowedHeaders: ['Content-Type', 'Authorization'], // Allow necessary headers
+}));
 
 app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }));
 

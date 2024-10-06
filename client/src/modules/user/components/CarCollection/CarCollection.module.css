@@ -71,6 +71,17 @@
     width: 100%;
   }
 
+
+  @media(min-width:769px)and (max-width: 1000px) {
+    .carsGrid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      
+    }
+    
+  }
+
 /* Responsive Styles for screens 768px and below */
 @media (max-width: 768px) {
   .carCollection{
