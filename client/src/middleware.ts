@@ -24,8 +24,6 @@ export function middleware(request: NextRequest) {
   return NextResponse.next();
 }
 
-
-
 // Configure the matcher to apply this middleware to all `/admin` routes except the login page
 export const config = {
   matcher: ['/admin/:path*'], // Apply the middleware to all admin routes

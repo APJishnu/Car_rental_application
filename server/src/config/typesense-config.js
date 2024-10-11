@@ -48,8 +48,6 @@ const createSchema = async () => {
     }
 };
 
-// Uncomment the line below to create the schema when starting the server
-
 
 // createSchema()
 
@@ -84,7 +82,6 @@ const addVehicleToTypesense = async (vehicle) => {
         console.error('Error adding vehicle to Typesense:', error);
     }
 };
-
 
 // Function to delete a vehicle from Typesense
 const deleteVehicleFromTypesense = async (id) => {

@@ -5,7 +5,7 @@ import { useQuery, gql } from '@apollo/client';
 import CarCard from '../CarCardsSection/CarCards';
 import styles from './CarCollection.module.css';
 import { useRouter } from 'next/navigation'; 
-import { Tooltip, Rate, Input, message } from "antd";
+import {  Input, message } from "antd";
 import Button from "@/themes/Button/Button";
 import { SearchOutlined } from '@ant-design/icons';
 import { searchVehicles } from "../../../../lib/typesense-client";
@@ -101,7 +101,7 @@ const CarCollection: React.FC = () => {
             prefix={<SearchOutlined />}
             style={{ width: '300px', marginRight: '10px' }}
           />
-          <Button type="submit" loading={isSearching}>
+          <Button type="submit" loading={isSearching} className={styles.searchButton}>
             Search
           </Button>
         </div>
@@ -121,6 +121,7 @@ const CarCollection: React.FC = () => {
               image={car.vehicle.primaryImageUrl}
               model={car.vehicle.name}
               price={car.pricePerDay}
+              totalPrice={0}
               features={{
                 passengers: car.vehicle.numberOfSeats || '',
                 transmission: car.vehicle.transmission,

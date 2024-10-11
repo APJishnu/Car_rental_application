@@ -1,5 +1,6 @@
 // src/repositories/auth-repo.js
 import User from '../models/auth-model.js';
+import authHelper from '../helpers/auth-helper.js';
 
 class AuthRepository {
   async findByPhoneNumber(phoneNumber) {
@@ -12,6 +13,21 @@ class AuthRepository {
 
   async updateUser(user) {
     return await user.save();
+  }
+
+  // authRepo.js
+  async findById(id) {
+    return User.findByPk(id);
+  }
+
+  async updateProfileImage(userId, profileImage) {
+    const user = await this.findById(userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    return user.update({ profileImage });
   }
 }
 

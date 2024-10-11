@@ -1,34 +1,56 @@
 "use client";
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './RentByCars.module.css';
+import { useRouter } from 'next/navigation';
 import { useQuery } from '@apollo/client';
+import { DatePicker } from 'antd';
 import { GET_MANUFACTURERS } from '@/graphql/admin-queries/manufacture'; 
 
+
+const { RangePicker } = DatePicker;
+
 const FilterOptions: React.FC = () => {
+  const router = useRouter();
+  const [pickupDate, setPickupDate] = useState('');
+  const [dropoffDate, setDropoffDate] = useState('');
+
+  const handleDateChange = (dates: any, dateStrings: [string, string]) => {
+    if (dates) {
+      setPickupDate(dateStrings[0]); // Set the pickup date
+      setDropoffDate(dateStrings[1]); // Set the dropoff date
+    } else {
+      setPickupDate(''); // Clear dates if none are selected
+      setDropoffDate('');
+    }
+  };
+
+  const handleFindVehicle = () => {
+    if (pickupDate && dropoffDate) {
+      // Redirect to the find cars page with selected dates as query params
+      router.push(`/user/find-cars?pickupDate=${pickupDate}&dropoffDate=${dropoffDate}`);
+    } else {
+      alert('Please select both pickup and dropoff dates');
+    }
+  };
+
   return (
     <div className={styles.filterSection}>
       <div className={styles.filterWrapper}>
         <div className={styles.filterItem}>
-          <label htmlFor="pickup-location">Pick-up Location</label>
-          <input type="text" id="pickup-location" placeholder="Search a location" />
+          <label htmlFor="pickup-date">Pick-up and Drop-off Date</label>
+          <RangePicker
+            format="YYYY-MM-DD" // Set the date format
+            onChange={handleDateChange} // Handle date changes
+            style={{ width: '100%' }} // Style to make it full width
+            className={styles.DatePicker}
+          />
         </div>
-        <div className={styles.filterItem}>
-          <label htmlFor="pickup-date">Pick-up Date</label>
-          <input type="date" id="pickup-date" />
-        </div>
-        <div className={styles.filterItem}>
-          <label htmlFor="dropoff-location">Drop-off Location</label>
-          <input type="text" id="dropoff-location" placeholder="Search a location" />
-        </div>
-        <div className={styles.filterItem}>
-          <label htmlFor="dropoff-date">Drop-off Date</label>
-          <input type="date" id="dropoff-date" />
-        </div>
-        <button className={styles.findVehicleBtn}>Find a Vehicle</button>
+        <button className={styles.findVehicleBtn} onClick={handleFindVehicle}>Find a Vehicle</button>
       </div>
     </div>
   );
 };
+
 
 const Brands: React.FC = () => {
   const { loading, error, data } = useQuery(GET_MANUFACTURERS);
@@ -61,7 +83,7 @@ const Brands: React.FC = () => {
 const RentByBrands: React.FC = () => {
   return (
     <>
-      {/* <FilterOptions /> */}
+      <FilterOptions />
       <Brands />
     </>
   );

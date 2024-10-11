@@ -1,9 +1,7 @@
 // src/graphql/resolvers.js
 
 import RentableVehicleHelper from '../../helpers/rentable-vehicle-helper.js';
-import { addVehicleToTypesense} from '../../../../config/typesense-config.js';
-
-
+import { addVehicleToTypesense } from '../../../../config/typesense-config.js';
 
 const RentableVehicleResolvers = {
   Query: {
@@ -17,22 +15,21 @@ const RentableVehicleResolvers = {
       console.log(vehicle);
       try {
         // Prepare the document to be added to Typesense
-
         console.log(vehicle)
         const typesenseVehicle = {
-          id:vehicle.id,
+          id: vehicle.id,
           name: vehicle.name,
-          pricePerDay:vehicle.pricePerDay,
+          pricePerDay: vehicle.pricePerDay,
           transmission: vehicle.transmission,
           fuelType: vehicle.fuelType,
-          year:vehicle.year,
-          availableQuantity:vehicle.availableQuantity,
-          manufacturer:vehicle.manufacturer,
-          imageUrl:vehicle.imageUrl,
-          numberOfSeats:vehicle.numberOfSeats,
-          primaryImageUrl:vehicle.primaryImageUrl,
-          description:vehicle.description
-          
+          year: vehicle.year,
+          availableQuantity: vehicle.availableQuantity,
+          manufacturer: vehicle.manufacturer,
+          imageUrl: vehicle.imageUrl,
+          numberOfSeats: vehicle.numberOfSeats,
+          primaryImageUrl: vehicle.primaryImageUrl,
+          description: vehicle.description
+
         };
 
         await addVehicleToTypesense(typesenseVehicle);

@@ -2,6 +2,9 @@
 import { gql } from 'apollo-server-express';
 
 const userAuthTypeDefs = gql`
+ scalar Upload
+
+
   type User {
     id: ID!
     firstName: String!
@@ -48,7 +51,6 @@ const userAuthTypeDefs = gql`
     country: String
     pincode: String
   }
-
   
 type Query {
   getUser: Response
@@ -59,7 +61,7 @@ type Query {
     sendOTP(phoneNumber: String!): ResponseSendOtp!
     verifyOTP(phoneNumber: String!, otp: String!): Response!
     loginUser(email: String!, password: String!): LoginResponse!
-    updateProfileImage(userId: ID!, profileImage: String): Response
+    updateProfileImage(userId: ID!, profileImage: Upload): Response
   }
 `;
 

@@ -1,0 +1,87 @@
+/* Modal Overlay */
+.modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.5s ease;
+    z-index: 9999;
+}
+
+/* Modal Content */
+.modalContent {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 300px;
+    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+    animation: slideIn 0.4s ease;
+}
+
+/* Icon styling */
+.modalIcon {
+    margin-bottom: 20px;
+}
+
+.success {
+    color: #00e676;
+}
+
+.error {
+    color: #ff1744;
+}
+
+/* Modal Title */
+.modalTitle {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: black;
+}
+
+/* Modal Message */
+.modalMessage {
+    color: black;
+    margin-bottom: 20px;
+}
+
+/* Close Button */
+.modalCloseBtn {
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modalCloseBtn:hover {
+    background-color: #333;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

@@ -22,6 +22,7 @@ class RentableRepo {
         }
     }
 
+    
     static async createRentable(data) {
         try {
             return await Rentable.create(data);

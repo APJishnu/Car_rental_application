@@ -34,13 +34,14 @@
     width: 100%;
     padding-top: 30px;
     gap: 30px;
-    
+
   }
-  .imageContainer{
+
+  .imageContainer {
     display: flex;
     width: 100%;
     align-items: center;
-   
+
   }
 
   .displayImage {
@@ -114,7 +115,7 @@
     color: #666;
     line-height: 1.5;
     font-size: 14px;
-    
+
   }
 
   .ownerSection {
@@ -199,7 +200,7 @@
     background-color: #333;
   }
 
-  .additionalImagesDiv{
+  .additionalImagesDiv {
     display: flex;
     gap: 10px;
     width: 100%;
@@ -210,9 +211,9 @@
 
   /* Additional Images Section */
   .additionalImages {
-   
+
     display: flex;
-   
+
     /* Allow images to wrap to the next line */
     /* Spacing between images */
     justify-content: space-between;
@@ -343,6 +344,250 @@
     margin-bottom: 5px;
   }
 
+  /* Modal Overlay */
+  .confirmOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: none;
+    /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    /* Semi-transparent background */
+  }
+
+  /* Modal Visibility */
+  .confirmOverlay.visible {
+    display: flex;
+    /* Show the modal when visible */
+    animation: fadeIn 0.3s;
+    /* Smooth fade-in effect */
+  }
+
+  /* Modal Content Container */
+  .confirmOverlayContent {
+    background-color: white;
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+  }
+
+
+  .modalContent {
+    padding: 10px;
+    background-color: #e8e8e8;
+    clip-path: polygon(3% 0, 97% 0, 100% 3%, 100% 97%, 97% 100%, 3% 100%, 0 97%, 0 3%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    /* Optional shadow */
+  }
+
+
+
+  .modalTitle {
+    font-size: 24px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .carImageContainer {
+    display: flex;
+    justify-content: center;
+  }
+
+  .carImage {
+    width: 100%;
+    max-width: 350px;
+    border-radius: 8px;
+    object-fit: contain;
+  }
+
+  .secondCard{
+    padding-top: 30px;
+    margin-left: 0px;
+    width: 100%;
+    max-width: 580px;
+  }
+
+  .rideInfo {
+    font-size: 16px;
+    color: #37383a;
+    margin-bottom: 15px;
+    
+  }
+
+  .closeButton {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+  }
+
+  .confirmInput {
+    color: #000000;
+    border: 1px solid #000000;
+    border-radius: 0px;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .confirmInput:hover {
+    background-color: #ebebeb;
+    border: 1px solid #000000;
+    /* Dark border */
+  }
+
+  .confirmInput::placeholder {
+    color: #000000;
+    /* Light grey placeholder text */
+  }
+
+
+  .cardModal {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+
+  }
+
+  .dateModal {
+    height: 100%;
+    width: 100%;
+    max-width: 200px;
+    padding: 10px;
+    background-color: #e8e8e8;
+
+    clip-path: polygon(4% 0, 96% 0, 100% 3%, 100% 97%, 96% 100%, 4% 100%, 0 97%, 0 3%);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    /* Optional shadow */
+  }
+
+  .dateModalDotDiv {
+    width: 100%;
+    border: 2px dashed rgb(143, 143, 143);
+    clip-path: polygon(4% 0, 96% 0, 100% 3%, 100% 97%, 96% 100%, 4% 100%, 0 97%, 0 3%);
+    height: 100%;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .dateModal p span {
+    font-size: 26px;
+    font-weight: 700;
+    color: rgb(0, 0, 0);
+  }
+
+  /* Modal Title */
+  .modalTitle {
+    font-size: 20px;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  .rideInfo {
+    margin: 10px 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .priceTable {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .priceTable td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .priceTable td:first-child {
+    text-align: left;
+  }
+  
+  .priceTable td:last-child {
+    text-align: right;
+  }
+  
+  .priceTable strong {
+    font-weight: bold;
+  }
+  
+
+  /* DatePicker Styling */
+  .datePicker {
+    width: 100%;
+    /* Full width for the date picker */
+    margin-bottom: 20px;
+    /* Spacing below the date picker */
+  }
+
+  .inputWithButton{
+    width: 100%;
+    display: flex;
+    align-items:center ;
+    justify-content: space-between;
+    gap: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  
+  /* Confirm Button */
+  .modalButton {
+    width: 100%;
+    max-width: 100px;
+    height: 45px;
+    border-radius: 25px;
+    background-color: #ff0050;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+  }
+
+  .modalButton:hover {
+    background-color: #e60046;
+  }
+
+  /* Close Button */
+  .closeButton {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    color: #555;
+    cursor: pointer;
+  }
+
+  /* Fade-in animation */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
 
 
   /* Desktop Styles */
@@ -362,6 +607,8 @@
       justify-content: center;
       align-items: center;
       z-index: 1000;
+      transition: opacity 0.3s ease;
+      /* Smooth transition */
     }
 
     .overlayContent {
@@ -371,6 +618,30 @@
       width: 400px;
       /* Fixed width for the popup */
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .overlayContent .priceDiv {
+      font-size: 30px;
+      background-color: #18b974;
+      color: white;
+      padding: 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      border-radius: 10px;
+      box-shadow: inset 1px 1px 10px rgb(239, 239, 239);
+    }
+
+    .overlayContent .priceDiv:hover {
+      box-shadow: 1px 1px 20px rgb(255, 255, 255);
+    }
+
+    .overlayContent .priceDiv span {
+      font-size: 30px;
+      font-weight: 700;
+      color: #2b2b2b !important;
+
     }
 
     /* Mobile Booking Overlay */
@@ -383,24 +654,25 @@
   }
 
   @media (max-width:1150px) {
-      /* General Styles */
-  .bookingContainer {
 
-    width: 100%;
-    padding: 0px 0px;
+    /* General Styles */
+    .bookingContainer {
 
-    margin-top: -25px;
+      width: 100%;
+      padding: 0px 0px;
 
-  }
+      margin-top: -25px;
 
-  .displayImage {
+    }
+
+    .displayImage {
       width: 350px;
       height: auto;
       border-radius: 10px;
 
     }
 
-    .additionalImagesDiv{
+    .additionalImagesDiv {
       display: flex;
       gap: 10px;
       width: 100%;
@@ -408,19 +680,19 @@
       justify-content: space-between;
       align-items: center;
     }
-  
+
     /* Additional Images Section */
     .additionalImages {
-     
+
       display: flex;
-     
+
       /* Allow images to wrap to the next line */
       /* Spacing between images */
       justify-content: space-between;
       gap: 15px;
       max-width: 780px;
     }
-  
+
     .additionalImage {
       object-fit: cover;
       width: 90px;
@@ -465,6 +737,8 @@
   /* Responsive Styles for max-width: 786px */
   @media (max-width: 786px) {
 
+   
+ 
     .bookingContainer {
       padding: 0px;
     }
@@ -479,7 +753,7 @@
 
     }
 
-    .displayImage{
+    .displayImage {
       width: 100%;
       /* Reduce image size */
     }
@@ -552,15 +826,65 @@
       padding: 20px 40px;
       padding-bottom: 40px;
     }
+
+
+    .dateModal{
+      max-width: 150px;
+    }
+
+    .dateModal p{
+      font-size: 10px;
+    }
+
+    .dateModal p span {
+      font-size: 15px;
+      font-weight: 700;
+      color: rgb(0, 0, 0);
+    }
   }
 
 
-  @media (max-width:486px){
+  @media (max-width:486px) {
     .additionalImage {
       object-fit: cover;
       max-width: 90px;
       height: 60px;
       border-radius: 5px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.156);
+    }
+
+    
+
+    .dateModal{
+      max-width: 100px;
+      max-height: 150px;
+    }
+
+    .dateModal p{
+      font-size: 7px;
+      font-weight: 200;
+    }
+
+    .dateModal p span {
+      font-size: 10px;
+      font-weight: 700;
+      color: rgb(0, 0, 0);
+    }
+
+    .modalContent {
+      padding: 10px;
+      background-color: #e8e8e8;
+      clip-path: polygon(3% 0, 97% 0, 100% 3%, 100% 97%, 97% 100%, 3% 100%, 0 97%, 0 3%);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      max-height: 150px;
+      /* Optional shadow */
+    }
+  
+
+    .carImage {
+      width: 100%;
+      max-width: 200px;
+      border-radius: 8px;
+      object-fit: cover;
     }
   }

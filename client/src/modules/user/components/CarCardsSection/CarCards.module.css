@@ -8,26 +8,30 @@
     opacity: 1; /* Fully visible */
   }
 }
+.secondCard{
+  padding: 15px;
+}
 
 .carCard {
   border: 2px solid #e0e0e0;
   border-radius: 20px;
-  padding: 15px;
+
   text-align: left;
   background-color: #fff;
-  padding-bottom: 30px;
+  padding-bottom: 0px;
   animation: opacity 2.9s ease-in-out; /* Apply the animation */
   max-width: 350px;
   
 }
 
 .carImage {
-  width: 280px;
+  width: 100%;
   height: 160px;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 10px;
   margin-bottom: 15px;
-  padding: 10px;
+  max-width: 280px;
+  
   border:4px solid #f0f0f0;
 }
 
@@ -38,14 +42,44 @@
 
 .carCard h3 {
   font-size: 20px;
-  margin-bottom: 5px;
+  margin-bottom: 0px;
 }
 
 .price {
-  font-size: 24px;
+  font-size: 14px;
   font-weight: bold;
-  margin-bottom: 15px;
-  color: rgb(17, 17, 154);
+  margin-bottom: 0px;
+  color: rgb(0, 0, 0);
+}
+
+.totalPrice{
+  border-radius: 5px;  
+  padding: 0px 0px;
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  font-weight: 100;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 10px;
+
+  position: relative;
+}
+
+.totalPrice span{
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 0px;
+  
+}
+.totalWithButton{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: inset 0px 0px 300px rgb(0, 0, 0);
+  gap: 10px;
+  padding: 0px 10px;
 }
 
 .features {

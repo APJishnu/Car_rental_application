@@ -40,6 +40,20 @@
   border-radius: 4px;
 }
 
+.DatePicker{
+  width: 100% !important;
+  padding: 10px;
+  border-color: black;
+  outline: #000;
+
+}
+.DatePicker:hover{
+  outline: #000;
+  box-shadow:inset 0px 0px 60px rgb(224, 224, 224);
+  color: rgb(0, 109, 193);
+}
+
+
 .findVehicleBtn {
   margin-top: 25px;
   padding: 12px 20px;

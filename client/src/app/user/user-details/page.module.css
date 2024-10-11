@@ -1,0 +1,141 @@
+/* Main container for the user details page */
+.mainDiv {
+    padding: 100px 20px;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center; /* Center the card horizontally */
+    align-items: flex-start; /* Align the card to the top */
+}
+
+/* Card for user details */
+.userCard {
+    background-color: #fff;
+    padding: 30px; /* Increased padding for better spacing */
+    border-radius: 12px; /* Slightly larger radius for softer corners */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Softer shadow */
+    width: 100%;
+    max-width: 500px; /* Set a max width for the card */
+}
+
+/* Profile header styling */
+.profileHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+/* Profile image styling */
+.profileImage {
+    width: 90px; /* Slightly larger image */
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    border: 1px solid #000000; /* Add a border for better visibility */
+    transition: transform 0.2s; /* Smooth transition for hover effect */
+}
+
+.profileImage:hover {
+    transform: scale(1.05); /* Scale effect on hover */
+}
+
+.profile{
+    position: relative;
+}
+
+/* User info container */
+.userInfo {
+    
+    margin-left: 20px;
+    display: flex;
+    flex-direction: column;
+    }
+
+/* Edit icon styling */
+.editIcon {
+    font-size: 20px;
+    cursor: pointer;
+    color: #000000; /* Blue color for edit icon */
+    transition: color 0.2s; /* Smooth color transition */
+    position: absolute;
+    bottom:5px;
+    right: 0;
+    background-color: #f5f5f5;
+    border-radius: 50%;
+    padding: 5px;
+}
+
+.editIcon:hover {
+    color: #0056b3; /* Darker shade on hover */
+}
+
+/* Profile actions section */
+.profileActions {
+    margin-top: 20px;
+}
+
+/* Button styling */
+.profileActions button {
+    width: 100%;
+    margin-bottom: 12px; /* Increased bottom margin for spacing */
+    border-radius: 5px; /* Rounded corners for buttons */
+    background-color: #007bff; /* Primary button color */
+    color: #fff; /* White text color */
+    border: none; /* No border */
+    transition: background-color 0.3s; /* Smooth background transition */
+}
+
+.profileActions button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Settings row styling */
+.settingsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Center items vertically */
+    margin-bottom: 10px;
+    height: inherit;
+}
+
+.checkOption{
+    max-width: 30px;
+
+    
+}
+
+/* Profile preview image styling */
+.previewImage {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+/* Centered loading or error message */
+.centeredDiv {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Additional Alert styling for better visibility */
+.ant-alert {
+    border-radius: 5px; /* Rounded corners for alerts */
+}
+
+/* Modal customization */
+.ant-modal {
+    border-radius: 12px; /* Rounded corners for modal */
+}
+
+.ant-modal-header {
+    border-bottom: none; /* Remove default border */
+}
+
+.ant-modal-title {
+    font-weight: bold; /* Bold title for better readability */
+}

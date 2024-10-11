@@ -82,10 +82,10 @@ class ManufacturerHelper {
 
 
       // Check if a vehicle with the same name and manufacturerId already exists
-      const existingManufacture = await ManufacturerRepository.findManufacturerByName(name);
-      if (existingManufacture) {
-        throw new Error('Manufacture with the same Details already exists');
-      }
+      // const existingManufacture = await ManufacturerRepository.findManufacturerByName(name);
+      // if (existingManufacture) {
+      //   throw new Error('Manufacture with the same Details already exists');
+      // }
       let imageUrl =null;
      
       if (image) {

@@ -221,7 +221,7 @@ const RegistrationForm: React.FC = () => {
         </Form.Item>
 
         <p className={styles.signin}>
-          Already have an account? <a href="#">Signin</a>
+          Already have an account? <a href="/user/user-login">Signin</a>
         </p>
       </Form>
     );

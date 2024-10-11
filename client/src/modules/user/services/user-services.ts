@@ -47,7 +47,7 @@ const GET_USER = gql`
 
 
 const UPDATE_PROFILE_IMAGE = gql`
-mutation UpdateProfileImage($userId: ID!, $profileImage: String) {
+mutation UpdateProfileImage($userId: ID!, $profileImage:Upload) {
   updateProfileImage(userId: $userId, profileImage: $profileImage) {
     status
     message
@@ -94,7 +94,9 @@ export const useFetchUserData = () => {
 export const useUpdateProfileImage = () => {
   const [updateProfileImage, { loading, error }] = useMutation(UPDATE_PROFILE_IMAGE);
   
-  const update = async ({ userId, profileImage }: { userId: string; profileImage: string | null }) => {
+  const update = async ({ userId, profileImage }: { userId: string; profileImage: File | null }) => {
+
+    console.log("Updating profile image:", profileImage); // Log the profile image to see what is being passed
     return updateProfileImage({
       variables: {
         userId,

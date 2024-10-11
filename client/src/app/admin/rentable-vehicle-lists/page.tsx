@@ -47,7 +47,6 @@ const DELETE_RENTABLE_VEHICLE = gql`
 `;
 
 
-
 const RentableVehiclesList: React.FC = () => {
     const [vehicles, setVehicles] = useState<any[]>([]);
     const [searchResults, setSearchResults] = useState<any[]>([]);

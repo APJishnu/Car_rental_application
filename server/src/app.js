@@ -9,6 +9,7 @@ import './modules/admin/models/assosiations.js'; // Import associations after mo
 import session from 'express-session';
 import cron from 'node-cron';
 import CleanupHelper from './utils/clean-up-otp.js';
+import './modules/user/models/booking-model.js'
 
 
 dotenv.config(); // Load environment variables from .env file

@@ -11,6 +11,7 @@
   background-color: var(--color-background);
   padding: 0 var(--spacing);
   z-index: 100;
+  transition: top 0.3s ease; /* Smooth transition when hiding/showing */
 }
 .container {
   display: flex;
@@ -46,11 +47,12 @@
 .menuIcon {
   font-size: 1.5rem;
   cursor: pointer;
-  background-color: black;
+  background-color:#000000;
   border: none;
   color: var(--color-accent);
   z-index: 100; /* Ensure it's above the menu */
 }
+
 
 .menu {
   display: none; /* Hide menu initially */
@@ -87,6 +89,41 @@
   align-items: center;
   justify-content: center;
 }
+
+.userIcon {
+  display: flex;
+  align-items: center;
+  cursor: pointer; /* Change cursor to pointer */
+  transition: transform 0.3s ease; /* Smooth scaling effect */
+  color: white;
+}
+
+.userIcon:hover {
+  transform: scale(1.1); /* Slightly scale up on hover */
+}
+
+
+/* Navbar.module.css */
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  color: rgb(0, 0, 0); /* Set text color to white */
+  padding: 10px 0px; /* Add some padding */
+  padding-left: 10px;
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition on hover */
+  width: 100%;
+}
+
+
+.menuItem:hover {
+  background-color: rgba(255, 255, 255, 0.2); /* Change background color on hover */
+  color: rgb(83, 83, 83)!important; /* Change text color on hover */
+  
+}
+
+
+
 
 .loginBtn {
   background: none;

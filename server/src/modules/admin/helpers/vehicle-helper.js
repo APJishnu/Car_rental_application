@@ -39,36 +39,36 @@ class VehicleHelper {
     }
   }
 
-  static async uploadToMinio(file, folder) {
-    try {
-      const { createReadStream, filename } = await file;
-      const stream = createReadStream();
-      const uniqueFilename = `${folder}/${filename}`;
-      const contentType = mime.lookup(filename) || 'application/octet-stream';
+    static async uploadToMinio(file, folder) {
+      try {
+        const { createReadStream, filename } = await file;
+        const stream = createReadStream();
+        const uniqueFilename = `${folder}/${filename}`;
+        const contentType = mime.lookup(filename) || 'application/octet-stream';
 
-      await new Promise((resolve, reject) => {
-        minioClient.putObject(
-          process.env.MINIO_BUCKET_NAME,
-          uniqueFilename,
-          stream,
-          { 'Content-Type': contentType },
-          (error) => {
-            if (error) {
-              return reject(new Error('MinIO upload failed'));
+        await new Promise((resolve, reject) => {
+          minioClient.putObject(
+            process.env.MINIO_BUCKET_NAME,
+            uniqueFilename,
+            stream,
+            { 'Content-Type': contentType },
+            (error) => {
+              if (error) {
+                return reject(new Error('MinIO upload failed'));
+              }
+              resolve();
             }
-            resolve();
-          }
-        );
-      });
+          );
+        });
 
-      const imageUrl = `http://localhost:9000/${process.env.MINIO_BUCKET_NAME}/${uniqueFilename}`;
+        const imageUrl = `http://localhost:9000/${process.env.MINIO_BUCKET_NAME}/${uniqueFilename}`;
 
-      return imageUrl;
-    } catch (error) {
-      console.error('Error uploading image:', error.message);
-      throw new Error('Image upload failed');
+        return imageUrl;
+      } catch (error) {
+        console.error('Error uploading image:', error.message);
+        throw new Error('Image upload failed');
+      }
     }
-  }
 
 
   static async getVehicles() {

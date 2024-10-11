@@ -57,7 +57,7 @@
 }
 
 .vehicleCard {
-  width: 300px;
+  width: 280px;
   height: 360px;
   border-radius: 8px;
   display: flex;
@@ -68,7 +68,7 @@
 }
 
 .vehicleImage {
-  object-fit: contain;
+  object-fit: cover;
   height: 150px;
   border-radius: 8px 8px 0 0;
 }
@@ -83,6 +83,7 @@
   width: 40px;
   border-radius: 50%;
   border: 2px solid #fff;
+  background-color: white;
 }
 
 .description {

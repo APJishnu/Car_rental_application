@@ -36,7 +36,7 @@ User.init({
         allowNull: false,
     },
     profileImage: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(1000),
         allowNull: true, // Profile image is optional
       },
     city: {
