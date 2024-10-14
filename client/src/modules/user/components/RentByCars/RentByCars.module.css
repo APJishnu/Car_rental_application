@@ -172,7 +172,8 @@
   .filterSection {
     padding: 15px;
     /* Slightly reduced padding */
-   padding-top: 50%;
+   padding-top: 1%;
+   background: linear-gradient(180deg, #ffffff 50%, #ffffff 50%);
   
   }
 

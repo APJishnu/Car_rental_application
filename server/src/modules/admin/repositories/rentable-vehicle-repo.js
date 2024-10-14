@@ -22,6 +22,27 @@ class RentableRepo {
         }
     }
 
+
+    // Find a vehicle by name and manufacturer ID (to check for duplicates)
+  static async findRenatableVehicleById(vehicleId) {
+    try {
+
+      if (vehicleId) {
+        const rentable = await Rentable.findOne({
+          where: {
+            vehicleId
+          },
+        });
+
+        return rentable;
+      }
+    
+    } catch (error) {
+      console.error('Error finding vehicle:', error);
+      throw new Error('Failed to find vehicle');
+    }
+  }
+
     
     static async createRentable(data) {
         try {
@@ -32,7 +53,7 @@ class RentableRepo {
     }
 
     // Add the delete method
-    static async deleteRentable(id) {
+    static async deleteRentableById(id) {
         try {
             const deletedRentable = await Rentable.destroy({
                 where: { id },
@@ -41,6 +62,8 @@ class RentableRepo {
             if (deletedRentable === 0) {
                 throw new Error('Vehicle not found');
             }
+
+            
 
             return deletedRentable; // Optionally, you can return a success message or the ID of the deleted vehicle
         } catch (error) {

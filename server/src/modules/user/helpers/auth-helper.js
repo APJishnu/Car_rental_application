@@ -45,20 +45,18 @@ class AuthHelper {
 
     const formatPhoneNumber = (phoneNumber) => {
       if (!phoneNumber.startsWith('+')) {
-        return `+91${phoneNumber.replace(/^0+/, '')}`; // Remove leading zeros and add country code
+        return `+918714804072`; // Remove leading zeros and add country code
       }
       return phoneNumber;
     };
 
-
-
     const formattedNumber = formatPhoneNumber(phoneNumber);
 
-    // await twilioClient.messages.create({
-    //     body: `Your verification code is ${otp}`,
-    //     from: process.env.TWILIO_PHONE_NUMBER,
-    //     to: formattedNumber,
-    // });
+    await twilioClient.messages.create({
+      body: `Your verification code is ${otp}`,
+      from: process.env.TWILIO_PHONE_NUMBER,
+      to: formattedNumber,
+    });
 
     return { status: 'success', message: 'OTP sent successfully', data: null };
   }
@@ -265,7 +263,6 @@ class AuthHelper {
       console.error('Error removing image from Minio:', error.message);
     }
   }
-
 
 }
 

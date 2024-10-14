@@ -1,5 +1,3 @@
-// typesenseService.ts
-
 import Typesense from 'typesense';
 
 const typesenseClient = new Typesense.Client({
@@ -14,21 +12,43 @@ const typesenseClient = new Typesense.Client({
   connectionTimeoutSeconds: 2,
 });
 
-export const searchVehicles = async (query: string) => {
+export const searchVehicles = async (
+  query: string,
+  transmission?: string,
+  fuelType?: string,
+  seats?: number | null,
+  priceSort: "asc" | "desc" = "asc"
+) => {
   try {
-    const searchResults = await typesenseClient
-      .collections('cars')
-      .documents()
-      .search({
-        q: query,
-        query_by: 'vehicle.name,vehicle.manufacturer.name,vehicle.transmission,vehicle.fuelType',
-        filter_by: 'pricePerDay:=[1..1000]',
-        sort_by: 'pricePerDay:asc',
-      });
+    const filters: string[] = ['pricePerDay:=[1..2000]']; // Base price filter
 
+    // Log incoming parameters for debugging
+    console.log("Search Parameters: ", { query, transmission, fuelType, seats, priceSort });
+
+    // Add filters conditionally based on provided arguments
+    if (transmission) {
+      filters.push(`vehicle.transmission:=${transmission}`);
+    }
+    if (fuelType) {
+      filters.push(`vehicle.fuelType:=${fuelType}`);
+    }
+    if (seats !== undefined && seats !== null) { // Check for undefined as well
+      filters.push(`vehicle.numberOfSeats:=${seats}`);
+    }
+
+    console.log("Filters being used: ", filters.join(" && "));
+
+    const searchResults = await typesenseClient.collections("cars").documents().search({
+      q: query,
+      query_by: "vehicle.name,vehicle.manufacturer.name,vehicle.transmission,vehicle.fuelType",
+      filter_by: filters.join(" && "), // Ensure correct formatting
+      sort_by: `pricePerDay:${priceSort}`, // Sort by price
+    });
+
+    console.log("Search Results: ", searchResults); // Log the raw search results
     return searchResults?.hits?.map((hit: any) => hit.document) || [];
   } catch (error) {
-    console.error("Typesense search error:", error);
-    throw new Error('Search failed.');
+    console.error("Search error: ", error); // Log the error
+    throw new Error("Error fetching vehicles");
   }
 };

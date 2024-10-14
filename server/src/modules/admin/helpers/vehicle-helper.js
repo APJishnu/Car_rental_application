@@ -1,15 +1,14 @@
 import VehicleRepository from '../repositories/vehicles-repo.js';
 import minioClient from '../../../config/minio.js';
-
 import mime from 'mime-types';
 
 class VehicleHelper {
-  static async createVehicle({ name, description,transmission,fuelType,numberOfSeats, primaryImage, otherImages, quantity, manufacturerId, year }) {
+  static async createVehicle({ name, description, transmission, fuelType, numberOfSeats, primaryImage, otherImages, quantity, manufacturerId, year }) {
     try {
       // Check if a vehicle with the same name and manufacturerId already exists
-      const existingVehicle = await VehicleRepository.findVehicleByNameAndManufacturer(name, manufacturerId);
+      const existingVehicle = await VehicleRepository.findVehicleByNameAndManufacturer(name, manufacturerId, year);
       if (existingVehicle) {
-        throw new Error('Vehicle with the same name and manufacturer already exists');
+        throw new Error('Vehicle with the same name and year already exists');
       }
 
       const primaryImageUrl = await this.uploadToMinio(primaryImage, `vehicle/${name}/primary`);
@@ -25,7 +24,7 @@ class VehicleHelper {
         year,
         name,
         description,
-        transmission,fuelType,numberOfSeats,
+        transmission, fuelType, numberOfSeats,
         quantity,
         primaryImageUrl,
         otherImageUrls,
@@ -39,36 +38,36 @@ class VehicleHelper {
     }
   }
 
-    static async uploadToMinio(file, folder) {
-      try {
-        const { createReadStream, filename } = await file;
-        const stream = createReadStream();
-        const uniqueFilename = `${folder}/${filename}`;
-        const contentType = mime.lookup(filename) || 'application/octet-stream';
+  static async uploadToMinio(file, folder) {
+    try {
+      const { createReadStream, filename } = await file;
+      const stream = createReadStream();
+      const uniqueFilename = `${folder}/${filename}`;
+      const contentType = mime.lookup(filename) || 'application/octet-stream';
 
-        await new Promise((resolve, reject) => {
-          minioClient.putObject(
-            process.env.MINIO_BUCKET_NAME,
-            uniqueFilename,
-            stream,
-            { 'Content-Type': contentType },
-            (error) => {
-              if (error) {
-                return reject(new Error('MinIO upload failed'));
-              }
-              resolve();
+      await new Promise((resolve, reject) => {
+        minioClient.putObject(
+          process.env.MINIO_BUCKET_NAME,
+          uniqueFilename,
+          stream,
+          { 'Content-Type': contentType },
+          (error) => {
+            if (error) {
+              return reject(new Error('MinIO upload failed'));
             }
-          );
-        });
+            resolve();
+          }
+        );
+      });
 
-        const imageUrl = `http://localhost:9000/${process.env.MINIO_BUCKET_NAME}/${uniqueFilename}`;
+      const imageUrl = `http://localhost:9000/${process.env.MINIO_BUCKET_NAME}/${uniqueFilename}`;
 
-        return imageUrl;
-      } catch (error) {
-        console.error('Error uploading image:', error.message);
-        throw new Error('Image upload failed');
-      }
+      return imageUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error.message);
+      throw new Error('Image upload failed');
     }
+  }
 
 
   static async getVehicles() {
@@ -85,9 +84,9 @@ class VehicleHelper {
   static async deleteFromMinio(imageUrl) {
     try {
 
-    const filePath = imageUrl.replace(`http://localhost:9000/${process.env.MINIO_BUCKET_NAME}/`, '');
+      const filePath = imageUrl.replace(`http://localhost:9000/${process.env.MINIO_BUCKET_NAME}/`, '');
 
-    console.log("minio extrated file path",filePath)
+      console.log("minio extrated file path", filePath)
 
       await new Promise((resolve, reject) => {
         minioClient.removeObject(process.env.MINIO_BUCKET_NAME, filePath, (error) => {
@@ -113,14 +112,13 @@ class VehicleHelper {
         throw new Error('Vehicle not found');
       }
 
-
       // Delete the vehicle from the database
       const deletedVehicle = await VehicleRepository.deleteVehicleById(id);
 
       // Delete images from MinIO
       await this.deleteFromMinio(vehicle.primaryImageUrl);
       await Promise.all(vehicle.otherImageUrls.map(imageUrl => this.deleteFromMinio(imageUrl)));
-      
+
       return deletedVehicle;
     } catch (error) {
       console.error('Error deleting vehicle:', error.message);
@@ -142,7 +140,6 @@ class VehicleHelper {
 
   static async updateVehicle({ id, name, description, primaryImage, otherImages, quantity, year }) {
     try {
-
 
       // Check if a vehicle with the same name and manufacturerId already exists
       const existingVehicle = await VehicleRepository.findVehicleByNameAndManufacturer(name);

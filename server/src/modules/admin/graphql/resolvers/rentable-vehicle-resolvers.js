@@ -21,12 +21,14 @@ const RentableResolvers = {
       }
     },
     deleteRentableVehicle: async (_, { id }) => {
-      const deletedVehicle = await Rentable.destroy({where:{id}});
-      if (!deletedVehicle) {
-        throw new Error('Vehicle not found');
+      try {
+        return await RentableVehicleHelper.deleteRentableVehicle(id);
+      } catch (error) {
+        console.error('Error in deleteRentableVehicle resolver:', error);
+        throw new Error('Failed to delete vehicle');
       }
-      return deletedVehicle.id; // Return the deleted vehicle data if needed
-    },
+    }
+    
   },
 };
 

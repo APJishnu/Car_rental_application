@@ -13,13 +13,12 @@
 }
 
 .carCard {
-  border: 2px solid #e0e0e0;
-  border-radius: 20px;
-
+  border: 2px solid #fefefe;
+  border-radius: 15px;
   text-align: left;
   background-color: #fff;
   padding-bottom: 0px;
-  animation: opacity 2.9s ease-in-out; /* Apply the animation */
+  animation: opacity 1.0s ease-in-out; /* Apply the animation */
   max-width: 350px;
   
 }
@@ -27,12 +26,11 @@
 .carImage {
   width: 100%;
   height: 160px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 10px;
   margin-bottom: 15px;
   max-width: 280px;
-  
-  border:4px solid #f0f0f0;
+  border:2px dashed #f5f5f5;
 }
 
 .carDetials {
@@ -40,21 +38,33 @@
   padding: 0px 10px;
 }
 
+.headingDiv{
+  border: none;
+  border-bottom: 1px solid black;
+  border-top: 1px solid black;
+  padding: 10px 0px;
+}
+
 .carCard h3 {
-  font-size: 20px;
+  font-size: 16px;
   margin-bottom: 0px;
+  font-weight: 600;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  letter-spacing: 1px;
+  padding-bottom: 0px;
 }
 
 .price {
   font-size: 14px;
-  font-weight: bold;
-  margin-bottom: 0px;
+  font-weight: 700;
+  padding-top: 10px;
+  margin-bottom: 5px;
   color: rgb(0, 0, 0);
+  letter-spacing: 2.0px;
 }
 
 .totalPrice{
   border-radius: 5px;  
-  padding: 0px 0px;
   color: rgb(255, 255, 255);
   font-size: 14px;
   font-weight: 100;
@@ -88,8 +98,9 @@
   font-size: 14px;
   color: #888;
   background-color: #f0f0f0;
-  margin-bottom: 20px;
-  padding: 20px;
+  margin-bottom: 10px;
+  margin-top: 10px;
+  padding: 15px;
   border-radius: 15px;
 }
 
@@ -117,10 +128,10 @@
 .carCard {
   border: 1px solid #e0e0e0;
   border-radius: 20px;
-  padding: 5px;
+  padding: 0px;
   text-align: left;
   background-color: #fff;
-  padding-bottom: 30px;
+  padding-bottom: 0px;
   animation: opacity 2.9s ease-in-out; /* Apply the animation */
   scroll-snap-align: start !important; /* Align each card at the start */
   flex: 0 0 auto; /* Prevent flex items from growing or shrinking */
@@ -131,16 +142,16 @@
 
 .carDetials {
   width: 100%;
-  padding: 0px 10px;
+  padding: 0px 5px;
 }
 
 .carCard h3 {
-  font-size: 13px;
+  font-size: 11px;
   margin-bottom: 0px;
 }
 
 .price {
-  font-size: 23px;
+  font-size: 13px;
   font-weight: bold;
   margin-bottom: 5px;
 }
@@ -151,7 +162,7 @@
   font-size: 12px;
   color: #888;
   background-color: #f0f0f0;
-  margin-bottom: 10px;
+  margin-bottom: 0px;
   padding: 10px;
   border-radius: 15px;
 }

@@ -12,7 +12,7 @@ const userAuthResolvers = {
       if (!token) {
         throw new Error('Authorization token is missing');
       }
-      
+
       const decodedToken = verifyToken(token.replace('Bearer ', '')); // Strip "Bearer "
 
       // Fetch the user based on the token payload
@@ -74,6 +74,7 @@ const userAuthResolvers = {
 
 
     async updateProfileImage(_, { userId, profileImage }) {
+      console.log(profileImage, "file in update profile")
       try {
         const result = await authHelper.updateUserProfileImage(userId, profileImage);
         return result; // The result will contain status, message, and data

@@ -52,6 +52,10 @@ Vehicle.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
+  isRented: {  // Allow longer URLs
+    type: DataTypes.BOOLEAN, // Increase length to 1000 or use DataTypes.TEXT
+    defaultValue:false,
+  },
 }, {
   sequelize,
   modelName: 'Vehicle',

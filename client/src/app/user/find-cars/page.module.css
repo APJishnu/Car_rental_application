@@ -1,21 +1,138 @@
 .carCollection {
-    text-align: center;
-    padding: 40px;
-    padding-top: 120px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color:#f0f0f0;
+  text-align: center;
+  padding: 20px;
+  padding-top: 100px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f0f0;
+  gap: 0px;
+}
+
+.carCollectionSecondDiv {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px !important;
+  height: 500px;
+}
+.carCollectionSecondDiv ::-webkit-scrollbar{
+  display: none;
+}
+
+.filters {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 80px;
+  border-bottom: 1px solid rgb(181, 181, 181);
+}
+
+.searchDiv {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+
+}
+
+/* page.module.css */
+.searchField {
+  background-color: #ffffff !important;
+  border: 0px;
+  width: 100%;
+  max-width: 500px;
+  padding: 10px;
+  border-radius: 2px;
+  color: #080097;
+}
+.searchField ::placeholder {
+  color:#080097;
+}
+
+
+.filterDiv {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+ 
+}
+
+
+
+
+.carsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+@media (min-width:1000px)and (max-width:1320px) {
+  .carsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
 
-  .carCollectionSecondDiv{
-    max-width: 1440px;
-  }
-  
+}
+
+@media (min-width:769px)and (max-width:999px) {
   .carsGrid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
-    
   }
+
+}
+
+@media (max-width:768px) {
+  .carCollection {
+    padding-left: 0px!important;
+    padding-right: 0px!important;
+
+  }
+  .searchDiv {
+   
+    justify-content:center;
+    width: 100%;
+    padding: 0px;
+  
+  }
+  .filters {
+    flex-direction: column;  
+    gap: 10px;
+    padding: 10px 10px;
+  }
+  .filterDiv {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    flex-wrap: wrap;
+    max-width: 505px;
+  }
+
+  .carCollectionSecondDiv {
+    max-width: 100%;
+    width: 100%;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+    padding-left: 10px;
+    padding-right: 10px !important;
+
+  }
+
+  .carsGrid {
+    display: flex;
+
+    gap: 0px;
+  }
+
+}

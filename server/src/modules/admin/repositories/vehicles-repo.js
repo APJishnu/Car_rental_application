@@ -1,5 +1,6 @@
 import Vehicle from '../models/vehicles-model.js';
 import { deleteVehicleFromTypesense } from '../../../config/typesense-config.js';
+import Rentable from '../models/rentable-vehicle-model.js';
 
 class VehicleRepository {
   // Create a vehicle in the database
@@ -26,13 +27,14 @@ class VehicleRepository {
   }
 
   // Find a vehicle by name and manufacturer ID (to check for duplicates)
-  static async findVehicleByNameAndManufacturer(name, manufacturerId) {
+  static async findVehicleByNameAndManufacturer(name, manufacturerId, year) {
     try {
 
       if (!manufacturerId) {
         const vehicle = await Vehicle.findOne({
           where: {
             name,
+            year,
           },
         });
 
@@ -42,6 +44,7 @@ class VehicleRepository {
         where: {
           name,
           manufacturerId,
+          year,
         },
       });
 
@@ -64,22 +67,31 @@ class VehicleRepository {
   }
 
 
-
   static async deleteVehicleById(id) {
     try {
-      const deletedVehicle = await Vehicle.destroy({
-        where: { id },
-      });
+      // Find all rentable entries associated with the vehicle
+      const rentables = await Rentable.findAll({ where: { vehicleId: id } });
+
+      if (rentables.length === 0) {
+        console.warn(`No rentable vehicles found for vehicle ID: ${id}`);
+        throw new Error('No rentable vehicles associated with this vehicle.');
+      }
+
+      // Iterate through each rentable entry and delete it from Typesense
+      for (const rentable of rentables) {
+        await deleteVehicleFromTypesense(rentable.id); // Delete from Typesense using rentable.id
+      }
+      // Delete the vehicle from the Vehicles table
+      const deletedVehicle = await Vehicle.destroy({ where: { id } });
 
       if (deletedVehicle === 0) {
-        // No rows were affected, meaning no vehicle was found with the given ID
-        return null;
+        return null; // No rows were affected, meaning no vehicle was found with the given ID
       }
-      await deleteVehicleFromTypesense(id); 
+
       return { id }; // Optionally return the ID of the deleted vehicle
     } catch (error) {
-      console.error('Error deleting vehicle from database:', error);
-      throw new Error('Failed to delete vehicle');
+      console.error('Error deleting vehicle and rentables:', error);
+      throw new Error('Failed to delete vehicle and associated rentables');
     }
   }
 
@@ -107,6 +119,22 @@ class VehicleRepository {
       throw new Error('Failed to fetch vehicle');
     }
   }
+
+ static async updateVehicleStatus(vehicleId, isRented) {
+    try {
+      const vehicle = await Vehicle.findByPk(vehicleId);
+      console.log(vehicle, "in update status")
+      const statusUpdatedVehicle =await vehicle.update({
+        isRented:isRented
+      });
+
+      console.log("updated successfull",statusUpdatedVehicle)
+    } catch (error) {
+      console.error("Error updating vehicle status:", error);
+      throw new Error("Failed to update vehicle status");
+    }
+  }
+
 }
 
 export default VehicleRepository;

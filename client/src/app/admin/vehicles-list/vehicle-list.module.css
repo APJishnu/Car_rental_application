@@ -1,17 +1,44 @@
 .mainDiv{
   padding: 20px;
   background-color: #f9f9f9;
+  height: 100vh;
+  
 }
 
 .cardContainer {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: wrap;   /* Keeps the cards wrapping */
   gap: 16px;
+  height: 85%;     /* Set a fixed height for the scrollable area */
+  overflow-y: auto;  /* Enables vertical scrolling */
+  padding: 10px;
+  scroll-behavior: smooth;
+  transition: opacity 0.5s ease; 
+  opacity: 1; 
+  scrollbar-width: none; /* Hides the scrollbar in Firefox */
+}/* Reduce opacity when scrolling up */
 
+.cardContainer::-webkit-scrollbar {
+  display: none;
 }
 
+/* Reduce opacity when scrolling up */
+.scrollingUp {
+  opacity: 0.6;
+}
+
+/* Full opacity when scrolling down */
+.scrollingDown {
+  opacity: 1;
+}
+
+/* Additional class when scroll event is active (for smooth effect) */
+.isScrolling {
+  transform: scale(1.01); /* Slight zoom effect to give a subtle effect during scrolling */
+  transition: opacity 0.5s ease, transform 0.3s ease;
+}
 .vehicleCard {
-  width: 300px;
+  width: 290px;
   /* Adjust the width of the card */
 }
 
@@ -24,7 +51,7 @@
 
 .displayImage {
   max-width: 100%;
-  height: auto;
+  height: 120px!important;
 }
 
 .scrollButton {
@@ -54,4 +81,51 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
+}
+
+
+/* Empty Message */
+
+/* CustomEmpty.module.css */
+.customEmptyContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.animatedEmpty {
+  animation: fadeIn 1s ease-in-out, bounce 2s infinite;
+  margin-top: 100px;
+}
+
+.ant-empty-image {
+  animation: bounce 2s infinite;
+}
+
+.ant-empty-description {
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+/* Keyframes for fadeIn */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Keyframes for bounce effect */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
 }

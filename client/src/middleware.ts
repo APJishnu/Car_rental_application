@@ -9,6 +9,7 @@ export function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
+
   // Exclude the /admin/admin-login route from the redirect loop
   if (pathname === '/admin/admin-login') {
     return NextResponse.next(); // Allow access to the login page

@@ -2,7 +2,7 @@ import { Model, DataTypes } from 'sequelize';
 import sequelize from '../../../config/database.js';
 import Rentable from '../../admin/models/rentable-vehicle-model.js'; // Import Rentable model
 
-class Booking extends Model {}
+class Booking extends Model { }
 
 Booking.init({
   vehicleId: {
@@ -39,6 +39,11 @@ Booking.init({
     type: DataTypes.STRING, // Store Razorpay order ID
     allowNull: true, // Will be null until payment is initiated
   },
+  paymentMethod:{
+    type: DataTypes.STRING, // Store Razorpay order ID
+    allowNull: true, 
+  }
+  
 }, {
   sequelize,
   modelName: 'Booking',

@@ -38,7 +38,7 @@ User.init({
     profileImage: {
         type: DataTypes.STRING(1000),
         allowNull: true, // Profile image is optional
-      },
+    },
     city: {
         type: DataTypes.STRING,
         allowNull: true, // This field comes after phone verification

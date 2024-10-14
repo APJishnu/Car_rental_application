@@ -2,7 +2,7 @@
 "use client";
 import React, { useState } from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { Card, Button, Image, Space, Modal, Tooltip, Input, Select } from "antd"; // Importing Ant Design components
+import { Card, Button, Image, Space, Modal, Tooltip, Input, Select ,Empty} from "antd"; // Importing Ant Design components
 import Swal from "sweetalert2"; // SweetAlert2 for popups
 import styles from "./vehicle-list.module.css"; // Your CSS module
 import { useRouter } from 'next/navigation';
@@ -20,6 +20,7 @@ type Vehicle = {
   year: string;
   primaryImageUrl?: string;
   otherImageUrls?: string[];
+  isRented?: string;
 };
 
 // Define Rentable input type
@@ -60,6 +61,7 @@ const GET_VEHICLES = gql`
       year
       primaryImageUrl
       otherImageUrls
+      isRented 
     }
   }
 `;
@@ -89,6 +91,7 @@ const VehicleListPage: React.FC = () => {
   const router = useRouter(); // Initialize router
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null); // State to hold selected vehicle for modal
   const [currentImageIndexes, setCurrentImageIndexes] = useState<number[]>([]); // Index for showing current images for each vehicle
+  const [filter, setFilter] = useState<'all' | 'rented' | 'unrented'>('all'); // Filter state
   const { loading, error, data, refetch } = useQuery<GetVehiclesData>(GET_VEHICLES);
   const [deleteVehicle] = useMutation<DeleteVehicleData>(DELETE_VEHICLE, {
     onCompleted: () => {
@@ -104,6 +107,7 @@ const VehicleListPage: React.FC = () => {
     onCompleted: () => {
       Swal.fire("Success!", "Vehicle added to rentable list.", "success");
       setSelectedRentableVehicle(null); // Close rentable modal
+      refetch();
     },
     onError: (err) => {
       console.error("Error adding to rentable:", err);
@@ -202,106 +206,137 @@ const VehicleListPage: React.FC = () => {
     }
   }, [data]);
 
+  // Filter the vehicles based on selected filter
+  const filteredVehicles = data?.getVehicles.filter((vehicle) => {
+    if (filter === 'rented') return !!vehicle.isRented; // Show rented vehicles
+    if (filter === 'unrented') return !vehicle.isRented; // Show unrented vehicles
+    return true; // Show all vehicles
+  });
+
+
   if (loading) return <p>Loading vehicles...</p>;
   if (error) return <p>Error loading vehicles: {error.message}</p>;
 
   return (
     <div className={styles.mainDiv}>
       <h1 className={styles.title}>Vehicle List</h1>
-      <div className={styles.cardContainer}>
-        {data?.getVehicles.map((vehicle, index) => (
-          <Card
-            key={vehicle.id}
-            hoverable
-            className={styles.vehicleCard}
-          >
-            {/* Image Navigation */}
-            <div className={styles.imageContainer}>
-              <Button
-                className={styles.scrollButton}
-                onClick={() => handlePrevImage(index, vehicle.otherImageUrls || [])} // Scroll left
-                icon={<LeftOutlined />}
-                disabled={currentImageIndexes[index] === 0} // Disable if showing primary image
-              />
-              <Image
-                src={
-                  currentImageIndexes[index] === 0
-                    ? vehicle.primaryImageUrl
-                    : vehicle.otherImageUrls?.[currentImageIndexes[index] - 1] // Show other image if index is greater than 0
-                }
-                alt="Vehicle Image"
-                className={styles.displayImage}
-              />
-              <Button
-                className={styles.scrollButton}
-                onClick={() => handleNextImage(index, vehicle.otherImageUrls || [])} // Scroll right
-                icon={<RightOutlined />}
-                disabled={vehicle.otherImageUrls?.length === 0} // Disable if no other images
-              />
-            </div>
-            <Card.Meta title={vehicle.name} description={`Year: ${vehicle.year}`} />
-
-
-            {/* Vehicle Info (Transmission, Fuel Type, Number of Seats) */}
-            <div className={styles.vehicleInfo}>
-              <div className={styles.detailItem}>
-                <Tooltip title="Transmission">
-                  <CarOutlined /> {vehicle.transmission}
-                </Tooltip>
-              </div>
-              <div className={styles.detailItem}>
-                <Tooltip title="Fuel Type">
-                  <FireOutlined /> {vehicle.fuelType}
-                </Tooltip>
-              </div>
-              <div className={styles.detailItem}>
-                <Tooltip title="Number of Seats">
-                  <TeamOutlined /> {vehicle.numberOfSeats}
-                </Tooltip>
-              </div>
-            </div>
-
-
-            <div className={styles.cardActions}>
-              <Space style={{ marginTop: '16px' }} className={styles.cardActions}>
-                <Tooltip title="Edit Vehicle">
-                  <Button
-                    icon={<EditOutlined />}
-                    onClick={() => router.push(`/admin/edit-vehicle?vehicle=${vehicle.id}`)}
-                    shape="circle"
-                    size="large"
-                  />
-                </Tooltip>
-                <Tooltip title="Delete Vehicle">
-                  <Button
-                    icon={<DeleteOutlined />}
-                    onClick={() => handleDelete(vehicle.id)}
-                    danger
-                    shape="circle"
-                    size="large"
-                  />
-                </Tooltip>
-                <Tooltip title="Add to Rentable">
-                  <Button
-                    icon={<PlusCircleOutlined />}
-                    onClick={() => handleAddRentable(vehicle)} // Open Rentable modal
-                    shape="circle"
-                    size="large"
-                  />
-                </Tooltip>
-                <Tooltip title="More Details">
-                  <Button
-                    icon={<InfoCircleOutlined />}
-                    onClick={() => showDetails(vehicle)} // Show details in modal
-                    shape="circle"
-                    size="large"
-                  />
-                </Tooltip>
-              </Space>
-            </div>
-          </Card>
-        ))}
+      {/* Filter Buttons */}
+      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+        <Button onClick={() => setFilter('all')} type={filter === 'all' ? 'primary' : 'default'}>All Vehicles</Button>
+        <Button onClick={() => setFilter('rented')} type={filter === 'rented' ? 'primary' : 'default'} style={{ marginLeft: '10px' }}>Rented Vehicles</Button>
+        <Button onClick={() => setFilter('unrented')} type={filter === 'unrented' ? 'primary' : 'default'} style={{ marginLeft: '10px' }}>Unrented Vehicles</Button>
       </div>
+
+
+      {filteredVehicles?.length === 0 ? (
+       <div className={styles.customEmptyContainer}>
+       <Empty
+         image={Empty.PRESENTED_IMAGE_DEFAULT}
+         description="No vehicles available"
+         className={styles.animatedEmpty} // Add class to apply animation
+       />
+     </div>
+      ) : (
+
+        <div className={styles.cardContainer}>
+          {filteredVehicles?.map((vehicle, index) => (
+            <Card
+              key={vehicle.id}
+              hoverable
+              className={styles.vehicleCard}
+            >
+              {/* Image Navigation */}
+              <div className={styles.imageContainer}>
+                <Button
+                  className={styles.scrollButton}
+                  onClick={() => handlePrevImage(index, vehicle.otherImageUrls || [])} // Scroll left
+                  icon={<LeftOutlined />}
+                  disabled={currentImageIndexes[index] === 0} // Disable if showing primary image
+                />
+                <Image
+                  src={
+                    currentImageIndexes[index] === 0
+                      ? vehicle.primaryImageUrl
+                      : vehicle.otherImageUrls?.[currentImageIndexes[index] - 1] // Show other image if index is greater than 0
+                  }
+                  alt="Vehicle Image"
+                  className={styles.displayImage}
+                />
+                <Button
+                  className={styles.scrollButton}
+                  onClick={() => handleNextImage(index, vehicle.otherImageUrls || [])} // Scroll right
+                  icon={<RightOutlined />}
+                  disabled={vehicle.otherImageUrls?.length === 0} // Disable if no other images
+                />
+              </div>
+              <Card.Meta title={vehicle.name} description={`Year: ${vehicle.year}| Rented: ${vehicle.isRented ? 'Yes' : 'No'}`} />
+
+
+              {/* Vehicle Info (Transmission, Fuel Type, Number of Seats) */}
+              <div className={styles.vehicleInfo}>
+                <div className={styles.detailItem}>
+                  <Tooltip title="Transmission">
+                    <CarOutlined /> {vehicle.transmission}
+                  </Tooltip>
+                </div>
+                <div className={styles.detailItem}>
+                  <Tooltip title="Fuel Type">
+                    <FireOutlined /> {vehicle.fuelType}
+                  </Tooltip>
+                </div>
+                <div className={styles.detailItem}>
+                  <Tooltip title="Number of Seats">
+                    <TeamOutlined /> {vehicle.numberOfSeats}
+                  </Tooltip>
+                </div>
+              </div>
+
+
+              <div className={styles.cardActions}>
+                <Space style={{ marginTop: '16px' }} className={styles.cardActions}>
+                  <Tooltip title="Edit Vehicle">
+                    <Button
+                      icon={<EditOutlined />}
+                      onClick={() => router.push(`/admin/edit-vehicle?vehicle=${vehicle.id}`)}
+                      shape="circle"
+                      size="large"
+                    />
+                  </Tooltip>
+                  <Tooltip title="Delete Vehicle">
+                    <Button
+                      icon={<DeleteOutlined />}
+                      onClick={() => handleDelete(vehicle.id)}
+                      danger
+                      shape="circle"
+                      size="large"
+                    />
+                  </Tooltip>
+                  <Tooltip title={vehicle.isRented ? "Rented" : "Add to Rentable"}>
+                    <Button
+                      icon={<PlusCircleOutlined />}
+                      onClick={() => handleAddRentable(vehicle)}
+                      shape="circle"
+                      size="large"
+                      style={{ backgroundColor: vehicle.isRented ? '#52c42b' : undefined, color: vehicle.isRented ? 'white' : '#52c42b', borderColor: vehicle.isRented ? '#52c42b' : '#52c42b' }} // Green color for rented vehicles
+                      disabled={vehicle.isRented ? true : false} // Disable button if rented
+                    />
+                  </Tooltip>
+
+                  <Tooltip title="More Details">
+                    <Button
+                      icon={<InfoCircleOutlined />}
+                      onClick={() => showDetails(vehicle)} // Show details in modal
+                      shape="circle"
+                      size="large"
+                    />
+                  </Tooltip>
+                </Space>
+              </div>
+            </Card>
+          ))}
+        </div>
+      )
+      }
 
       {/* Vehicle Details Modal */}
       <Modal
@@ -343,6 +378,7 @@ const VehicleListPage: React.FC = () => {
         />
       </Modal>
     </div>
+
   );
 };
 

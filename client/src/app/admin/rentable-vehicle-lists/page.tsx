@@ -133,13 +133,16 @@ const RentableVehiclesList: React.FC = () => {
             setIsSearching(true);
             try {
                 const results = await searchVehicles(query);
+                console.log('Search Results:', results); // Log search results
                 setSearchResults(results);
             } catch (error) {
+                console.error("Search error:", error); // Log any errors during the search
                 message.error("Search failed. Please try again.");
             } finally {
                 setIsSearching(false);
             }
         };
+
 
         const delayDebounceFn = setTimeout(() => {
             handleSearch();

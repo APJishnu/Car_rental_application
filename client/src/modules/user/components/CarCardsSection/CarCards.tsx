@@ -1,5 +1,10 @@
 import React from 'react';
 import styles from './CarCards.module.css';
+import {DoubleRightOutlined} from '@ant-design/icons'
+import { Typography } from 'antd';
+
+const { Text } = Typography;
+
 
 interface CarCardProps {
   image: string;
@@ -20,8 +25,11 @@ const CarCard: React.FC<CarCardProps> = ({ image, model, price,totalPrice, featu
       <div className={styles.secondCard}>
       <img src={image} alt={model} className={styles.carImage} />
       <div className={styles.carDetails}>
-        <h3>{model}</h3>
-        <p className={styles.price}>${price} / day</p>
+        <div className={styles.headingDiv} style={{display:'flex',alignItems:'center',gap:'10px'}}> <DoubleRightOutlined style={{fontWeight:'100',color:'red'}}/> <h3> {`${model}`}</h3></div>
+     
+        <p className={styles.price}> <Text style={{color:'darkblue',fontSize:'18px'}}>{'₹'}</Text> {price} / DAY
+        </p>
+
         
        
         <div className={styles.features}>
@@ -40,7 +48,7 @@ const CarCard: React.FC<CarCardProps> = ({ image, model, price,totalPrice, featu
       {totalPrice > 0 && (
       <div className={styles.totalWithButton}>
         
-          <div className={styles.totalPrice}> TOTAL<span>${totalPrice}</span></div>
+          <div className={styles.totalPrice}> TOTAL<span>₹{totalPrice}</span></div>
      
        
         <button className={styles.rentButton} onClick={onRentNow}>

@@ -2,6 +2,7 @@
 import Manufacturer from '../models/manufacturer-model.js'; // Adjust the import path as necessary
 import Vehicle from '../models/vehicles-model.js'; // Import the Vehicle model
 import { deleteVehicleFromTypesense } from '../../../config/typesense-config.js';
+import Rentable from '../models/rentable-vehicle-model.js';
 
 class ManufacturerRepository {
   static async createManufacturer({ name, country, imageUrl }) {
@@ -20,7 +21,7 @@ class ManufacturerRepository {
     }
   }
 
-  
+
   static async findAll() {
     try {
       return await Manufacturer.findAll(); // Fetch all manufacturers from the database
@@ -66,21 +67,40 @@ class ManufacturerRepository {
 
   static async deleteManufacturer(id) {
     try {
-      // Delete vehicles associated with the manufacturer
-      await Vehicle.destroy({
-        where: { manufacturerId: id },
-      });
+      // Step 1: Find all vehicles associated with the manufacturer
+      const vehicles = await Vehicle.findAll({ where: { manufacturerId: id } });
 
-      // Now delete the manufacturer
-      const result = await Manufacturer.destroy({
-        where: { id },
-      });
+      if (vehicles.length === 0) {
+        console.warn(`No vehicles found for manufacturer ID: ${id}`);
+      }
 
-      await deleteVehicleFromTypesense(id);       
-      return result > 0; // Return true if a manufacturer was deleted
+      // Step 2: For each vehicle, find and delete associated rentables
+      for (const vehicle of vehicles) {
+        const rentables = await Rentable.findAll({ where: { vehicleId: vehicle.id } });
+
+        for (const rentable of rentables) {
+          // Delete rentable from Typesense using rentable.id
+          await deleteVehicleFromTypesense(rentable.id);
+
+          // Delete rentable entry from Rentable table
+          await Rentable.destroy({ where: { id: rentable.id } });
+        }
+
+        // Step 3: Delete vehicle entry from Vehicles table
+        await Vehicle.destroy({ where: { id: vehicle.id } });
+      }
+
+      // Step 4: Delete the manufacturer itself
+      const deletedManufacturer = await Manufacturer.destroy({ where: { id } });
+
+      if (deletedManufacturer === 0) {
+        throw new Error('Manufacturer not found or already deleted');
+      }
+
+      return deletedManufacturer > 0; // Return true if a manufacturer was deleted
     } catch (error) {
-      console.error('Error deleting manufacturer from database:', error);
-      throw new Error('Failed to delete manufacturer');
+      console.error('Error deleting manufacturer and associated vehicles/rentables:', error);
+      throw new Error('Failed to delete manufacturer and associated data');
     }
   }
 
@@ -101,7 +121,7 @@ class ManufacturerRepository {
     }
   }
 
-  
+
 }
 
 export default ManufacturerRepository;

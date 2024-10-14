@@ -88,6 +88,8 @@ const UserDetails: React.FC = () => {
     }
   };
 
+  
+
   const removeProfilePicture = () => {
     Swal.fire({
       title: "Are you sure?",

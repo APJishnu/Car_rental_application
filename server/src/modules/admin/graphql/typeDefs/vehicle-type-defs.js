@@ -18,6 +18,7 @@ const vehicleTypeDefs = gql`
     year: String!
     primaryImageUrl: String
     otherImageUrls: [String] # Array of URLs for other images
+    isRented: Boolean
   }
 
   # Input for adding vehicle details

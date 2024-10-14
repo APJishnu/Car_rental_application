@@ -43,7 +43,11 @@ const LoginForm: React.FC = () => {
         const token = data.loginUser.token;
         Cookies.set("userToken", token, { expires: 1 / 24 }); 
         
-        router.push("/");
+
+ 
+        window.history.back();
+
+
       } else {
         message.error(data.loginUser.message);
       }

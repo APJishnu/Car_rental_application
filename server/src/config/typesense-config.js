@@ -23,22 +23,26 @@ const createSchema = async () => {
             { name: 'id', type: 'string', facet: false },
             { name: 'pricePerDay', type: 'int32', facet: false },
             { name: 'availableQuantity', type: 'int32', facet: false },
-            { name: 'vehicle', type: 'object', facet: false, fields: [
-                { name: 'name', type: 'string', facet: false },
-                { name: 'year', type: 'string', facet: false },
-                { name: 'description', type: 'string', facet: false },
-                { name: 'numberOfSeats', type: 'string', facet: false },
-                { name: 'transmission', type: 'string', facet: true },
-                { name: 'fuelType', type: 'string', facet: true },
-                { name: 'primaryImageUrl', type: 'string', facet: false },
-                { name: 'manufacturer', type: 'object', facet: false, fields: [
+            {
+                name: 'vehicle', type: 'object', facet: false, fields: [
                     { name: 'name', type: 'string', facet: false },
-                    { name: 'imageUrl', type: 'string', facet: false },
-                ] },
-            ] },
+                    { name: 'year', type: 'string', facet: false },
+                    { name: 'description', type: 'string', facet: false },
+                    { name: 'numberOfSeats', type: 'string', facet: false },
+                    { name: 'transmission', type: 'string', facet: true },
+                    { name: 'fuelType', type: 'string', facet: true },
+                    { name: 'primaryImageUrl', type: 'string', facet: false },
+                    {
+                        name: 'manufacturer', type: 'object', facet: false, fields: [
+                            { name: 'name', type: 'string', facet: false },
+                            { name: 'imageUrl', type: 'string', facet: false },
+                        ]
+                    },
+                ]
+            },
         ],
     };
-    
+
 
     try {
         await typesense.collections().create(schema);
@@ -57,22 +61,22 @@ const addVehicleToTypesense = async (vehicle) => {
     const document = {
         id: vehicle.id,
         pricePerDay: vehicle.pricePerDay,
-        availableQuantity:vehicle.availableQuantity,
-        vehicle:{
+        availableQuantity: vehicle.availableQuantity,
+        vehicle: {
             name: vehicle.name,
             transmission: vehicle.transmission,
             fuelType: vehicle.fuelType,
-            year:vehicle.year,
-            numberOfSeats:vehicle.numberOfSeats,
-            description:vehicle.description,
-           
+            year: vehicle.year,
+            numberOfSeats: vehicle.numberOfSeats,
+            description: vehicle.description,
+
             primaryImageUrl: vehicle.primaryImageUrl,
-            manufacturer:{
+            manufacturer: {
                 name: vehicle.manufacturer,
-                imageUrl:vehicle.imageUrl
-            }  
-        }  
-       
+                imageUrl: vehicle.imageUrl
+            }
+        }
+
     };
 
     try {
@@ -94,4 +98,4 @@ const deleteVehicleFromTypesense = async (id) => {
 };
 
 
-export { typesense, createSchema, addVehicleToTypesense , deleteVehicleFromTypesense  };
+export { typesense, createSchema, addVehicleToTypesense, deleteVehicleFromTypesense };

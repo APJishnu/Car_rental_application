@@ -1,20 +1,24 @@
 /* AdminNavbar.module.css */
 .navbar {
   height: 100%;
-  width: 250px; /* Width of the sidebar */
+  width: 250px;
+  /* Width of the sidebar */
   display: flex;
   flex-direction: column;
-  position: relative; /* Fixed sidebar */
+  position: relative;
+  /* Fixed sidebar */
   top: 0;
   left: 0;
-  background-color: var(--admin-background-color);
+  background: linear-gradient(to right, rgb(0, 0, 0), rgb(0, 0, 73));
   padding: var(--spacing);
   z-index: 100;
-  transition: all 0.3s ease; /* Smooth transition */
+  transition: all 0.4s ease;
+  /* Smooth transition */
 }
 
 .collapsed {
-  width: 60px; /* Width when collapsed */
+  width: 60px;
+  /* Width when collapsed */
 }
 
 .logoContainer {
@@ -23,17 +27,31 @@
   align-items: center;
   margin-bottom: var(--spacing);
   margin-top: var(--spacing);
+  width: 100%;
+  gap: 30px;
 }
-.logo{
+
+.logo {
   display: flex;
   align-items: center;
   justify-content: center;
   padding-top: 5px;
-  width: 200px;
+  width: 100%;
+
 }
 
-.toggleButtonDiv{
+.logoImg {
+  height: 24px;
+}
+
+.toggleButtonDiv {
   width: 100%;
+}
+
+
+.iconScale {
+  transform: scale(1.2);
+  /* Scale up the icon on swipe or click */
 }
 
 .menu {
@@ -45,53 +63,78 @@
   margin: var(--spacing) 0;
   color: var(--admin-accent-color);
   text-align: left;
-  display: flex; /* Make links flexible */
-  align-items: center; /* Center align icons and text */
-  transition: color 0.3s;
+  display: flex;
+  /* Make links flexible */
+  align-items: center;
+  /* Center align icons and text */
+  transition: all 0.5s ease;
+  /* Smooth transition */
 }
 
 .navLink:hover {
-  color: var(--admin-hover-color); /* Change color on hover */
+  color: rgb(2, 169, 235);
+  /* Change color on hover */
+  text-shadow: 1px 0px 10px rgb(255, 255, 255);
 }
 
 /* Icons */
 .icon {
-  font-size: 1.5rem; /* Size for the icons */
-  margin-right: 8px; /* Space between icon and text */
+  font-size: 1.20rem;
+  /* Size for the icons */
+  margin-right: 8px;
+  /* Space between icon and text */
 }
 
 /* Adjustments to Logout Button Container */
 .logoutButtonContainer {
-  margin-top: auto; /* Push to the bottom */
+  margin-top: auto;
+  /* Push to the bottom */
 }
 
 /* Logout Button Styles */
 .logoutButton {
-  display: flex; 
+  display: flex;
   align-items: center;
-  color: var(--admin-accent-color); 
-  text-align: left; 
+  color: var(--admin-accent-color);
+  text-align: left;
   padding-top: var(--spacing);
-  transition: color 0.3s;
+  transition: color 0.4s;
 }
 
 .logoutButton:hover {
-  color: var(--admin-hover-color); /* Change color on hover */
+  color: rgb(2, 169, 235);
+  /* Change color on hover */
+  text-shadow: 1px 0px 10px rgb(255, 255, 255);
 }
+
 .menuIcon {
   display: none;
 }
 
 .toggleIcon {
-  display: none; /* Hidden by default */
+  display: none;
+  /* Hidden by default */
+  transition: transform 0.3s ease;
+  /* Smooth transition for scaling */
+
 }
 
+
+.active {
+  color: rgb(96, 181, 255); /* Active text color */
+  font-weight: bold; /* Bold text for active link */
+  border-left: 4px solid rgb(21, 0, 74); /* Optional: Add a left border */
+  padding-left: 8px; /* Optional: Space for the left border */
+}
 /* Mobile Styles */
 @media (max-width: 768px) {
   .navbar {
-    width: 100%; /* Full width on mobile */
-    height: auto; /* Auto height */
-    position: relative; /* Relative positioning */
+    width: 100%;
+    /* Full width on mobile */
+    height: auto;
+    /* Auto height */
+    position: relative;
+    /* Relative positioning */
     padding: 0.6rem;
   }
 
@@ -105,34 +148,40 @@
     background-color: transparent;
     border: none;
     color: var(--admin-accent-color);
-    font-size: 1.5rem; /* Use an icon for better UX */
+    font-size: 1.5rem;
+    /* Use an icon for better UX */
     position: absolute;
     right: 1rem;
     top: 1rem;
   }
 
   .menu {
-    display: none; /* Hide menu by default */
+    display: none;
+    /* Hide menu by default */
     flex-direction: column;
   }
 
   .showMenu {
-    display: flex; /* Show menu when toggled */
+    display: flex;
+    /* Show menu when toggled */
   }
 
   .navLink {
-    padding: 0.5rem 1rem; /* Add padding for mobile links */
+    padding: 0.5rem 1rem;
+    /* Add padding for mobile links */
   }
 }
 
 /* Desktop Styles */
 @media (min-width: 769px) {
   .toggleIcon {
-    display: block; /* Show toggle icon on desktop */
+    display: block;
+    /* Show toggle icon on desktop */
     cursor: pointer;
     background-color: transparent;
     border: none;
     color: var(--admin-accent-color);
-    font-size: 1.5rem; /* Size for the icon */
+    font-size: 1.5rem;
+    /* Size for the icon */
   }
 }

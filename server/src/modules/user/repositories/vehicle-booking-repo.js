@@ -6,7 +6,7 @@ import Booking from '../models/booking-model.js';
 
 class VehicleBookingRepo {
     static async getRentableVehicles() {
-        const response =  await Rentable.findAll({
+        const response = await Rentable.findAll({
             where: {
                 availableQuantity: {
                     [Op.gt]: 0,  // Only get vehicles with quantity > 0
@@ -26,58 +26,58 @@ class VehicleBookingRepo {
             ],
         });
 
-        console.log("rentables in repo",response)
+        console.log("rentables in repo", response)
 
         return response
     }
 
     static async checkVehicleAvailability(vehicleId, pickupDate, dropoffDate) {
         // Fetch total available quantity for the vehicle
-    const rentableVehicle = await Rentable.findOne({
-        where: { vehicleId },
-    });
+        const rentableVehicle = await Rentable.findOne({
+            where: { vehicleId },
+        });
 
-    if (!rentableVehicle) {
-        throw new Error("Vehicle not found.");
-    }
+        if (!rentableVehicle) {
+            throw new Error("Vehicle not found.");
+        }
 
-    const totalAvailableQuantity = rentableVehicle.availableQuantity;
+        const totalAvailableQuantity = rentableVehicle.availableQuantity;
 
-    // Find overlapping bookings for the specified vehicle in the requested date range
-    const overlappingBookings = await Booking.findAll({
-        where: {
-            vehicleId,
-            status: 'booked', // Only check fully booked vehicles
-            [Op.or]: [
-                {
-                    pickupDate: {
-                        [Op.between]: [pickupDate, dropoffDate],
+        // Find overlapping bookings for the specified vehicle in the requested date range
+        const overlappingBookings = await Booking.findAll({
+            where: {
+                vehicleId,
+                status: 'booked', // Only check fully booked vehicles
+                [Op.or]: [
+                    {
+                        pickupDate: {
+                            [Op.between]: [pickupDate, dropoffDate],
+                        },
                     },
-                },
-                {
-                    dropoffDate: {
-                        [Op.between]: [pickupDate, dropoffDate],
+                    {
+                        dropoffDate: {
+                            [Op.between]: [pickupDate, dropoffDate],
+                        },
                     },
-                },
-                {
-                    [Op.and]: [
-                        { pickupDate: { [Op.lte]: pickupDate } },
-                        { dropoffDate: { [Op.gte]: dropoffDate } },
-                    ],
-                },
-            ],
-        },
-    });
+                    {
+                        [Op.and]: [
+                            { pickupDate: { [Op.lte]: pickupDate } },
+                            { dropoffDate: { [Op.gte]: dropoffDate } },
+                        ],
+                    },
+                ],
+            },
+        });
 
-    const bookedCount = overlappingBookings.length;
+        const bookedCount = overlappingBookings.length;
 
-    // Calculate available quantity
-    const availableQuantity = (totalAvailableQuantity) - bookedCount;
-    console.log(`Vehiclesss ${totalAvailableQuantity}: Available Quantity = ${bookedCount}`)
+        // Calculate available quantity
+        const availableQuantity = (totalAvailableQuantity) - bookedCount;
+        console.log(`Vehiclesss ${totalAvailableQuantity}: Available Quantity = ${bookedCount}`)
 
-    console.log(`Vehicle ${vehicleId}: Available Quantity = ${availableQuantity}`);
+        console.log(`Vehicle ${vehicleId}: Available Quantity = ${availableQuantity}`);
 
-    return availableQuantity > 0;
+        return availableQuantity > 0;
     }
 
     static async getExistingBooking(userId, vehicleId, pickupDate, dropoffDate) {
@@ -90,26 +90,27 @@ class VehicleBookingRepo {
             },
         });
     }
-  // Create a new booking
-  static async createBooking(bookingData) {
-    return await Booking.create(bookingData);
-}
-
-// Update booking status (e.g., from 'pending' to 'booked')
-static async updateBookingStatus(razorpayOrderId, status) {
-    const booking = await Booking.findOne({
-        where: { razorpayOrderId }
-    });
-
-    if (!booking) {
-        throw new Error("Booking not found.");
+    // Create a new booking
+    static async createBooking(bookingData) {
+        return await Booking.create(bookingData);
     }
 
-    booking.status = status; // Update status to 'booked'
-    await booking.save();
+    // Update booking status (e.g., from 'pending' to 'booked')
+    static async updateBookingStatus(razorpayOrderId, status, paymentMethod) {
+        const booking = await Booking.findOne({
+            where: { razorpayOrderId }
+        });
 
-    return booking;
-}
+        if (!booking) {
+            throw new Error("Booking not found.");
+        }
+
+        booking.status = status; // Update status to 'booked'
+        booking.paymentMethod = paymentMethod;
+        await booking.save();
+
+        return booking;
+    }
 }
 
 export default VehicleBookingRepo;

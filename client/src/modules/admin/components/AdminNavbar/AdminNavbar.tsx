@@ -4,19 +4,38 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link'; // Update this based on your routing
-import { MenuOutlined, CloseOutlined, DashboardOutlined, UserOutlined, SettingOutlined, LogoutOutlined, CarOutlined, BuildOutlined } from '@ant-design/icons'; // Import Ant Design icons
+import { MenuOutlined, CloseOutlined,DoubleRightOutlined, DoubleLeftOutlined  , DashboardOutlined, UserOutlined, SettingOutlined, LogoutOutlined, CarOutlined, BuildOutlined } from '@ant-design/icons'; // Import Ant Design icons
 import styles from './AdminNavbar.module.css'; // Import CSS Module
+import { useRouter } from 'next/navigation'; // Import useRouter from next/navigation
+import { usePathname } from 'next/navigation'; 
 
 const AdminNavbar: React.FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isScaled, setIsScaled] = useState(false); 
+  const router = useRouter(); // Get the router instance
+  const pathname = usePathname(); // Get the current pathname
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+
   const toggleSidebar = () => {
-    setIsSidebarCollapsed(!isSidebarCollapsed);
+    setIsSidebarCollapsed(!isSidebarCollapsed); // Toggle sidebar state
+    setIsScaled(true); // Trigger the scale effect
+
+    // Remove the scale effect after the animation is done
+    setTimeout(() => {
+      setIsScaled(false);
+    }, 500); // Matches the CSS transition duration
+  };
+
+
+
+   // Handle navigation and set active tab based on the current path
+   const handleNavigation = (path: string) => {
+    router.push(path); // Use router to navigate
   };
 
   return (
@@ -24,12 +43,13 @@ const AdminNavbar: React.FC = () => {
       <div className={styles.logoContainer}>
         {!isSidebarCollapsed && (
           <div className={styles.logo}>
-            <img src="/Navbar/Heading-logo.svg" alt="Logo" />
+            <img className={styles.logoImg} src="/Navbar/Heading-logo.svg" alt="Logo" />
           </div>
         )}
         <div className={styles.toggleButtonDiv}>
-          <button className={styles.toggleIcon} onClick={toggleSidebar}>
-            {isSidebarCollapsed ? <MenuOutlined /> : <CloseOutlined />} {/* Ant Design icons */}
+          <button className={`${styles.toggleIcon} ${isScaled ? styles.iconScale : ''}`} onClick={toggleSidebar}>
+            
+            {isSidebarCollapsed ? <DoubleRightOutlined /> : <DoubleLeftOutlined />} {/* Ant Design icons */}
           </button>
           <button className={styles.menuIcon} onClick={toggleMenu}>
             {isMenuOpen ? <CloseOutlined /> : <MenuOutlined />} {/* Use Ant Design icons */}
@@ -37,36 +57,34 @@ const AdminNavbar: React.FC = () => {
         </div>
       </div>
       <div className={`${styles.menu} ${isMenuOpen ? styles.showMenu : ''}`}>
-        <Link href="/admin/" className={styles.navLink}>
+        <div onClick={() => handleNavigation('/admin/')} className={`${styles.navLink} ${pathname === '/admin/' ? styles.active : ''}`}>
           <DashboardOutlined className={styles.icon} />
           {!isSidebarCollapsed && 'Admin Dashboard'}
-        </Link>
-        <Link href="/admin/users" className={styles.navLink}>
+        </div>
+        <div onClick={() => handleNavigation('/admin/users')} className={`${styles.navLink} ${pathname === '/admin/users' ? styles.active : ''}`}>
           <UserOutlined className={styles.icon} />
           {!isSidebarCollapsed && 'Users'}
-        </Link>
-        <Link href="/admin/manufacture-list" className={styles.navLink}>
+        </div>
+        <div onClick={() => handleNavigation('/admin/manufacture-list')} className={`${styles.navLink} ${pathname === '/admin/manufacture-list' ? styles.active : ''}`}>
           <BuildOutlined className={styles.icon} />
           {!isSidebarCollapsed && 'Makes'}
-        </Link>
-        <Link href="/admin/vehicles-list" className={styles.navLink}>
+        </div>
+        <div onClick={() => handleNavigation('/admin/vehicles-list')} className={`${styles.navLink} ${pathname === '/admin/vehicles-list' ? styles.active : ''}`}>
           <CarOutlined className={styles.icon} />
           {!isSidebarCollapsed && 'Vehicles'}
-        </Link>
-        <Link href="/admin/rentable-vehicle-lists" className={styles.navLink}>
+        </div>
+        <div onClick={() => handleNavigation('/admin/rentable-vehicle-lists')} className={`${styles.navLink} ${pathname === '/admin/rentable-vehicle-lists' ? styles.active : ''}`}>
           <CarOutlined className={styles.icon} />
-          {!isSidebarCollapsed && 'Rentable Vehicles'}
-        </Link>
-        <Link href="/admin/settings" className={styles.navLink}>
+          {!isSidebarCollapsed && 'Rentables'}
+        </div>
+        <div onClick={() => handleNavigation('/admin/settings')} className={`${styles.navLink} ${pathname === '/admin/settings' ? styles.active : ''}`}>
           <SettingOutlined className={styles.icon} />
           {!isSidebarCollapsed && 'Settings'}
-        </Link>
+        </div>
         {/* Logout Button */}
-        <div className={styles.logoutButtonContainer}>
-          <Link href="/" className={styles.logoutButton}>
-            <LogoutOutlined className={styles.icon} />
-            {!isSidebarCollapsed && 'Logout'}
-          </Link>
+        <div onClick={() => handleNavigation('/')} className={`${styles.logoutButton} ${pathname === '/' ? styles.active : ''}`}>
+          <LogoutOutlined className={styles.icon} />
+          {!isSidebarCollapsed && 'Logout'}
         </div>
       </div>
     </div>

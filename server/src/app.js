@@ -39,22 +39,22 @@ const server = new ApolloServer({
   resolvers,
 
 
-  formatError:(err)=>{
-      console.log("error in formatError");
+  formatError: (err) => {
+    console.log("error in formatError");
 
-      if(err){
-        console.log(err)
-        return {
-          
-          message: err.message,
-        }
+    if (err) {
+      console.log(err)
+      return {
+
+        message: err.message,
       }
+    }
   },
 
 
-  context: ({ req ,res }) => {
+  context: ({ req, res }) => {
     const token = req.headers.authorization || '';
-    return { token,req, res ,session: req.session }; // Make sure to handle this token in your resolvers
+    return { token, req, res, session: req.session }; // Make sure to handle this token in your resolvers
   },
 });
 
@@ -74,7 +74,7 @@ app.use('/uploads', express.static('uploads'));
 const startServer = async () => {
   await server.start();
   server.applyMiddleware({ app });
-  
+
 
   app.listen(PORT, async () => {
     console.log(`Server running on port ${PORT}`);
