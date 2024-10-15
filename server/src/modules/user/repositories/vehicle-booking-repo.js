@@ -111,6 +111,36 @@ class VehicleBookingRepo {
 
         return booking;
     }
+
+    static async fetchBookingsByUserId(userId) {
+        try {
+          // Fetch all bookings by userId and include Rentable, Vehicle, and Manufacturer
+          return await Booking.findAll({
+            where: { userId },
+            include: [
+              {
+                model: Rentable,
+                as: 'rentable',
+                include: [
+                  {
+                    model: Vehicle,
+                    as: 'vehicle',
+                    include: [
+                      {
+                        model: Manufacturer,
+                        as: 'manufacturer',
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          });
+        } catch (error) {
+          console.error("Error in BookingRepo:", error);
+          throw new Error("Database query failed");
+        }
+      }
 }
 
 export default VehicleBookingRepo;

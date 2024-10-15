@@ -7,6 +7,35 @@ const VehicleBookingResolver = {
     getAvailableVehicles: async (_, { pickupDate, dropoffDate }) => {
       return await VehicleBookingHelper.getAvailableVehicles(pickupDate, dropoffDate);
     },
+    fetchBookings: async (_, __, { token }) => {
+
+      try {
+        if (!token) {
+          console.log("Authorization token is missing.");
+          return {
+            status: false,
+            statusCode: 401,
+            message: "Authorization token is missing.",
+            data: [],
+          };
+        }
+
+        // Verify and decode the JWT token to get user details
+        const decodedToken = verifyToken(token.replace('Bearer ', ''));
+        const userId = decodedToken.id;
+
+        // Use helper to get bookings for the user
+        return await VehicleBookingHelper.getBookingsByUser(userId);
+      } catch (error) {
+        console.error("Error fetching bookings:", error);
+        return {
+          status: false,
+          statusCode: 500,
+          message: "Failed to fetch bookings.",
+          data: [],
+        };
+      }
+    },
   },
 
   Mutation: {
@@ -35,7 +64,7 @@ const VehicleBookingResolver = {
         }
 
         // Create Razorpay order using the total price and booking details
-        const razorpayOrder = await VehicleBookingHelper.createPaymentOrder(totalPrice ,user.id, bookingInput );
+        const razorpayOrder = await VehicleBookingHelper.createPaymentOrder(totalPrice, user.id, bookingInput);
         console.log("Razorpay order created:", razorpayOrder);
 
         return {

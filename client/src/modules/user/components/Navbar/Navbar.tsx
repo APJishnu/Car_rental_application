@@ -2,29 +2,68 @@
 import React, { useState } from 'react';
 import styles from './Navbar.module.css';
 import { FaBars, FaTimes, FaUser, FaCog, FaSignOutAlt, FaEnvelope , FaChevronDown} from 'react-icons/fa'; // Import icons
-import { Dropdown, MenuProps  } from 'antd';
+import { Dropdown, MenuProps, Modal, Button   } from 'antd';
 import useUserData from '../../services/user-data';
+import { UserAddOutlined, LoginOutlined , SmileOutlined } from '@ant-design/icons';
 import { removeUserToken } from '../../services/remove-user-cookie';
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { userData, loading } = useUserData();
+  const [isModalVisible, setIsModalVisible] = useState(false); 
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
   };
 
-  const handleSignUp = () => {
-    window.location.href = '/user/sign-up';
-  };
+
 
   const handleLogout = () => {
     removeUserToken(); // Call the function to remove the token
     window.location.href = '/'; // Redirect to login page after logout
   };
 
+
+  const showModal = () => {
+    setIsModalVisible(true); // Show modal on click
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false); // Close modal
+  };
   // Render loading state
   const renderLoading = () => <span>Loading...</span>;
+
+   
+const renderModalContent = () => (
+  <div className={styles.card}>
+    <img src="/login-signup.svg" alt="user login" />
+    <p className={styles.heading}><SmileOutlined /> Welcome to Our Platform! <SmileOutlined /></p>
+    <p className={styles.description}>
+      We're excited to have you here! <br />
+      Join us today by creating an account or logging in to continue.
+    </p>
+    <div className={styles.buttonContainer}>
+    
+<Button
+  type="primary"
+  icon={<UserAddOutlined />}  // Changed icon to UserAddOutlined
+  className={styles.signupButton}
+  onClick={() => window.location.href = '/user/sign-up'}
+>
+  Sign Up
+</Button>
+<Button
+  type="default"
+  icon={<LoginOutlined />}  // Changed icon to LoginOutlined
+  className={styles.loginButton}
+  onClick={() => window.location.href = '/user/user-login'}
+>
+  Login
+</Button>
+    </div>
+  </div>
+);
 
   // Render user icon or login button
   const renderUserIconOrButton = () => {
@@ -85,7 +124,7 @@ const Navbar: React.FC = () => {
       </Dropdown>
     );
   }
-    return <button className={styles.loginBtn} onClick={handleSignUp}>Login / Register</button>;
+  return <button className={styles.loginBtn} onClick={showModal}>Login / Register</button>;
   };
 
   return (
@@ -121,6 +160,10 @@ const Navbar: React.FC = () => {
           {renderUserIconOrButton()}
         </div>
       </div>
+        {/* Modal for Login/Signup */}
+        <Modal open={isModalVisible} onCancel={handleCancel} footer={null} centered>
+        {renderModalContent()}
+      </Modal>
     </nav>
   );
 };

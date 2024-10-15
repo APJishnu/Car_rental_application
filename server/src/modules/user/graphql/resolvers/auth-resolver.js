@@ -14,8 +14,6 @@ const userAuthResolvers = {
       }
 
       const decodedToken = verifyToken(token.replace('Bearer ', '')); // Strip "Bearer "
-
-      // Fetch the user based on the token payload
       const user = await User.findByPk(decodedToken.id);
 
       console.log(decodedToken)

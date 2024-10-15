@@ -145,6 +145,37 @@ class VehicleBookingHelper {
     }
 
 
+
+    static async getBookingsByUser(userId) {
+        try {
+          // Fetch bookings from the repository
+          const bookings = await VehicleBookingRepo.fetchBookingsByUserId(userId);
+    
+          if (!bookings || bookings.length === 0) {
+            return {
+              status: true,
+              statusCode: 200,
+              message: "No bookings found for this user.",
+              data: [],
+            };
+          }
+    
+          return {
+            status: true,
+            statusCode: 200,
+            message: "Bookings fetched successfully",
+            data: bookings,
+          };
+        } catch (error) {
+          console.error("Error in BookingHelper:", error);
+          return {
+            status: false,
+            statusCode: 500,
+            message: "Failed to fetch bookings",
+            data: [],
+          };
+        }
+      }
 }
 
 export default VehicleBookingHelper;

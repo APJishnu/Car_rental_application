@@ -12,7 +12,6 @@ const VehicleBookingTypeDefs = gql`
     imageUrl: String
   }
 
-  # Define the Vehicle type
   type Vehicle {
     id: ID!
     name: String!
@@ -22,17 +21,17 @@ const VehicleBookingTypeDefs = gql`
     numberOfSeats: String!
     year: String!
     primaryImageUrl: String
-    manufacturer: Manufacturer!  # Relation with Manufacturer
+    manufacturer: Manufacturer! 
   }
 
-  # Define the Rentable type
-  type Rentable {
-    id: ID!
-    vehicleId: ID!
-    pricePerDay: Float!
-    availableQuantity: Int!
-    vehicle: Vehicle!  # Relation with Vehicle
-  }
+ type Rentable {
+  id: ID!
+  vehicleId: ID!
+  pricePerDay: Float!
+  availableQuantity: Int!
+  vehicle: Vehicle!  
+}
+
 
   # Booking Details Type
   type Booking {
@@ -67,11 +66,29 @@ const VehicleBookingTypeDefs = gql`
 
  
 
-  # Input for verifying payment
   input PaymentInput {
     razorpayPaymentId: String!
     razorpayOrderId: String!
     razorpaySignature: String!
+  }
+
+   type GetBooking {
+    id: ID!
+    vehicleId: Int!
+    userId: Int!
+    pickupDate: String!
+    dropoffDate: String!
+    totalPrice: Float!
+    razorpayOrderId: String
+    paymentMethod: String!
+    rentable: Rentable
+  }
+
+  type FetchBookingsResponse {
+    status: Boolean!
+    statusCode: Int!
+    message: String!
+    data: [GetBooking]
   }
 
 
@@ -84,6 +101,7 @@ const VehicleBookingTypeDefs = gql`
   # Query for getting available vehicles
   type Query {
     getAvailableVehicles(pickupDate: String!, dropoffDate: String!): [Rentable]
+    fetchBookings: FetchBookingsResponse!
   }
 
   # Mutation for creating a Razorpay payment order and verifying payment + booking creation
