@@ -17,7 +17,10 @@ Manufacturer.init({
     type: DataTypes.STRING(1000), // Increase length to 1000 or use DataTypes.TEXT
     allowNull: true,
   },
- 
+  isDeleted:{
+    type:DataTypes.BOOLEAN,
+    allowNull:true
+  }
 }, {
   sequelize,
   modelName: 'Manufacturer',

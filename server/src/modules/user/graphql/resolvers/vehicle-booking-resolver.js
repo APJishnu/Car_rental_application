@@ -1,6 +1,8 @@
 import { verifyToken } from '../../../../utils/jwt-helper.js';
 import VehicleBookingHelper from '../../helpers/vehicle-booking-helper.js';
 import User from '../../models/auth-model.js';
+import Booking from '../../models/booking-model.js';
+import Review from '../../models/review-model.js';
 
 const VehicleBookingResolver = {
   Query: {
@@ -34,6 +36,29 @@ const VehicleBookingResolver = {
           message: "Failed to fetch bookings.",
           data: [],
         };
+      }
+    }, 
+
+    fetchReviews: async (_, { vehicleId }) => {
+      try {
+        const reviews = await Review.findAll({
+          where: { vehicleId }, // Filter by vehicleId
+          include: [
+            {
+              model: Booking,
+              as: 'booking', // Include Booking details
+            },
+            {
+              model: User,
+              as: 'user', // Include User details to fetch firstName, lastName, email, and profilePicture
+              attributes: ['id', 'firstName', 'lastName', 'email', 'profileImage'], // Select necessary fields
+            },
+          ],
+        });
+        return reviews;
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+        throw new Error("Failed to fetch reviews");
       }
     },
   },
@@ -116,6 +141,33 @@ const VehicleBookingResolver = {
         return {
           status: "error",
           message: "Payment verification and booking creation failed.",
+        };
+      }
+    },
+
+    addReview: async (_, { bookingId,vehicleId, comment, rating }, { token }) => {
+      try {
+        if (!token) {
+          return {
+            status: false,
+            message: 'Authorization token is missing.',
+          };
+        }
+
+        // Verify and decode the JWT token to get user details
+        const decodedToken = verifyToken(token.replace('Bearer ', ''));
+        const userId = decodedToken.id;
+
+  
+
+        
+        const response = await VehicleBookingHelper.addReview({ bookingId,vehicleId, comment, rating, userId: userId });
+        return response;
+      } catch (err) {
+        console.error(err);
+        return {
+          status: false,
+          message: 'Failed to add review.',
         };
       }
     },

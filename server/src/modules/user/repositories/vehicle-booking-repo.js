@@ -3,6 +3,7 @@ import Rentable from '../../admin/models/rentable-vehicle-model.js';
 import Vehicle from '../../admin/models/vehicles-model.js';
 import Manufacturer from '../../admin/models/manufacturer-model.js';
 import Booking from '../models/booking-model.js';
+import Review from '../models/review-model.js';
 
 class VehicleBookingRepo {
     static async getRentableVehicles() {
@@ -139,6 +140,30 @@ class VehicleBookingRepo {
         } catch (error) {
           console.error("Error in BookingRepo:", error);
           throw new Error("Database query failed");
+        }
+      }
+
+     static async createReview(bookingId,vehicleId, comment, rating, userId) {
+        try {
+          // Validate booking exists and is associated with the user
+          const booking = await Booking.findOne({ where: { id: bookingId, userId } });
+          if (!booking) {
+            throw new Error('Booking not found or not associated with the user.');
+          }
+    
+          // Create the review
+          const review = await Review.create({
+            bookingId,
+            vehicleId,
+            userId ,
+            comment,
+            rating,
+          });
+    
+          return review;
+        } catch (error) {
+          console.error(error);
+          return null;
         }
       }
 }

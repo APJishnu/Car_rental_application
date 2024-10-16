@@ -28,10 +28,18 @@ interface Vehicle {
 }
 
 interface Review {
-  userName: string;
-  rating: number;
+  id: string;
+  bookingId: string;
+  vehicleId: string;
+  userId: string;
   comment: string;
-  userReviewImage: string; // New field for user profile image
+  rating: number;
+  user: {
+    id: string;
+    fullName: string;
+    email: string;
+    profileImage: string; // URL or path to the user's profile picture
+  };
 }
 
 
@@ -76,6 +84,30 @@ const GET_RENTABLE_VEHICLE_BY_ID = gql`
   }
 `;
 
+
+const FETCH_REVIEWS = gql`
+  query FetchReviewsByVehicleId($vehicleId: ID!) {
+    fetchReviews(vehicleId: $vehicleId) {
+      id
+      bookingId
+      vehicleId
+      userId
+      comment
+      rating
+      user {
+        id
+        firstName
+        lastName
+        email
+        profileImage
+      }
+    }
+  }
+`;
+
+
+
+
 const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
   const [car, setCar] = useState<RentableVehicle | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -99,7 +131,6 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
   const dropoffDate = searchParams.get('dropoffDate');
 
   const [isBookingSectionVisible, setIsBookingSectionVisible] = useState<boolean>(false);
-  const [isConfirmationVisible, setIsConfirmationVisible] = useState<boolean>(false);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [numberOfDays, setNumberOfDays] = useState<number>(0);
   const [setGstPerDay, setIsGstPerDay] = useState<number>(0);
@@ -122,6 +153,41 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
     setIsModalOpen(true); // Open the modal to show the message
   }
 
+
+
+  const vehicleId = carId; // Get the vehicle ID from the fetched car data
+  const { loading: reviewsLoading, error: reviewsError, data: reviewsData } = useQuery(FETCH_REVIEWS, {
+    variables: { vehicleId },
+    skip: !vehicleId, // Skip the query if vehicleId is not available
+  });
+
+
+  useEffect(() => {
+    if (reviewsData) {
+      const fetchedReviews = reviewsData.fetchReviews.map((review: any) => ({
+        id: review.id,
+        bookingId: review.bookingId,
+        vehicleId: review.vehicleId,
+        userId: review.userId,
+        comment: review.comment,
+        rating: review.rating,
+        user: {
+          id: review.user.id,
+          fullName: `${review.user.firstName} ${review.user.lastName}`, // Combine first and last names
+          email: review.user.email,
+          profileImage: review.user.profileImage || "/default-profile.png", // Default profile picture if missing
+        },
+      }));
+  
+      setReviews(fetchedReviews); // Update the state with fetched reviews
+    }
+  
+    if (reviewsError) {
+      console.error("Error fetching reviews:", reviewsError);
+    }
+  }, [reviewsData, reviewsError]);
+
+  
   useEffect(() => {
     if (data) {
       setCar(data.rentableVehicleWithId);
@@ -133,23 +199,6 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
 
 
 
-    setReviews([
-      { userName: "John Doe", rating: 5, comment: "Great experience!", userReviewImage: "/profile.svg" },
-      { userName: "Jane Smith", rating: 5, comment: "Fantastic car!", userReviewImage: "/profile.svg" },
-      { userName: "Peter Parker", rating: 5, comment: "Good, but could be better.", userReviewImage: "/profile.svg" },
-      { userName: "Peter Parker", rating: 2, comment: "Good, but could be better.", userReviewImage: "/profile.svg" },
-      { userName: "Peter Parker", rating: 5, comment: "Good, but could be better.", userReviewImage: "/profile.svg" },
-      { userName: "Peter Parker", rating: 4, comment: "Good, but could be better.", userReviewImage: "/profile.svg" },
-      { userName: "Peter Parker", rating: 5, comment: "Good, but could be better.", userReviewImage: "/profile.svg" },
-      { userName: "Peter Parker", rating: 5, comment: "Good, but could be better.", userReviewImage: "/profile.svg" },
-      { userName: "Peter Parker", rating: 5, comment: "Good, but could be better.", userReviewImage: "/profile.svg" },
-      { userName: "Peter Parker", rating: 4, comment: "Good, but could be better.", userReviewImage: "/path/to/peter-image.jpg" },
-      { userName: "Peter Parker", rating: 3, comment: "Good, but could be better.", userReviewImage: "/path/to/peter-image.jpg" },
-      { userName: "Peter Parker", rating: 3, comment: "Good, but could be better.", userReviewImage: "/path/to/peter-image.jpg" },
-      { userName: "Mary Jane", rating: 5, comment: "Loved it!", userReviewImage: "/path/to/mary-image.jpg" },
-      { userName: "Mary Jane", rating: 4, comment: "Loved it!", userReviewImage: "/path/to/mary-image.jpg" },
-      { userName: "Mary Jane", rating: 1, comment: "Loved it!", userReviewImage: "/path/to/mary-image.jpg" },
-    ]);
 
   }, [data, queryLoading, queryError]);
 
@@ -452,21 +501,24 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
                 <p>1 Star</p>
               </div>
             </div>
-
-            {reviews.slice(0, 5).map((review, index) => (
-              <div key={index} className={styles.reviewItem}>
-                <img
-                  src={review.userReviewImage}
-                  alt={`${review.userName}'s profile`}
-                  className={styles.userImage}
-                />
-                <div className={styles.reviewContent}>
-                  <h4>{review.userName}</h4>
-                  <Rate value={review.rating} disabled />
-                  <p>{review.comment}</p>
-                </div>
-              </div>
-            ))}
+<div className={styles.reviews}>
+  {reviews.slice(0, 5).map((review, index) => (
+    <div key={index} className={styles.reviewItem}>
+      <img
+        src={review.user.profileImage}
+        alt={`${review.user.fullName}'s profile`}
+        className={styles.userImage}
+      />
+      <div className={styles.reviewContent}>
+        <h4>{review.user.fullName}</h4> {/* Display full name */}
+        <p>{review.user.email}</p> {/* Display user email */}
+        <Rate value={review.rating} allowHalf disabled style={{ color: 'black' }} 
+        />
+        <p>{review.comment}</p>
+      </div>
+    </div>
+  ))}
+</div>
           </div>
         </div>
 

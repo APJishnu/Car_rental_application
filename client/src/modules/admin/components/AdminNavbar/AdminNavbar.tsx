@@ -57,7 +57,7 @@ const AdminNavbar: React.FC = () => {
         </div>
       </div>
       <div className={`${styles.menu} ${isMenuOpen ? styles.showMenu : ''}`}>
-        <div onClick={() => handleNavigation('/admin/')} className={`${styles.navLink} ${pathname === '/admin/' ? styles.active : ''}`}>
+        <div onClick={() => handleNavigation('/admin/dashboard')} className={`${styles.navLink} ${pathname === '/admin/dashboard' ? styles.active : ''}`}>
           <DashboardOutlined className={styles.icon} />
           {!isSidebarCollapsed && 'Admin Dashboard'}
         </div>

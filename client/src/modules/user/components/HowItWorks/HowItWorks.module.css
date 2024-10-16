@@ -16,6 +16,9 @@
   width: 100%;
   text-align: center;
 }
+.title{
+  color: rgb(138, 0, 0);
+}
 
 .stepsSection {
   width: 100%;
@@ -46,6 +49,7 @@
   background: #ffffff;
   padding: 20px;
   border-radius: 8px;
+  
   border: 2px solid #f0f0f0;
 }
 
@@ -63,6 +67,7 @@
   width: 55px;
   height: 25px;
   padding: 0px;
+  color: rgb(138, 0, 0);
 }
 
 .stepContent {
@@ -74,6 +79,7 @@
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 5px;
+  color: rgb(138, 0, 0);
 }
 
 .stepDescription {

@@ -1,6 +1,5 @@
 import RentableVehicleHelper from '../../helpers/rentable-vehicle-helper.js';
 import { ApolloError } from 'apollo-server-express';
-import Rentable from '../../models/rentable-vehicle-model.js'
 
 const RentableResolvers = {
   Query: {

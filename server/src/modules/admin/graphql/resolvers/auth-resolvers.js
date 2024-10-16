@@ -35,17 +35,18 @@ const authResolvers = {
         }
 
         // Generate JWT token
-        const token = AdminHelper.generateToken(admin);
+        const token = AdminHelper.generateToken(admin.dataValues);
+
 
         return {
           token,
           admin: {
-            id: admin.id,
-            name: admin.name, // Include name
-            email: admin.email,
-            role: admin.role,
-            createdAt: admin.createdAt,
-            updatedAt: admin.updatedAt,
+            id: admin.dataValues.id,
+            name: admin.dataValues.name, // Include name
+            email: admin.dataValues.email,
+            role: admin.dataValues.role,
+            createdAt: admin.dataValues.createdAt,
+            updatedAt: admin.dataValues.updatedAt,
           },
         };
       } catch (error) {

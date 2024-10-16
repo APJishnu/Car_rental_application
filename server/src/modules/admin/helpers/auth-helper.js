@@ -1,11 +1,11 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import AuthRepository from '../repositories/auth-repo.js'; // Import the auth repository
-import { SECRET_KEY } from '../../../config/config.js'; // Secret key for JWT
+import { JWT_SECRET } from '../../../config/config.js'; // Secret key for JWT
 
 class AdminHelper {
   constructor() {
-    this.secretKey = SECRET_KEY;
+    this.secretKey = JWT_SECRET;
   }
 
    // Method to find admin by email using the repository
@@ -30,6 +30,7 @@ class AdminHelper {
   // Method to generate JWT token
   generateToken(admin) {
     try {
+      console.log(admin," in generate token admin")
       return jwt.sign(
         { id: admin.id, email: admin.email, role: admin.role },
         this.secretKey,

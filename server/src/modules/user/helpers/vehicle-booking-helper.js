@@ -150,6 +150,8 @@ class VehicleBookingHelper {
         try {
           // Fetch bookings from the repository
           const bookings = await VehicleBookingRepo.fetchBookingsByUserId(userId);
+
+          console.log(bookings,"in helper booking fetching")
     
           if (!bookings || bookings.length === 0) {
             return {
@@ -173,6 +175,23 @@ class VehicleBookingHelper {
             statusCode: 500,
             message: "Failed to fetch bookings",
             data: [],
+          };
+        }
+      }
+
+     static async addReview({ bookingId,vehicleId, comment, rating, userId }) {
+        // Here we can add any additional business logic if needed
+        const result = await VehicleBookingRepo.createReview(bookingId,vehicleId, comment, rating, userId);
+        
+        if (result) {
+          return {
+            status: true,
+            message: 'Review added successfully.',
+          };
+        } else {
+          return {
+            status: false,
+            message: 'Error adding review.',
           };
         }
       }

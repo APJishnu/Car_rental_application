@@ -85,7 +85,6 @@ class ManufacturerRepository {
           // Delete rentable entry from Rentable table
           await Rentable.destroy({ where: { id: rentable.id } });
         }
-
         // Step 3: Delete vehicle entry from Vehicles table
         await Vehicle.destroy({ where: { id: vehicle.id } });
       }
