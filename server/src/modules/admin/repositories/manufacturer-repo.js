@@ -69,39 +69,40 @@ class ManufacturerRepository {
     try {
       // Step 1: Find all vehicles associated with the manufacturer
       const vehicles = await Vehicle.findAll({ where: { manufacturerId: id } });
-
+  
       if (vehicles.length === 0) {
         console.warn(`No vehicles found for manufacturer ID: ${id}`);
       }
-
-      // Step 2: For each vehicle, find and delete associated rentables
+  
+      // Step 2: For each vehicle, find and soft delete associated rentables
       for (const vehicle of vehicles) {
         const rentables = await Rentable.findAll({ where: { vehicleId: vehicle.id } });
-
+  
         for (const rentable of rentables) {
-          // Delete rentable from Typesense using rentable.id
+          // Soft delete rentable entry
+          await rentable.destroy(); // This will set the deletedAt field
+  
+          // Optionally delete from Typesense
           await deleteVehicleFromTypesense(rentable.id);
-
-          // Delete rentable entry from Rentable table
-          await Rentable.destroy({ where: { id: rentable.id } });
         }
-        // Step 3: Delete vehicle entry from Vehicles table
-        await Vehicle.destroy({ where: { id: vehicle.id } });
+        // Step 3: Soft delete vehicle entry
+        await vehicle.destroy(); // This will set the deletedAt field
       }
-
-      // Step 4: Delete the manufacturer itself
-      const deletedManufacturer = await Manufacturer.destroy({ where: { id } });
-
-      if (deletedManufacturer === 0) {
+  
+      // Step 4: Soft delete the manufacturer itself
+      const manufacturer = await Manufacturer.findByPk(id);
+      if (!manufacturer) {
         throw new Error('Manufacturer not found or already deleted');
       }
-
-      return deletedManufacturer > 0; // Return true if a manufacturer was deleted
+      await manufacturer.destroy(); // This will set the deletedAt field
+  
+      return true; // Return true if a manufacturer was deleted
     } catch (error) {
       console.error('Error deleting manufacturer and associated vehicles/rentables:', error);
       throw new Error('Failed to delete manufacturer and associated data');
     }
   }
+  
 
 
   static async updateManufacturer(id, updates) {

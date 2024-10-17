@@ -2,6 +2,7 @@ import Booking from "../../user/models/booking-model.js";
 import Manufacturer from "../models/manufacturer-model.js";
 import Rentable from "../models/rentable-vehicle-model.js";
 import Vehicle from "../models/vehicles-model.js";
+import { Op } from 'sequelize'; // Import Op from sequelize
 
 class BookingsRepo {
   
@@ -9,18 +10,26 @@ class BookingsRepo {
     static async fetchAllBookings() {
       try {
         return await Booking.findAll({
+          where: {
+            status: {
+              [Op.or]: ['booked', 'released'], // Filter for booked or released status
+            },
+          },
           include: [
             {
               model: Rentable,
               as: 'rentable',
+              paranoid: false, // Include soft-deleted Rentable records
               include: [
                 {
                   model: Vehicle,
                   as: 'vehicle',
+                  paranoid: false, // Include soft-deleted Vehicle records
                   include: [
                     {
                       model: Manufacturer,
                       as: 'manufacturer',
+                      paranoid: false, // Include soft-deleted Manufacturer records
                     },
                   ],
                 },
@@ -33,6 +42,7 @@ class BookingsRepo {
         throw new Error("Database query failed");
       }
     }
+    
 
     static async findById(bookingId) {
       try {

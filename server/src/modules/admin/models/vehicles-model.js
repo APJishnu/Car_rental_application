@@ -1,12 +1,10 @@
 // src/models/vehicles-model.js
-
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../../../config/database.js';
 import Manufacturer from './manufacturer-model.js'; // Import the Manufacturer model
 
 class Vehicle extends Model {}
 
-// Define the Vehicle model
 Vehicle.init({
   manufacturerId: {
     type: DataTypes.INTEGER,
@@ -24,15 +22,15 @@ Vehicle.init({
     type: DataTypes.TEXT,
     allowNull: true,
   },
-  transmission:{
+  transmission: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  fuelType:{
+  fuelType: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  numberOfSeats:{
+  numberOfSeats: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -52,19 +50,25 @@ Vehicle.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
-  isRented: {  // Allow longer URLs
-    type: DataTypes.BOOLEAN, // Increase length to 1000 or use DataTypes.TEXT
-    defaultValue:false,
+  isRented: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  deletedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
   },
 }, {
   sequelize,
   modelName: 'Vehicle',
+  paranoid: true, // Enable soft delete functionality
 });
 
 // Define associations
 Vehicle.belongsTo(Manufacturer, {
   foreignKey: 'manufacturerId',
   as: 'manufacturer', // Define the alias for easier access
+  onDelete: 'SET NULL', // Set manufacturerId to null on manufacturer delete
 });
 
 export default Vehicle;

@@ -40,6 +40,8 @@
 .vehicleCard {
   width: 290px;
   /* Adjust the width of the card */
+  height: 100%;
+  max-height: 350px;
 }
 
 .imageContainer {

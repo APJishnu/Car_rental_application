@@ -3,6 +3,7 @@ import authHelper from '../../helpers/auth-helper.js';
 import User from '../../models/auth-model.js';
 import { verifyToken } from '../../../../utils/jwt-helper.js';
 import { GraphQLUpload } from 'graphql-upload';
+import { sendOtpValidationSchema } from '../../../../utils/registration-validation.js';
 
 const userAuthResolvers = {
   Upload: GraphQLUpload,
@@ -48,10 +49,50 @@ const userAuthResolvers = {
 
 
   Mutation: {
-    async sendOTP(_, { phoneNumber }) {
-      const response = await authHelper.sendOTP(phoneNumber);
-      return { ...response, data: null }; // Return data as null since no user is created yet
+    async sendOTP(_, { firstName, lastName, phoneNumber, email, password, confirmPassword }) {
+      try {
+        // Validate inputs
+        const { error } = sendOtpValidationSchema.validate(
+          { firstName, lastName, phoneNumber, email, password, confirmPassword },
+          { abortEarly: false }
+        );
+    
+        // Map the validation errors to the desired output format
+        const validationErrors = error
+          ? error.details.map(err => ({
+              field: err.path[0],  // The field name
+              message: `"${err.path[0]}" ${err.message}`, // Include quotes around the field name
+            }))
+          : [];
+    
+        console.log(validationErrors); // For debugging purposes
+    
+        // If there are validation errors, return them
+        if (validationErrors.length > 0) {
+          return {
+            status: 'error',
+            message: 'Validation error',
+            errors: validationErrors,
+            data: null,
+          };
+        }
+    
+        // Send OTP logic
+        const response = await authHelper.sendOTP(phoneNumber);
+    
+        // Return the response from sending OTP
+        return { ...response, data: null };
+      } catch (error) {
+        console.error("Error in sendOTP:", error); // Log the error for debugging
+        return {
+          status: 'error',
+          message: 'An unexpected error occurred while sending OTP.',
+          errors: [], // No specific errors to return in this case
+          data: null,
+        };
+      }
     },
+    
 
     async registerUser(_, { input }) {
       const response = await authHelper.registerUser(input);

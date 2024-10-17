@@ -66,34 +66,34 @@ class VehicleRepository {
     }
   }
 
-
   static async deleteVehicleById(id) {
     try {
-      // Find all rentable entries associated with the vehicle
-      const rentables = await Rentable.findAll({ where: { vehicleId: id } });
+        // Find all rentable entries associated with the vehicle
+        const rentables = await Rentable.findAll({ where: { vehicleId: id } });
 
-      if (rentables.length === 0) {
-        console.warn(`No rentable vehicles found for vehicle ID: ${id}`);
-        throw new Error('No rentable vehicles associated with this vehicle.');
-      }
+        // If there are rentables, iterate through each and soft delete it
+        if (rentables.length > 0) {
+            for (const rentable of rentables) {
+                await rentable.destroy(); // This will set the deletedAt field
+                await deleteVehicleFromTypesense(rentable.id); // Optionally delete from Typesense
+            }
+        }
 
-      // Iterate through each rentable entry and delete it from Typesense
-      for (const rentable of rentables) {
-        await deleteVehicleFromTypesense(rentable.id); // Delete from Typesense using rentable.id
-      }
-      // Delete the vehicle from the Vehicles table
-      const deletedVehicle = await Vehicle.destroy({ where: { id } });
+        // Now, attempt to soft delete the vehicle from the Vehicles table
+        const vehicle = await Vehicle.findByPk(id);
+        if (!vehicle) {
+            return null; // No rows were affected, meaning no vehicle was found with the given ID
+        }
+        await vehicle.destroy(); // This will set the deletedAt field
 
-      if (deletedVehicle === 0) {
-        return null; // No rows were affected, meaning no vehicle was found with the given ID
-      }
-
-      return { id }; // Optionally return the ID of the deleted vehicle
+        return { id }; // Optionally return the ID of the deleted vehicle
     } catch (error) {
-      console.error('Error deleting vehicle and rentables:', error);
-      throw new Error('Failed to delete vehicle and associated rentables');
+        console.error('Error deleting vehicle and associated rentables:', error);
+        throw new Error('Failed to delete vehicle and associated rentables');
     }
-  }
+}
+
+  
 
 
 

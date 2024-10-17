@@ -2,10 +2,19 @@
 
 import React, { useEffect, useState } from "react";
 import styles from "./CarBooking.module.css";
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams } from "next/navigation";
 import { gql, useQuery } from "@apollo/client";
-import { Tooltip, Rate, Input, Button, Progress, Divider } from "antd";
-import { CarOutlined, TeamOutlined, FireOutlined, LeftOutlined, RightOutlined, CloseOutlined } from '@ant-design/icons';
+import confetti from "canvas-confetti";
+
+import { Tooltip, Rate, Input, Button, Progress } from "antd";
+import {
+  CarOutlined,
+  TeamOutlined,
+  FireOutlined,
+  LeftOutlined,
+  RightOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 import { useBooking } from "../../services/booking-services"; // Import the custom hook
 import Modal from "../../../../themes/Modal/Modal"; // Import the modal component
 
@@ -42,7 +51,6 @@ interface Review {
   };
 }
 
-
 interface RentableVehicle {
   vehicleId: string;
   pricePerDay: string;
@@ -52,7 +60,6 @@ interface RentableVehicle {
 
 interface CarBookingProps {
   carId: string;
-
 }
 
 // GraphQL Query to get the details of a specific rentable vehicle by ID
@@ -84,7 +91,6 @@ const GET_RENTABLE_VEHICLE_BY_ID = gql`
   }
 `;
 
-
 const FETCH_REVIEWS = gql`
   query FetchReviewsByVehicleId($vehicleId: ID!) {
     fetchReviews(vehicleId: $vehicleId) {
@@ -105,9 +111,6 @@ const FETCH_REVIEWS = gql`
   }
 `;
 
-
-
-
 const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
   const [car, setCar] = useState<RentableVehicle | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -115,52 +118,74 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [userContact, setUserContact] = useState<string>("");
 
-
-
-
   const [modalMessage, setModalMessage] = useState<string | null>(null);
-  const [modalStatus, setModalStatus] = useState<"success" | "error" | null>(null);
+  const [modalStatus, setModalStatus] = useState<"success" | "error" | null>(
+    null
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
-
-
 
   const searchParams = useSearchParams(); // Use `useSearchParams` to get search params
 
   // Get query params for pickupDate and dropoffDate
-  const pickupDate = searchParams.get('pickupDate');
-  const dropoffDate = searchParams.get('dropoffDate');
+  const pickupDate = searchParams.get("pickupDate");
+  const dropoffDate = searchParams.get("dropoffDate");
 
-  const [isBookingSectionVisible, setIsBookingSectionVisible] = useState<boolean>(false);
+  const [isBookingSectionVisible, setIsBookingSectionVisible] =
+    useState<boolean>(false);
   const [totalPrice, setTotalPrice] = useState<number>(0);
   const [numberOfDays, setNumberOfDays] = useState<number>(0);
   const [setGstPerDay, setIsGstPerDay] = useState<number>(0);
-  const { loading: queryLoading, error: queryError, data } = useQuery(GET_RENTABLE_VEHICLE_BY_ID, {
+  const {
+    loading: queryLoading,
+    error: queryError,
+    data,
+  } = useQuery(GET_RENTABLE_VEHICLE_BY_ID, {
     variables: { id: carId },
     skip: !carId,
   });
 
-
-  const { handleBooking, loading: mutationLoading, error: mutationError, data: mutationData } = useBooking();
+  const {
+    handleBooking,
+    loading: mutationLoading,
+    error: mutationError,
+    data: mutationData,
+  } = useBooking();
   const handlerfunction = (data: any) => {
-    console.log(data, "data in carbooking")
+    console.log(data, "data in carbooking");
     if (data && data.verifyPaymentAndCreateBooking.status === "success") {
-      setModalMessage(data.verifyPaymentAndCreateBooking.message || "Booking created successfully!"); // Display success message
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+      });
+
+      setModalMessage(
+        data.verifyPaymentAndCreateBooking.message ||
+          "Booking created successfully!"
+      ); // Display success message
       setModalStatus("success");
+
+      // setTimeout(() => {
+      //   window.location.href = "/user/user-bookings"; // Change this to the correct path for user bookings
+      // }, 5000);
     } else {
-      setModalMessage(data.verifyPaymentAndCreateBooking?.message || "Something went wrong!"); // Display error message
+      setModalMessage(
+        data.verifyPaymentAndCreateBooking?.message || "Something went wrong!"
+      ); // Display error message
       setModalStatus("error");
     }
     setIsModalOpen(true); // Open the modal to show the message
-  }
+  };
 
-
-
-  const vehicleId = carId; // Get the vehicle ID from the fetched car data
-  const { loading: reviewsLoading, error: reviewsError, data: reviewsData } = useQuery(FETCH_REVIEWS, {
+  const vehicleId = car?.vehicleId; // Get the vehicle ID from the fetched car data
+  const {
+    loading: reviewsLoading,
+    error: reviewsError,
+    data: reviewsData,
+  } = useQuery(FETCH_REVIEWS, {
     variables: { vehicleId },
     skip: !vehicleId, // Skip the query if vehicleId is not available
   });
-
 
   useEffect(() => {
     if (reviewsData) {
@@ -178,16 +203,15 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
           profileImage: review.user.profileImage || "/default-profile.png", // Default profile picture if missing
         },
       }));
-  
+
       setReviews(fetchedReviews); // Update the state with fetched reviews
     }
-  
+
     if (reviewsError) {
       console.error("Error fetching reviews:", reviewsError);
     }
   }, [reviewsData, reviewsError]);
 
-  
   useEffect(() => {
     if (data) {
       setCar(data.rentableVehicleWithId);
@@ -196,18 +220,16 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
       setError("Error fetching data!");
     }
     setLoading(queryLoading);
-
-
-
-
   }, [data, queryLoading, queryError]);
 
   // const [isBookingSectionVisible, setIsBookingSectionVisible] = useState<boolean>(false);
-  const [currentPrimaryImage, setCurrentPrimaryImage] = useState<string>(car?.vehicle.primaryImageUrl || ""); // Default to empty string
+  const [currentPrimaryImage, setCurrentPrimaryImage] = useState<string>(
+    car?.vehicle.primaryImageUrl || ""
+  ); // Default to empty string
 
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
 
-
+  console.log(reviews);
   // Set the primary image on initial load
   useEffect(() => {
     if (car) {
@@ -224,15 +246,19 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
     setCurrentPrimaryImage(imageUrl);
   };
 
-
-
   const calculateOverallRating = (): number => {
     const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0);
     return totalRating / reviews.length;
   };
 
   const getRatingDistribution = (): { [key: number]: number } => {
-    const distribution: { [key: number]: number } = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+    const distribution: { [key: number]: number } = {
+      5: 0,
+      4: 0,
+      3: 0,
+      2: 0,
+      1: 0,
+    };
     reviews.forEach((review) => {
       distribution[review.rating]++;
     });
@@ -240,7 +266,6 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
   };
 
   const ratingDistribution = getRatingDistribution();
-
 
   const handlePrevImage = () => {
     if (currentImageIndex > 0) {
@@ -298,16 +323,17 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
       };
 
       try {
-
         // Call the createBooking function from the useBooking hook
         const response = await handleBooking(bookingData, handlerfunction);
 
-        console.log("response in handleBooking", response)
+        console.log("response in handleBooking", response);
 
         if (response != undefined) {
           // Ensure response is defined before accessing its properties
-          if (response && response.status === "success") {
-            setModalMessage(response.message || "Booking created successfully!"); // Display success message
+          if (response && response?.status === "success") {
+            setModalMessage(
+              response.message || "Booking created successfully!"
+            ); // Display success message
             setModalStatus("success");
           } else {
             setModalMessage(response?.message || "Something went wrong!"); // Display error message
@@ -333,18 +359,13 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
     setModalStatus(null);
   };
 
-
-
   // Helper function to format the date
   const formatDate = (dateString: any) => {
-
     if (!dateString) return "Not selected"; // Handle empty dates
     const date = new Date(dateString);
-    const options: any = { day: 'numeric', month: 'short', year: 'numeric' };
-    return date.toLocaleDateString('en-GB', options);
+    const options: any = { day: "numeric", month: "short", year: "numeric" };
+    return date.toLocaleDateString("en-GB", options);
   };
-
-
 
   if (loading) {
     return <p>Loading...</p>;
@@ -356,15 +377,12 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
     return <p>No car details found.</p>;
   }
 
-
-
   return (
     <div className={styles.bookingContainer}>
       <div className={styles.secondMainDiv}>
         {/* Left Section with Car Image */}
         <div className={styles.leftSection}>
           <div className={styles.imageContainer}>
-
             <img
               src={
                 currentImageIndex === 0
@@ -374,7 +392,6 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
               alt={car.vehicle.name}
               className={styles.displayImage}
             />
-
           </div>
           <div className={styles.additionalImagesDiv}>
             <Button
@@ -406,10 +423,15 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
 
         {/* Right Section with Car Details and Booking */}
         <div className={styles.rightSection}>
-          <h2>{car.vehicle.name} <span>{car.vehicle.year}</span></h2>
+          <h2>
+            {car.vehicle.name} <span>{car.vehicle.year}</span>
+          </h2>
 
-          <p className={styles.description}> {`${car.vehicle.description.substring(0, 300)}...`}</p>
-          <p className={styles.price}>{`$${car.pricePerDay} / day`}</p>
+          <p className={styles.description}>
+            {" "}
+            {`${car.vehicle.description.substring(0, 300)}...`}
+          </p>
+          <p className={styles.price}>{`₹${car.pricePerDay} / day`}</p>
 
           {/* Vehicle Info (Transmission, Fuel Type, Number of Seats) */}
           <div className={styles.specifications}>
@@ -430,10 +452,14 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
             </div>
           </div>
 
-
           <div className={styles.ownerSection}>
-            <p><strong>Owner:</strong> {/* Owner data can be added here */}</p>
-            <button className={styles.expandButton} onClick={handleToggleBooking}>
+            <p>
+              <strong>Owner:</strong> {/* Owner data can be added here */}
+            </p>
+            <button
+              className={styles.expandButton}
+              onClick={handleToggleBooking}
+            >
               {isBookingSectionVisible ? "Hide Booking" : "Rent Now"}
             </button>
           </div>
@@ -441,7 +467,12 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
           <div className={styles.reviewSection}>
             <h3>User Reviews</h3>
             <div className={styles.reviewSummary}>
-              <Rate value={calculateOverallRating()} disabled />
+              <Rate
+                value={calculateOverallRating()}
+                disabled
+                allowHalf
+                style={{ color: "black" }}
+              />
               <p>{`Overall Rating: ${calculateOverallRating().toFixed(1)} / 5 ★`}</p>
             </div>
 
@@ -450,10 +481,9 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
                 <Progress
                   type="circle"
                   percent={(ratingDistribution[5] / reviews.length) * 100}
-                  format={() => '5 ★'}
+                  format={() => "5 ★"}
                   strokeColor="#40A578"
                   size={80}
-
                 />
                 <p>5 Stars</p>
               </div>
@@ -461,7 +491,7 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
                 <Progress
                   type="circle"
                   percent={(ratingDistribution[4] / reviews.length) * 100}
-                  format={() => '4 ★'}
+                  format={() => "4 ★"}
                   strokeColor="#52c41a"
                   size={80}
                 />
@@ -471,7 +501,7 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
                 <Progress
                   type="circle"
                   percent={(ratingDistribution[3] / reviews.length) * 100}
-                  format={() => '3 ★'}
+                  format={() => "3 ★"}
                   strokeColor="#fadb14"
                   size={80}
                 />
@@ -481,11 +511,9 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
                 <Progress
                   type="circle"
                   percent={(ratingDistribution[2] / reviews.length) * 100}
-                  format={() => '2 ★'}
+                  format={() => "2 ★"}
                   strokeColor="#faad14"
                   size={80}
-
-
                 />
                 <p>2 Stars</p>
               </div>
@@ -493,83 +521,115 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
                 <Progress
                   type="circle"
                   percent={(ratingDistribution[1] / reviews.length) * 100}
-                  format={() => '1 ★'}
+                  format={() => "1 ★"}
                   strokeColor="#ff4d4f"
                   size={80}
-
                 />
                 <p>1 Star</p>
               </div>
             </div>
-<div className={styles.reviews}>
-  {reviews.slice(0, 5).map((review, index) => (
-    <div key={index} className={styles.reviewItem}>
-      <img
-        src={review.user.profileImage}
-        alt={`${review.user.fullName}'s profile`}
-        className={styles.userImage}
-      />
-      <div className={styles.reviewContent}>
-        <h4>{review.user.fullName}</h4> {/* Display full name */}
-        <p>{review.user.email}</p> {/* Display user email */}
-        <Rate value={review.rating} allowHalf disabled style={{ color: 'black' }} 
-        />
-        <p>{review.comment}</p>
-      </div>
-    </div>
-  ))}
-</div>
+            <div className={styles.reviews}>
+              {reviews.slice(0, 5).map((review, index) => (
+                <div key={index} className={styles.reviewItem}>
+                  <img
+                    src={review.user.profileImage}
+                    alt={`${review.user.fullName}'s profile`}
+                    className={styles.userImage}
+                  />
+                  <div className={styles.reviewContent}>
+                    <h4>{review.user.fullName}</h4> {/* Display full name */}
+                    <p>{review.user.email}</p> {/* Display user email */}
+                    <Rate
+                      value={review.rating}
+                      allowHalf
+                      disabled
+                      style={{ color: "black", fontSize: "12px" }}
+                    />
+                    <p>{review.comment}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-
-
         {/* modal */}
 
-        <div className={`${styles.confirmOverlay} ${isBookingSectionVisible ? styles.visible : ''}`}>
+        <div
+          className={`${styles.confirmOverlay} ${isBookingSectionVisible ? styles.visible : ""}`}
+        >
           <div className={styles.confirmOverlayContent}>
-            <CloseOutlined className={styles.closeButton} onClick={() => setIsBookingSectionVisible(false)} />
+            <CloseOutlined
+              className={styles.closeButton}
+              onClick={() => setIsBookingSectionVisible(false)}
+            />
 
             <h1 className={styles.modalTitle}>Confirm Your Rental</h1>
             <div className={styles.cardModal}>
               <div className={styles.dateModal}>
                 <div className={styles.dateModalDotDiv}>
-                  <p><span> {formatDate(pickupDate)}</span></p>
-                  <p><strong>TO</strong></p>
-                  <p><span> {formatDate(dropoffDate)}</span></p>
+                  <p>
+                    <span> {formatDate(pickupDate)}</span>
+                  </p>
+                  <p>
+                    <strong>TO</strong>
+                  </p>
+                  <p>
+                    <span> {formatDate(dropoffDate)}</span>
+                  </p>
                 </div>
               </div>
               <div className={styles.modalContent}>
                 <div className={styles.carImageContainer}>
-                  <img src={car.vehicle.primaryImageUrl} alt="Car" className={styles.carImage} />
+                  <img
+                    src={car.vehicle.primaryImageUrl}
+                    alt="Car"
+                    className={styles.carImage}
+                  />
                 </div>
               </div>
             </div>
-
 
             <div className={styles.secondCard}>
               <div className={styles.rideInfo}>
                 <table className={styles.priceTable}>
                   <tbody>
                     <tr>
-                      <td><strong>Price per Day:</strong></td>
-                      <td>${car?.pricePerDay || "0.00"}</td>
+                      <td>
+                        <strong>Price per Day:</strong>
+                      </td>
+                      <td>₹{car?.pricePerDay || "0.00"}</td>
                     </tr>
                     <tr>
-                      <td><strong>Number of Days:</strong></td>
+                      <td>
+                        <strong>Number of Days:</strong>
+                      </td>
                       <td>{numberOfDays} Days</td>
                     </tr>
                     <tr>
-                      <td><strong>Base Price:</strong></td>
-                      <td>${parseFloat(car?.pricePerDay || "0") * numberOfDays}</td>
+                      <td>
+                        <strong>Base Price:</strong>
+                      </td>
+                      <td>
+                        ₹{parseFloat(car?.pricePerDay || "0") * numberOfDays}
+                      </td>
                     </tr>
                     <tr>
-                      <td><strong>GST ({(GST_PERCENTAGE * 100).toFixed(2)}%):</strong></td>
-                      <td>${setGstPerDay?.toFixed(2)}</td> {/* Assuming GST is calculated per day */}
+                      <td>
+                        <strong>
+                          GST ({(GST_PERCENTAGE * 100).toFixed(2)}%):
+                        </strong>
+                      </td>
+                      <td>₹{setGstPerDay?.toFixed(2)}</td>{" "}
+                      {/* Assuming GST is calculated per day */}
                     </tr>
                     <tr>
-                      <td><strong>Total Price:</strong></td>
-                      <td><strong>${totalPrice.toFixed(2)}</strong></td>
+                      <td>
+                        <strong>Total Price:</strong>
+                      </td>
+                      <td>
+                        <strong>₹{totalPrice.toFixed(2)}</strong>
+                      </td>
                     </tr>
                   </tbody>
                 </table>
@@ -581,13 +641,17 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
                   placeholder="Enter your contact number"
                   onChange={(e) => setUserContact(e.target.value)}
                 />
-                <Button className={styles.modalButton} type="primary" onClick={() => handleConfirmRent(userContact)}>Confirm</Button>
+                <Button
+                  className={styles.modalButton}
+                  type="text"
+                  onClick={() => handleConfirmRent(userContact)}
+                >
+                  Confirm
+                </Button>
               </div>
             </div>
           </div>
-
         </div>
-
       </div>
 
       {isModalOpen && modalMessage && modalStatus && (
@@ -598,7 +662,6 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
         />
       )}
     </div>
-
   );
 };
 

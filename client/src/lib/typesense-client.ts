@@ -17,13 +17,20 @@ export const searchVehicles = async (
   transmission?: string,
   fuelType?: string,
   seats?: number | null,
-  priceSort: "asc" | "desc" = "asc"
+  priceSort: "asc" | "desc" = "asc",
+  availableCarIds: string[] = []
 ) => {
   try {
     const filters: string[] = ['pricePerDay:=[1..2000]']; // Base price filter
 
     // Log incoming parameters for debugging
     console.log("Search Parameters: ", { query, transmission, fuelType, seats, priceSort });
+
+    if (availableCarIds.length > 0) {
+      const carIdFilter = availableCarIds.map(id => `vehicle.id:=${id}`).join(" || ");
+      filters.push(`(${carIdFilter})`); // Add OR condition for available car IDs
+    }
+
 
     // Add filters conditionally based on provided arguments
     if (transmission) {

@@ -1,6 +1,5 @@
 // src/repositories/auth-repo.js
 import User from '../models/auth-model.js';
-import authHelper from '../helpers/auth-helper.js';
 
 class AuthRepository {
   async findByPhoneNumber(phoneNumber) {

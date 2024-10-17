@@ -41,7 +41,9 @@ const GET_RENTABLE_VEHICLES = gql`
 const DELETE_RENTABLE_VEHICLE = gql`
   mutation DeleteRentableVehicle($id: ID!) {
     deleteRentableVehicle(id: $id) {
-      id
+      status
+      statusCode
+      data
     }
   }
 `;

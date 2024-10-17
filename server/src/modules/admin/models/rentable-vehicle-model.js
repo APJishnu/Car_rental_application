@@ -1,5 +1,4 @@
 // src/models/rentable-vehicle-model.js
-
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../../../config/database.js';
 import Vehicle from './vehicles-model.js'; // Ensure the Vehicle model is imported
@@ -14,7 +13,7 @@ Rentable.init({
       model: 'Vehicles', // This assumes there is a Vehicles table
       key: 'id',
     },
-    onDelete: 'CASCADE',
+    onDelete: 'CASCADE', // Ensure that rentables are deleted if vehicle is deleted
   },
   pricePerDay: {
     type: DataTypes.FLOAT,
@@ -24,9 +23,14 @@ Rentable.init({
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  deletedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 }, {
   sequelize,
   modelName: 'Rentable',
+  paranoid: true, // Enable soft delete functionality
 });
 
 // Define associations

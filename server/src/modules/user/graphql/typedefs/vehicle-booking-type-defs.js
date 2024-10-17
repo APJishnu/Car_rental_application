@@ -54,14 +54,19 @@ const VehicleBookingTypeDefs = gql`
     userContact: String!
   }
 
-  # Payment order response type
-  type PaymentOrder {
-    status: String!
+type PaymentOrder {
+    status: Boolean!
     message: String!
-    razorpayOrderId: String!
-    amount: Float!
-    currency: String!
-  }
+    statusCode: Int!
+    data: PaymentOrderData
+}
+
+type PaymentOrderData {
+    razorpayOrderId: String
+    amount: Float
+    currency: String
+}
+
 
   input PaymentInput {
     razorpayPaymentId: String!

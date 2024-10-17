@@ -3,7 +3,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { Form, Input, Button, message } from "antd";
+import { Form, Input, message } from "antd";
+import Button from "../../../../themes/Button/Button";
 import { gql, useMutation } from "@apollo/client";
 import styles from './LoginForm.module.css';
 import { useRouter } from "next/navigation";
@@ -87,7 +88,7 @@ const LoginForm: React.FC = () => {
         </Form.Item>
 
         <Form.Item>
-          <Button className={styles.submit} type="primary" htmlType="submit" loading={loading}>
+          <Button className={styles.submit}  type="submit" loading={loading}>
             Login
           </Button>
         </Form.Item>

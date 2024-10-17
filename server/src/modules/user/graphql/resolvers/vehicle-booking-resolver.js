@@ -55,10 +55,17 @@ const VehicleBookingResolver = {
             },
           ],
         });
+
+        console.log(vehicleId)
+
+        console.log(reviews,"in resolver review fetching")
         return reviews;
       } catch (error) {
-        console.error("Error fetching reviews:", error);
-        throw new Error("Failed to fetch reviews");
+        return{
+          status:"error",
+          message:error.message,
+          id: null,
+        }
       }
     },
   },
@@ -71,10 +78,12 @@ const VehicleBookingResolver = {
         if (!token) {
           console.log("Authorization token is missing.");
           return {
-            status: "error",
-            message: 'Authorization token is missing.',
+              status: false,
+              message: 'Authorization token is missing.',
+              statusCode: 401, // Unauthorized
+              data: null
           };
-        }
+      }
 
         // Verify and decode the JWT token to get user details
         const decodedToken = verifyToken(token.replace('Bearer ', ''));
@@ -83,30 +92,26 @@ const VehicleBookingResolver = {
 
         if (!user) {
           return {
-            status: "error",
-            message: "User not found.Please Login First",
+              status: false,
+              message: "User not found. Please login first.",
+              statusCode: 404, // Not Found
+              data: null
           };
-        }
-
+      }
         // Create Razorpay order using the total price and booking details
-        const razorpayOrder = await VehicleBookingHelper.createPaymentOrder(totalPrice, user.id, bookingInput);
-        console.log("Razorpay order created:", razorpayOrder);
-
-        return {
-          status: "success",
-          message: "Payment order created successfully.",
-          userName: user.name,
-          userEmail: user.email, // Ensure the field is correctly referenced
-          razorpayOrderId: razorpayOrder.id, // Ensure this is not null
-          amount: razorpayOrder.amount,
-          currency: razorpayOrder.currency,
-        };
+        const paymentResponse = await VehicleBookingHelper.createPaymentOrder(totalPrice, user.id, bookingInput);
+        
+        return paymentResponse; 
       } catch (error) {
         console.error("Error creating payment order:", error);
         return {
-          status: "error",
-          message: "Failed to create payment order.",
-        };
+            status: false,
+            message: "Failed to create payment order.",
+            statusCode: 500, // Internal Server Error
+            data: {
+                error: error.message || "An unknown error occurred."
+            }
+      };
       }
     },
 

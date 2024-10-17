@@ -13,17 +13,19 @@ Manufacturer.init({
     type: DataTypes.STRING,
     allowNull: true,
   },
-  imageUrl: {  // Allow longer URLs
-    type: DataTypes.STRING(1000), // Increase length to 1000 or use DataTypes.TEXT
+  imageUrl: {
+    type: DataTypes.STRING(1000),
     allowNull: true,
   },
-  isDeleted:{
-    type:DataTypes.BOOLEAN,
-    allowNull:true
-  }
+  // Use this field to mark the record as deleted
+  deletedAt: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
 }, {
   sequelize,
   modelName: 'Manufacturer',
+  paranoid: true, // Enable soft delete functionality
 });
 
 export default Manufacturer;

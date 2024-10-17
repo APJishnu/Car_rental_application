@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { Form, Input, Button, Steps, message } from "antd";
-import { gql, useMutation } from '@apollo/client'; // Import useMutation from Apollo Client
-import styles from './Registration.module.css'; // Import your CSS module
-import { useRouter } from 'next/navigation';
+import { gql, useMutation } from "@apollo/client"; // Import useMutation from Apollo Client
+import styles from "./Registration.module.css"; // Import your CSS module
+import { useRouter } from "next/navigation";
 
 const { Step } = Steps;
 
@@ -21,14 +21,29 @@ interface FormData {
   pincode?: string;
 }
 
-
-// GraphQL mutations
 const SEND_OTP = gql`
-  mutation SendOTP($phoneNumber: String!) {
-    sendOTP(phoneNumber: $phoneNumber) {
+  mutation sendOTP(
+    $firstName: String
+    $lastName: String
+    $phoneNumber: String
+    $email: String
+    $password: String
+    $confirmPassword: String
+  ) {
+    sendOTP(
+      firstName: $firstName
+      lastName: $lastName
+      phoneNumber: $phoneNumber
+      email: $email
+      password: $password
+      confirmPassword: $confirmPassword
+    ) {
       status
       message
-      data
+      errors {
+        field
+        message
+      }
     }
   }
 `;
@@ -81,12 +96,11 @@ const RegistrationForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0); // Manage the current step
   const [formData, setFormData] = useState<FormData>({}); // Store form data across steps
 
-  const router = useRouter();  // Use the Next.js router
+  const router = useRouter(); // Use the Next.js router
   // Mutations
   const [sendOTP] = useMutation(SEND_OTP);
   const [verifyOTP] = useMutation(VERIFY_OTP);
   const [registerUser] = useMutation(REGISTER_USER);
-
 
   // Function to go to the next step
   const next = () => {
@@ -99,142 +113,128 @@ const RegistrationForm: React.FC = () => {
   };
 
   const StepOneForm = () => {
-    const onFinish = async (values: FormData) => {
+    const [form] = Form.useForm(); // Create a form instance
+
+    const onFinish = async (values: any) => {
       setFormData((prevData) => ({ ...prevData, ...values }));
 
-      console.log(formData)
-
       try {
-        // Call sendOTP mutation
-        const { data } = await sendOTP({ variables: { phoneNumber: values.phoneNumber } });
+        // Call sendOTP mutation with additional fields
+        const { data } = await sendOTP({
+          variables: {
+            firstName: values.firstName,
+            lastName: values.lastName,
+            phoneNumber: values.phoneNumber,
+            email: values.email,
+            password: values.password,
+            confirmPassword: values.confirmPassword,
+          },
+        });
 
-        if (data.sendOTP.status === 'success') {
+        // Handle success and error responses from the backend
+        if (data.sendOTP.status === "success") {
           message.success(data.sendOTP.message);
           next(); // Proceed to the next step if OTP is sent successfully
         } else {
-          message.error(data.sendOTP.message); // Display error message if OTP send fails
+          // If there are validation errors, set form field errors
+          if (data.sendOTP.errors && Array.isArray(data.sendOTP.errors)) {
+            const fieldErrors = data.sendOTP.errors.map((error: any) => ({
+                name: error.field, // Field name to update
+                 errors: [error.message], // Error message to display
+            }));
+
+            // Set fields with the corresponding error messages
+            form.setFields(fieldErrors);
+            await form.validateFields(); 
+            console.log("Field errors set:", fieldErrors); 
+            // Loop through each error and display the message
+
+
+            data.sendOTP.errors.forEach((error: any) => {
+              message.error(error.message); // Display individual error message
+              console.log(error.message); // Log each error message
+            });
+
+          } else {
+            message.error(data.sendOTP.message); // Display error message if OTP send fails
+          }
         }
       } catch (error) {
-        message.error("An error occurred while sending OTP."); // Handle any unexpected errors
+        // Handle unexpected errors (like network errors)
+        console.error("An unexpected error occurred:", error);
+        message.error(
+          "An unexpected error occurred while sending OTP. Please try again later."
+        );
       }
     };
 
     return (
       <Form
-        name="basicRegistration"
-        onFinish={onFinish}
-        layout="vertical"
-        className={styles.form}
+      form={form} // Attach form instance to the Form component
+      name="basicRegistration"
+      onFinish={onFinish}
+      layout="vertical"
+      className={styles.form}
+  >
+      <p className={styles.title}>Register</p>
+      <p className={styles.message}>Signup now to get full access.</p>
+
+      <div className={styles.flex}>
+          <Form.Item 
+              name="firstName" 
+          >
+              <Input className={styles.input} placeholder="Firstname" />
+          </Form.Item>
+
+          <Form.Item 
+              name="lastName"
+          >
+              <Input className={styles.input} placeholder="Lastname" />
+          </Form.Item>
+      </div>
+
+      <Form.Item 
+          name="phoneNumber" 
       >
-        <p className={styles.title}>Register</p>
-        <p className={styles.message}>Signup now to get full access.</p>
+          <Input className={styles.input} placeholder="Phone Number" />
+      </Form.Item>
 
-        <div className={styles.flex}>
-          <Form.Item
-            name="firstName"
-            rules={[{ required: true, message: "Please input your first name!" }]}
-          >
-            <Input
-              className={styles.input}
-              placeholder="Firstname"
-              required
-            />
-          </Form.Item>
+      <Form.Item 
+          name="email" 
+      >
+          <Input className={styles.input} placeholder="Email" />
+      </Form.Item>
 
-          <Form.Item
-            name="lastName"
-            rules={[{ required: true, message: "Please input your last name!" }]}
-          >
-            <Input
-              className={styles.input}
-              placeholder="Lastname"
-              required
-            />
-          </Form.Item>
-        </div>
+      <Form.Item 
+          name="password" 
+      >
+          <Input.Password className={styles.input} placeholder="Password" />
+      </Form.Item>
 
-        <Form.Item
-          name="phoneNumber"
-          rules={[
-            { required: true, message: "Please input your phone number!" },
-            { pattern: /^[0-9]{10}$/, message: "Please enter a valid 10-digit phone number!" }
-          ]}
-        >
-          <Input
-            className={styles.input}
-            placeholder="Phone Number"
-            required
-          />
-        </Form.Item>
+      <Form.Item 
+          name="confirmPassword" 
+      >
+          <Input.Password className={styles.input} placeholder="Confirm password" />
+      </Form.Item>
 
-        <Form.Item
-          name="email"
-          rules={[
-            { required: true, message: "Please input your email!" },
-            { type: "email", message: "Please enter a valid email!" },
-          ]}
-        >
-          <Input
-            className={styles.input}
-            placeholder="Email"
-            required
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="password"
-          rules={[{ required: true, message: "Please input your password!" }]}
-        >
-          <Input.Password
-            className={styles.input}
-            placeholder="Password"
-            required
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="confirmPassword"
-          dependencies={["password"]}
-          rules={[
-            { required: true, message: "Please confirm your password!" },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error("The two passwords do not match!"));
-              },
-            }),
-          ]}
-        >
-          <Input.Password
-            className={styles.input}
-            placeholder="Confirm password"
-            required
-          />
-        </Form.Item>
-
-        <Form.Item>
+      <Form.Item>
           <Button className={styles.submit} type="primary" htmlType="submit">
-            Submit
+              Submit
           </Button>
-        </Form.Item>
+      </Form.Item>
 
-        <p className={styles.signin}>
+      <p className={styles.signin}>
           Already have an account? <a href="/user/user-login">Signin</a>
-        </p>
-      </Form>
+      </p>
+  </Form>
     );
   };
 
-
   // Step 2: Phone Verification Form (OTP)
   const StepTwoForm = () => {
-
     const [timer, setTimer] = useState(60); // Initialize timer with 60 seconds
     const [resendDisabled, setResendDisabled] = useState(true); // Disable resend button initially
     let countdownInterval: any = null; // Declare a variable for the countdown interval
-
 
     // Start the countdown when Step 2 is rendered
     const startCountdown = () => {
@@ -286,17 +286,17 @@ const RegistrationForm: React.FC = () => {
 
     const onFinish = async (values: any) => {
       // Call verifyOTP mutation
-      const { data } = await verifyOTP({ variables: { phoneNumber: formData.phoneNumber, otp: values.otp } });
+      const { data } = await verifyOTP({
+        variables: { phoneNumber: formData.phoneNumber, otp: values.otp },
+      });
 
-      if (data.verifyOTP.status === 'success') {
+      if (data.verifyOTP.status === "success") {
         message.success(data.verifyOTP.message);
         next(); // Proceed to the next step
       } else {
         message.error(data.verifyOTP.message);
       }
     };
-
-
 
     return (
       <Form
@@ -306,16 +306,26 @@ const RegistrationForm: React.FC = () => {
         className={styles.form}
       >
         <p className={styles.title}>Phone Verification</p>
-        <p className={styles.message}>Please enter the 4-digit OTP sent to your phone.</p>
+        <p className={styles.message}>
+          Please enter the 4-digit OTP sent to your phone.
+        </p>
 
         <Form.Item
           name="otp"
           rules={[
             { required: true, message: "Please input the OTP!" },
-            { pattern: /^[0-9]{4}$/, message: "Please enter a valid 4-digit OTP!" },
+            {
+              pattern: /^[0-9]{6}$/,
+              message: "Please enter a valid 6-digit OTP!",
+            },
           ]}
         >
-          <Input className={styles.input} placeholder="4-digit OTP" maxLength={4} required />
+          <Input
+            className={styles.input}
+            placeholder="6-digit OTP"
+            maxLength={6}
+            required
+          />
         </Form.Item>
 
         <Form.Item>
@@ -330,9 +340,7 @@ const RegistrationForm: React.FC = () => {
           onClick={handleResendOTP}
           disabled={resendDisabled}
         >
-          {resendDisabled
-            ? `Resend OTP in ${timer} seconds`
-            : "Resend OTP"}
+          {resendDisabled ? `Resend OTP in ${timer} seconds` : "Resend OTP"}
         </Button>
 
         <Button onClick={prev} className={styles.submit}>
@@ -350,10 +358,10 @@ const RegistrationForm: React.FC = () => {
       // Call registerUser mutation
       const { data } = await registerUser({ variables: { input: inputData } });
 
-      if (data.registerUser.status === 'success') {
+      if (data.registerUser.status === "success") {
         message.success(data.registerUser.message);
 
-        router.push('/');  // This will redirect to the home page
+        router.push("/"); // This will redirect to the home page
       } else {
         message.error(data.registerUser.message);
       }
@@ -394,10 +402,18 @@ const RegistrationForm: React.FC = () => {
           name="pincode"
           rules={[
             { required: true, message: "Please input your pincode!" },
-            { pattern: /^[0-9]{6}$/, message: "Please enter a valid 6-digit pincode!" },
+            {
+              pattern: /^[0-9]{6}$/,
+              message: "Please enter a valid 6-digit pincode!",
+            },
           ]}
         >
-          <Input className={styles.input} placeholder="Pincode" maxLength={6} required />
+          <Input
+            className={styles.input}
+            placeholder="Pincode"
+            maxLength={6}
+            required
+          />
         </Form.Item>
 
         <Form.Item>

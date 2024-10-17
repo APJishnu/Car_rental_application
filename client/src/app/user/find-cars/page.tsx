@@ -75,30 +75,44 @@ const FindCars: React.FC = () => {
         skip: !pickupDate || !dropoffDate, // Skip query if dates are not present
     });
 
-    // Handle search and filters
     useEffect(() => {
         const fetchFilteredCars = async () => {
-            setIsFiltering(true); // Mark as filtering
-
-            try {
-                const searchResults = await searchVehicles(query, transmission, fuelType, seats, priceSort); // Pass filters to search function
-
-                // If search result is null or empty, show a message
-                if (!searchResults || searchResults.length === 0) {
-                    setFilteredCars([]);
-                    message.warning("No cars available for the selected filters.");
-                } else {
-                    setFilteredCars(searchResults);
-                }
-            } catch (error) {
-                message.error("Error while fetching cars. Please try again.");
-            } finally {
-                setIsFiltering(false); // Filtering is done
+          setIsFiltering(true); // Mark as filtering
+      
+          try {
+            // If there are no available cars, show message and exit early
+            if (!data?.getAvailableVehicles || data.getAvailableVehicles.length === 0) {
+              setFilteredCars([]);
+              message.warning("No cars available for the selected dates.");
+              setIsFiltering(false);
+              return;
             }
+      
+            // Extract the available car vehicle IDs
+            const availableCarIds = data.getAvailableVehicles.map((car: any) => car.vehicleId);
+      
+            // Perform Typesense search only on available cars
+            const searchResults = await searchVehicles(query, transmission, fuelType, seats, priceSort, availableCarIds);
+      
+            // If search result is null or empty, show a message
+            if (!searchResults || searchResults.length === 0) {
+              setFilteredCars([]);
+              message.warning("No cars match the search criteria.");
+            } else {
+              setFilteredCars(searchResults);
+            }
+          } catch (error) {
+            setIsFiltering(false);
+            return error; 
+          } finally {
+            setIsFiltering(false); // Filtering is done
+          }
         };
-
-        fetchFilteredCars();
-    }, [query, transmission, fuelType, seats, priceSort]);
+      
+        if (!loading && data) {
+          fetchFilteredCars();
+        }
+      }, [query, transmission, fuelType, seats, priceSort, data]);
 
     // Handle rent action
     const handleRentNow = (carId: string, pickupDate: string, dropoffDate: string) => {
@@ -226,7 +240,7 @@ const FindCars: React.FC = () => {
             <div className={styles.carCollectionSecondDiv}>
                 <div className={styles.carsGrid}>
                     {noCarsAvailable ? (
-                        <p>No cars available for the selected filters.</p>
+                        <p style={{textAlign:"center"}}>No cars available for the selected dates.</p>
                     ) : (
                         availableCars.map((car: any) => {
                             const totalPrice = calculateTotalPrice(Number(car.pricePerDay));

@@ -10,6 +10,11 @@ const RentableTypeDefs = gql`
     country: String!
     image: String
   }
+  type DeleteStatus {
+   status:Boolean
+   statusCode:Int
+   data:String
+  }
 
   type Vehicle {
     id: ID!
@@ -36,7 +41,7 @@ const RentableTypeDefs = gql`
 
   type Mutation {
     addRentable(vehicleId: ID!, pricePerDay: Float!, availableQuantity: Int!): Rentable
-    deleteRentableVehicle(id: ID!): Rentable 
+    deleteRentableVehicle(id: ID!): DeleteStatus
   }
 `;
 

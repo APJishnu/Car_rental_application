@@ -23,6 +23,14 @@ User.init({
             is: /^[0-9]{10}$/, // Validate 10-digit phone number format
         },
     },
+    isPhoneVerified:{
+        type:DataTypes.BOOLEAN,
+        defaultValue:false
+    },
+    phoneVerifiedAt:{
+        type: DataTypes.DATE,
+        allowNull: true,
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false,

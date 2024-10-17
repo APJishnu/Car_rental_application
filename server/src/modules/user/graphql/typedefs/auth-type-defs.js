@@ -33,11 +33,19 @@ const userAuthTypeDefs = gql`
     data: User
   }
 
-  type ResponseSendOtp{
-    status: String!
-    message: String!
-    data:String
-  }
+
+ type ValidationError {                
+ field: String!
+ message: String!
+}
+
+   type ResponseSendOtp {
+   status: String!
+   message: String!
+   data: String
+   errors: [ValidationError]  # Added this field for validation errors
+ }
+
 
   input RegisterInput {
     firstName: String!
@@ -58,7 +66,7 @@ type Query {
 
   type Mutation {
     registerUser(input: RegisterInput): Response!
-    sendOTP(phoneNumber: String!): ResponseSendOtp!
+   sendOTP(firstName: String, lastName: String, phoneNumber: String, email: String, password: String, confirmPassword: String): ResponseSendOtp! 
     verifyOTP(phoneNumber: String!, otp: String!): Response!
     loginUser(email: String!, password: String!): LoginResponse!
     updateProfileImage(userId: ID!, profileImage: Upload): Response

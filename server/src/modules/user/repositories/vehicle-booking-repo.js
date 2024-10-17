@@ -4,6 +4,7 @@ import Vehicle from '../../admin/models/vehicles-model.js';
 import Manufacturer from '../../admin/models/manufacturer-model.js';
 import Booking from '../models/booking-model.js';
 import Review from '../models/review-model.js';
+import  sequelize  from "../../../config/database.js";
 
 class VehicleBookingRepo {
     static async getRentableVehicles() {
@@ -33,9 +34,13 @@ class VehicleBookingRepo {
     }
 
     static async checkVehicleAvailability(vehicleId, pickupDate, dropoffDate) {
+
+      const transaction = await sequelize.transaction();
         // Fetch total available quantity for the vehicle
         const rentableVehicle = await Rentable.findOne({
             where: { vehicleId },
+            lock: transaction.LOCK.UPDATE, 
+            transaction,
         });
 
         if (!rentableVehicle) {
@@ -74,9 +79,12 @@ class VehicleBookingRepo {
 
         // Calculate available quantity
         const availableQuantity = (totalAvailableQuantity) - bookedCount;
-        console.log(`Vehiclesss ${totalAvailableQuantity}: Available Quantity = ${bookedCount}`)
+        console.log(`available quantity ${totalAvailableQuantity}: booked count = ${bookedCount}`)
 
         console.log(`Vehicle ${vehicleId}: Available Quantity = ${availableQuantity}`);
+
+
+        await transaction.commit();
 
         return availableQuantity > 0;
     }
@@ -114,35 +122,41 @@ class VehicleBookingRepo {
     }
 
     static async fetchBookingsByUserId(userId) {
-        try {
-          // Fetch all bookings by userId and include Rentable, Vehicle, and Manufacturer
-          return await Booking.findAll({
-            where: { userId },
-            include: [
-              {
-                model: Rentable,
-                as: 'rentable',
-                include: [
-                  {
-                    model: Vehicle,
-                    as: 'vehicle',
-                    include: [
-                      {
-                        model: Manufacturer,
-                        as: 'manufacturer',
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
-          });
-        } catch (error) {
-          console.error("Error in BookingRepo:", error);
-          throw new Error("Database query failed");
-        }
+      try {
+        // Fetch all bookings by userId and include Rentable, Vehicle, and Manufacturer
+        return await Booking.findAll({
+          where: { userId },
+          include: [
+            {
+              model: Rentable,
+              as: 'rentable',
+              required: false, // Ensure the join does not filter out soft-deleted records
+              paranoid: false, // Include soft-deleted records
+              include: [
+                {
+                  model: Vehicle,
+                  as: 'vehicle',
+                  required: false, // Ensure the join does not filter out soft-deleted records
+                  paranoid: false, // Include soft-deleted records
+                  include: [
+                    {
+                      model: Manufacturer,
+                      as: 'manufacturer',
+                      required: false, // Ensure the join does not filter out soft-deleted records
+                      paranoid: false, // Include soft-deleted records
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("Error in BookingRepo:", error);
+        throw new Error("Database query failed");
       }
-
+    }
+    
      static async createReview(bookingId,vehicleId, comment, rating, userId) {
         try {
           // Validate booking exists and is associated with the user

@@ -1,6 +1,7 @@
 import Rentable from '../models/rentable-vehicle-model.js';
 import Vehicle from '../models/vehicles-model.js';
 import Manufacturer from '../models/manufacturer-model.js';
+import VehicleRepository from './vehicles-repo.js';
 
 class RentableRepo {
     static async findAllRentable() {
@@ -55,21 +56,27 @@ class RentableRepo {
     // Add the delete method
     static async deleteRentableById(id) {
         try {
-            const deletedRentable = await Rentable.destroy({
-                where: { id },
-            });
-
-            if (deletedRentable === 0) {
-                throw new Error('Vehicle not found');
+            // Find the rentable entry by ID
+            const rentable = await Rentable.findByPk(id);
+            
+            if (!rentable) {
+                throw new Error('Rentable not found');
             }
 
-            
+            if (rentable){
+                await VehicleRepository.updateVehicleStatus(rentable.vehicleId, false);
+              }
 
-            return deletedRentable; // Optionally, you can return a success message or the ID of the deleted vehicle
+    
+            // Soft delete the rentable entry
+            await rentable.destroy(); // This will set the deletedAt field
+    
+            return true; // Optionally, you can return the ID of the deleted rentable
         } catch (error) {
             throw new Error('Database error occurred while deleting rentable vehicle: ' + error.message);
         }
     }
+    
 }
 
 export default RentableRepo;
