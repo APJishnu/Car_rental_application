@@ -148,6 +148,7 @@ const vehicleResolvers = {
     updateVehicle: async (_, { id, input }) => {
       const { name, description, quantity, year, primaryImage, otherImages } = input;
 
+    
       console.log("backend input", input)
       try {
         const updatedVehicle = await VehicleHelper.updateVehicle({

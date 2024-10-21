@@ -39,6 +39,8 @@ const useAdminLogin = () => {
         variables: { email, password },
       });
 
+      console.log("hai",email,password);
+
       if (data?.adminLogin.statusCode === 200) {
         const { token, data: { admin } } = data.adminLogin;
 

@@ -16,7 +16,7 @@ import {
   PieChart,
   Pie,
   Cell,
-  LabelList ,
+  LabelList,
   ResponsiveContainer,
   LineChart,
   Line,
@@ -320,13 +320,61 @@ const Dashboard: React.FC = () => {
     setShowAll(true);
   };
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+  const SECONDCOLORS = ["#7B68EE", "#ADD8E6", "#4B0082", "#5F9EA0", "#00CED1"];
+
+  // Prepare data for manufacturer distribution
+  const manufacturerData = bookings.reduce(
+    (acc: Record<string, number>, booking: Booking) => {
+      const manufacturer = booking.rentable.vehicle.manufacturer.name;
+      acc[manufacturer] = (acc[manufacturer] || 0) + 1;
+      return acc;
+    },
+    {}
+  );
+
+  const manufacturerChartData = Object.entries(manufacturerData).map(
+    ([name, value]) => ({
+      name,
+      value,
+    })
+  );
+
+  // Prepare data for vehicle revenue distribution
+  const vehicleRevenueData = bookings.reduce(
+    (acc: Record<string, number>, booking: Booking) => {
+      const vehicleName = booking.rentable.vehicle.name;
+      acc[vehicleName] = (acc[vehicleName] || 0) + booking.totalPrice;
+      return acc;
+    },
+    {}
+  );
+
+  const vehicleRevenueChartData = Object.entries(vehicleRevenueData)
+    .map(([name, value]) => ({
+      name,
+      value: Number(value.toFixed(2)),
+    }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 5);
 
   return (
     <div className={styles.dashboard}>
-      <h2>ADMIN DASHBOARD</h2>
+      <div
+        style={{
+          display: "flex",
+          width: "100%",
+          justifyContent: "space-between",
+        }}
+      >
+        <h2>ADMIN DASHBOARD</h2>
 
-      {/* Date Range Picker */}
-      <DatePicker.RangePicker className={styles.DatePicker} value={dateRange} onChange={handleDateChange} />
+        {/* Date Range Picker */}
+        <DatePicker.RangePicker
+          className={styles.DatePicker}
+          value={dateRange}
+          onChange={handleDateChange}
+        />
+      </div>
 
       <div className={styles.dashboardOverflowDiv}>
         {/* Chart Section */}
@@ -335,25 +383,32 @@ const Dashboard: React.FC = () => {
           <div className={styles.chartSection}>
             <h3>Payment Method Distribution</h3>
             <ResponsiveContainer width="100%" height={300}>
-            <PieChart width={400} height={400}>
-      <Pie
-        data={chartData}
-        dataKey="value"
-        nameKey="name"
-        cx="50%"
-        cy="50%"
-        outerRadius={100}
-        innerRadius={60}
-      >
-       <LabelList className={styles.lablePie} dataKey="name" position="outside" fontSize={10} fill="#FF5733" />  {/* Adds the payment method name as labels */}
-        {chartData.map((entry, index) => (
-          <Cell
-            key={`cell-${index}`}
-            fill={COLORS[index % COLORS.length]}
-          />
-        ))}
-      </Pie>
-    </PieChart>
+              <PieChart width={400} height={400}>
+                <Pie
+                  data={chartData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={100}
+                  innerRadius={60}
+                >
+                  <LabelList
+                    className={styles.lablePie}
+                    dataKey="name"
+                    position="outside"
+                    fontSize={10}
+                    fill="#FF5733"
+                  />{" "}
+                  {/* Adds the payment method name as labels */}
+                  {chartData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
             </ResponsiveContainer>
           </div>
 
@@ -367,180 +422,233 @@ const Dashboard: React.FC = () => {
               )
             </h3>
             <ResponsiveContainer width="100%" height={300}>
-            
-    
-      <LineChart
-        data={revenueLineChartData}
-        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-      >
-        {/* Customized Grid */}
-        <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+              <LineChart
+                data={revenueLineChartData}
+                margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+              >
+                {/* Customized Grid */}
+                <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
 
-        {/* X and Y Axes */}
-        <XAxis
-          dataKey="date"
-          tick={{ fill: '#8884d8', fontSize: 12 }}
-          tickLine={false}
-        />
-        <YAxis
-          tick={{ fill: '#8884d8', fontSize: 12 }}
-          tickLine={false}
-          axisLine={false}
-        />
+                {/* X and Y Axes */}
+                <XAxis
+                  dataKey="date"
+                  tick={{ fill: "#8884d8", fontSize: 12 }}
+                  tickLine={false}
+                />
+                <YAxis
+                  tick={{ fill: "#8884d8", fontSize: 12 }}
+                  tickLine={false}
+                  axisLine={false}
+                />
 
-        {/* Tooltip */}
-        <Tooltip contentStyle={{ backgroundColor: '#f5f5f5', borderColor: '#8884d8' }} />
+                {/* Tooltip */}
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "#f5f5f5",
+                    borderColor: "#8884d8",
+                  }}
+                />
 
-        {/* Legend */}
-        <Legend verticalAlign="top" height={36} iconType="circle" />
+                {/* Legend */}
+                <Legend verticalAlign="top" height={36} iconType="circle" />
 
-        {/* Adding a gradient to the line */}
-        <defs>
-          <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
-            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
-          </linearGradient>
-        </defs>
+                {/* Adding a gradient to the line */}
+                <defs>
+                  <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
 
-        {/* Line with smoothed shape and stroke */}
-        <Line
-          type="monotone"
-          dataKey="totalRevenue"
-          stroke="#8884d8"
-          strokeWidth={2}
-          dot={{ r: 4, stroke: '#8884d8', strokeWidth: 2, fill: '#fff' }} // Custom dots
-          activeDot={{ r: 6 }}
-        />
+                {/* Line with smoothed shape and stroke */}
+                <Line
+                  type="monotone"
+                  dataKey="totalRevenue"
+                  stroke="#8884d8"
+                  strokeWidth={2}
+                  dot={{
+                    r: 4,
+                    stroke: "#8884d8",
+                    strokeWidth: 2,
+                    fill: "#fff",
+                  }} // Custom dots
+                  activeDot={{ r: 6 }}
+                />
 
-        {/* Adding Brush for better navigation */}
-        <Brush
-          height={30}
-          stroke="#8884d8"
-          startIndex={0}
-          endIndex={revenueLineChartData.length - 1}
-          travellerWidth={12}
-        />
-      </LineChart>
+                {/* Adding Brush for better navigation */}
+                <Brush
+                  height={30}
+                  stroke="#8884d8"
+                  startIndex={0}
+                  endIndex={revenueLineChartData.length - 1}
+                  travellerWidth={12}
+                />
+              </LineChart>
             </ResponsiveContainer>
           </div>
         </div>
 
+        <div className={styles.secondChartsDiv}>
+          {/* New Manufacturer Distribution Chart */}
+          <div className={styles.chartSection3}>
+            <h3>Manufacturer Booking Distribution</h3>
+            <ResponsiveContainer width="100%" height={200}>
+              <PieChart width={240} height={240}>
+                <Pie
+                  data={manufacturerChartData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={60}
+                  innerRadius={30}
+                >
+                  <LabelList
+                    className={styles.lablePie}
+                    dataKey="name"
+                    position="outside"
+                    fontSize={10}
+                    fill="#FF5733"
+                  />
+                  {manufacturerChartData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={SECONDCOLORS[index % SECONDCOLORS.length]}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className={styles.line}></div>
+          {/* New Vehicle Revenue Distribution Chart */}
+          <div className={styles.chartSection4}>
+            <h3>Top 5 Vehicles by Revenue</h3>
+            <ResponsiveContainer width="100%" height={200}>
+              <PieChart width={300} height={300}>
+                <Pie
+                  data={vehicleRevenueChartData}
+                  dataKey="value"
+                  nameKey="name"
+                  cx="50%"
+                  cy="50%"
+                  outerRadius={70}
+                  innerRadius={40}
+                >
+                  <LabelList
+                    className={styles.lablePie}
+                    dataKey="name"
+                    position="outside"
+                    fontSize={10}
+                    fill="#FF5733"
+                  />
+                  {vehicleRevenueChartData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={SECONDCOLORS[index % SECONDCOLORS.length]}
+                    />
+                  ))}
+                </Pie>
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
         {/* Booking List Section */}
         <div className={styles.bookingList}>
-          <h3>Bookings</h3>
-          <List
-            itemLayout="horizontal"
-            dataSource={showAll ? filteredData : filteredData.slice(0, 5)}
-            renderItem={(booking) => {
-              const dropoffDate = dayjs(booking.dropoffDate);
-              const isDropoffDueOrPassed =
+    <h3>Bookings</h3>
+    <List
+        itemLayout="horizontal"
+        dataSource={showAll ? filteredData : filteredData.slice(0, 5)}
+        renderItem={(booking) => {
+            const dropoffDate = dayjs(booking.dropoffDate);
+            const isDropoffDueOrPassed =
                 dropoffDate.isSame(today, "day") ||
-                dropoffDate.isSame(today.add(3, "day"), "day") ||
                 dropoffDate.isBefore(today, "day");
+            const isBookingBooked = booking.status === "booked";
 
-              // Check if the booking status is 'booked'
-              const isBookingBooked = booking.status === "booked";
-
-              const date = dropoffDate.isSame(today.add(2, "day"));
-              console.log(dropoffDate);
-              console.log("haii", date);
-              console.log(isDropoffDueOrPassed);
-              // Check if dropoff date has passed or is today
-
-              return (
+            return (
                 <List.Item>
-                  <List.Item.Meta
-                    title={
-                      <strong style={{ fontSize: "1.2em", color: "#007bff" }}>
-                        Booking ID: {booking.id}
-                      </strong>
-                    }
-                    description={
-                      <div style={{ fontWeight: "bold" }}>
-                        <span style={{ marginRight: "10px" }}>
-                          <UserOutlined style={{ marginRight: "5px" }} />
-                          User ID:{" "}
-                          <span style={{ color: "#555" }}>
-                            {booking.userId}
-                          </span>
-                        </span>
-                        <span style={{ marginRight: "10px" }}>
-                          <CalendarOutlined style={{ marginRight: "5px" }} />
-                          Pickup:{" "}
-                          <span style={{ color: "#555" }}>
-                            {booking.pickupDate}
-                          </span>
-                        </span>
-                        <span>
-                          <CalendarTwoTone style={{ marginRight: "5px" }} />
-                          Dropoff:{" "}
-                          <span style={{ color: "#555" }}>
-                            {booking.dropoffDate}
-                          </span>
-                        </span>
-                      </div>
-                    }
-                  />
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <img
-                      src={booking.rentable.vehicle.primaryImageUrl}
-                      alt={booking.rentable.vehicle.name}
-                      style={{
-                        width: "100px",
-                        height: "auto",
-                        marginRight: "15px",
-                        borderRadius: "8px",
-                      }}
-                    />
-                    <div style={{ flex: 1 }}>
-                      <p>
-                        <strong style={{ fontSize: "1.1em", color: "#333" }}>
-                          <CarOutlined style={{ marginRight: "5px" }} />
-                          Vehicle: {booking.rentable.vehicle.name} /{" "}
-                          {booking.rentable.vehicle.year}
-                        </strong>
-                      </p>
-                      <p>
-                        <Tag color="blue">{booking.paymentMethod}</Tag>
-                      </p>
-                      <Tag
-                        color="green"
-                        style={{ fontSize: "1.1em", fontWeight: "bold" }}
-                      >
-                        <TagOutlined style={{ marginRight: "5px" }} />
-                        Total Price: ${booking.totalPrice.toFixed(2)}
-                      </Tag>
+                    <div className={styles.listItem}>
+                        <div className={styles.bookingId}>
+                            Booking ID:{" "}
+                            <strong className={styles.bookingIdValue}>
+                                {booking.id}
+                            </strong>
+                        </div>
+                        <div className={styles.bookingDetails}>
+                            <div className={styles.userInfo}>
+                                <UserOutlined style={{ marginRight: "5px" }} />
+                                User ID:{" "}
+                                <span className={styles.userId}>
+                                    {booking.userId}
+                                </span>
+                            </div>
+                            <div className={styles.dateInfo}>
+                                <CalendarOutlined style={{ marginRight: "5px" }} />
+                                Pickup:{" "}
+                                <span className={styles.dateValue}>
+                                    {booking.pickupDate}
+                                </span>
+                            </div>
+                            <div className={styles.dateInfo}>
+                                <CalendarTwoTone style={{ marginRight: "5px" }} />
+                                Dropoff:{" "}
+                                <span className={styles.dateValue}>
+                                    {booking.dropoffDate}
+                                </span>
+                            </div>
+                        </div>
+                        <div className={styles.BookingVehicleDetails}>
+                            <img
+                                src={booking.rentable.vehicle.primaryImageUrl}
+                                alt={booking.rentable.vehicle.name}
+                                className={styles.vehicleImage}
+                            />
+                            <p className={styles.vehicleName}>
+                                <strong>
+                                    <CarOutlined style={{ marginRight: "5px" }} />
+                                    {booking.rentable.vehicle.name} /{" "}
+                                    {booking.rentable.vehicle.year}
+                                </strong>
+                            </p>
+                        </div>
+                        <div className={styles.paymentDetails}>
+                            <p>
+                                <Tag color="blue">{booking.paymentMethod}</Tag>
+                            </p>
+                            <Tag
+                                color="green"
+                                className={styles.totalPriceTag}
+                            >
+                                <TagOutlined style={{ marginRight: "5px" }} />
+                                Total Price: ${booking.totalPrice.toFixed(2)}
+                            </Tag>
+                        </div>
+                        {isBookingBooked && isDropoffDueOrPassed && (
+                            <Button
+                                type="link"
+                                className={styles.button}
+                                onClick={() => handleRelease(booking.id)}
+                            >
+                                Release
+                            </Button>
+                        )}
+                        {!isBookingBooked && (
+                            <Tag
+                                color="cyan"
+                                className={styles.pendingTag}
+                            >
+                                <CheckCircleOutlined style={{ marginRight: "0px" }} />
+                            </Tag>
+                        )}
                     </div>
-                  </div>
-
-                  {isBookingBooked && isDropoffDueOrPassed && (
-                    <Button
-                      type="primary"
-                      onClick={() => handleRelease(booking.id)}
-                    >
-                      Release
-                    </Button>
-                  )}
-                  {!isBookingBooked && (
-                    <Tag
-                      color="blue"
-                      style={{
-                        fontSize: "1.1em",
-                        fontWeight: "bold",
-                        padding: "5px",
-                      }}
-                    >
-                      <CheckCircleOutlined style={{ marginRight: "5px" }} />
-                      Released..
-                    </Tag>
-                  )}
                 </List.Item>
-              );
-            }}
-          />
+            );
+        }}
+    />
 
-          {!showAll && <Button onClick={handleShowMore}>Show More</Button>}
-        </div>
+    {!showAll && <Button onClick={handleShowMore}>Show More</Button>}
+</div>
       </div>
     </div>
   );

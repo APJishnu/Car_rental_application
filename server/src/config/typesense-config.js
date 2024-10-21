@@ -21,6 +21,7 @@ const createSchema = async () => {
         enable_nested_fields: true, // Enable nested fields
         fields: [
             { name: 'id', type: 'string', facet: false },
+            
             { name: 'pricePerDay', type: 'int32', facet: false },
             { name: 'availableQuantity', type: 'int32', facet: false },
             {

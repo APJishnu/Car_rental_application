@@ -30,16 +30,6 @@ class VehicleRepository {
   static async findVehicleByNameAndManufacturer(name, manufacturerId, year) {
     try {
 
-      if (!manufacturerId) {
-        const vehicle = await Vehicle.findOne({
-          where: {
-            name,
-            year,
-          },
-        });
-
-        return vehicle;
-      }
       const vehicle = await Vehicle.findOne({
         where: {
           name,

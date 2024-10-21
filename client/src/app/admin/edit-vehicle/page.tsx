@@ -16,7 +16,6 @@ const GET_VEHICLE_BY_ID = gql`
       id
       name
       description
-      
       quantity
       year
       primaryImageUrl
@@ -84,12 +83,13 @@ const VehicleEditPage: React.FC = () => {
   const handleFinish = (values: any) => {
     const primaryImage = fileList.length > 0 ? fileList[0].originFileObj : null; // Get the primary file
 
-    const updatedValues = {
-      ...values,
-      primaryImage, // Pass the file directly to the input
-      otherImages: otherFiles.map((file) => file.originFileObj || file.url), // Keep original images or newly added files
-    };
+      const updatedValues = {
+    ...values,
+    primaryImage: primaryImage || null, // Set to null if no new primary image
+    otherImages: otherFiles.length > 0 ? otherFiles.map((file) => file.originFileObj ): [], // Set to empty array if no new other images
+  };
 
+    console.log("updated values",updatedValues)
     updateVehicle({
       variables: {
         id,
@@ -123,58 +123,67 @@ const VehicleEditPage: React.FC = () => {
 
   return (
     <div className={styles.mainDiv}>
-      <h1>Edit Vehicle</h1>
-      <Form form={form} onFinish={handleFinish} layout="vertical" className={styles.form}>
-        <Form.Item name="name" label="Name" rules={[{ required: true }]}>
-          <Input placeholder="Enter vehicle name" />
+        <h1>Edit Vehicle</h1>
+        <Form form={form} onFinish={handleFinish} layout="vertical" className={styles.form}>
+            {/* Form Fields Section */}
+            <div className={styles.formLeft}>
+        <Form.Item name="name" label="Name" rules={[{ required: true }]} className={styles.formItemSpacing}>
+            <Input placeholder="Enter vehicle name" />
         </Form.Item>
 
-        <Form.Item name="description" label="Description">
-          <Input.TextArea rows={4} placeholder="Enter vehicle description" />
+        <Form.Item name="description" label="Description" className={styles.formItemSpacing}>
+            <Input.TextArea className={styles.textArea} rows={1} placeholder="Enter vehicle description" />
         </Form.Item>
 
-        <Form.Item name="quantity" label="Quantity" rules={[{ required: true }]}>
-          <Input placeholder="Enter quantity" />
+        <Form.Item name="quantity" label="Quantity" rules={[{ required: true }]} className={styles.formItemSpacing}>
+            <Input placeholder="Enter quantity" />
         </Form.Item>
 
-        <Form.Item name="year" label="Year" rules={[{ required: true }]}>
-          <Input placeholder="Enter year of manufacture" />
+        <Form.Item name="year" label="Year" rules={[{ required: true }]} className={styles.formItemSpacing}>
+            <Input placeholder="Enter year of manufacture" />
         </Form.Item>
-
-        {/* File Upload for Primary Image */}
-        <Form.Item label="Primary Image">
-          <Upload
-            listType="picture"
-            fileList={fileList}
-            onChange={handlePrimaryFileChange}
-            beforeUpload={() => false} // Prevent automatic upload
-            maxCount={1} // Restrict to one image
-          >
-            <Button icon={<UploadOutlined />}>Upload Primary Image</Button>
-          </Upload>
-        </Form.Item>
-
-        {/* File Upload for Other Images */}
-        <Form.Item label="Other Images (Max 3)">
-          <Upload
-            listType="picture"
-            fileList={otherFiles}
-            onChange={handleOtherFileChange}
-            beforeUpload={() => false} // Prevent automatic upload
-            multiple
-          >
-            <Button icon={<UploadOutlined />}>Upload Other Images</Button>
-          </Upload>
-        </Form.Item>
-
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Save Changes
-          </Button>
-        </Form.Item>
-      </Form>
     </div>
-  );
+
+    {/* Primary Image Upload Section */}
+    <div className={styles.formPrimary}>
+        <Form.Item label="Primary Image" className={styles.formItemSpacing}>
+            <Upload
+                listType="picture"
+                fileList={fileList}
+                onChange={handlePrimaryFileChange}
+                beforeUpload={() => false} // Prevent automatic upload
+                maxCount={1} // Restrict to one image
+            >
+                <Button icon={<UploadOutlined />}>Upload Primary Image</Button>
+            </Upload>
+        </Form.Item>
+    </div>
+
+    {/* Other Images Upload Section */}
+    <div className={styles.formOther}>
+        <Form.Item label="Other Images (Max 3)" className={styles.formItemSpacing}>
+            <Upload
+                listType="picture"
+                fileList={otherFiles}
+                onChange={handleOtherFileChange}
+                beforeUpload={() => false} // Prevent automatic upload
+                multiple
+            >
+                <Button icon={<UploadOutlined />}>Upload Other Images</Button>
+            </Upload>
+        </Form.Item>
+    </div>
+
+            {/* Centering the Save Changes button */}
+            <Form.Item>
+                <Button type="primary" htmlType="submit">
+                    Save Changes
+                </Button>
+            </Form.Item>
+        </Form>
+    </div>
+);
+
 };
 
 export default VehicleEditPage;

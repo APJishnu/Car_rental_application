@@ -38,7 +38,7 @@ const vehicleTypeDefs = gql`
     description: String
     quantity: String!
     primaryImage: Upload
-    otherImages: [Upload!]
+    otherImages: [Upload]
     year: String!
   }
 

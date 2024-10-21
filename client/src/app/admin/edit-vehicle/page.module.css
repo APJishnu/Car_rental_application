@@ -1,14 +1,91 @@
-.mainDiv{
+.mainDiv {
     width: 100%;
     padding: 20px;
-    padding-top: 120px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    background-color: #f5f5f5;
+    min-height: 100vh;
 }
 
-.form{
+.form {
     width: 100%;
-    max-width: 500px;
+    max-width: 800px; /* Increased max-width for more room */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* Three equal columns */
+    column-gap: 20px; /* Spacing between columns */
+    align-items: start; /* Aligns items at the top */
+}
+
+.form-left {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Space between form fields */
+    grid-column: span 1; /* Occupy the first column */
+}
+
+.form-primary {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Space for primary image uploader */
+    grid-column: span 1; /* Occupy the second column */
+}
+
+.form-other {
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* Space for other image uploaders */
+    grid-column: span 1; /* Occupy the third column */
+}
+
+.ant-form-item-label > label {
+    font-weight: bold;
+    color: #333;
+}
+
+.ant-input-affix-wrapper {
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.form input ,.form .textArea{
+    padding: 10px;
+}
+
+.form button {
+    width: 100%;
+    color: #000000;
+    padding: 20px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    grid-column: span 3; /* Make the button span all three columns */
+    justify-self: center; /* Center the button */
+}
+/* styles.module.css */
+.formItemSpacing {
+    margin-bottom: 6px; /* Adjust this value to change the space between items */
+}
+
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 1200px) {
+    .form {
+        grid-template-columns: 1fr 1fr; /* Two columns on medium-sized screens */
+    }
+}
+
+
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .form {
+        grid-template-columns: 1fr; /* Stack form fields and uploaders vertically on small screens */
+        max-width: 100%;
+        padding: 10px;
+    }
 }

@@ -1,9 +1,8 @@
 // src/graphql/typedefs.js
-import { gql } from 'apollo-server-express';
+import { gql } from "apollo-server-express";
 
 const userAuthTypeDefs = gql`
- scalar Upload
-
+  scalar Upload
 
   type User {
     id: ID!
@@ -13,7 +12,7 @@ const userAuthTypeDefs = gql`
     email: String!
     isPhoneVerified: Boolean!
     phoneVerifiedAt: String
-    profileImage:String
+    profileImage: String
     city: String
     state: String
     country: String
@@ -26,26 +25,31 @@ const userAuthTypeDefs = gql`
     data: User
   }
 
-  type LoginResponse{
-    status: String
-    message: String
-    token:String
-    data: User
+  type LoginValidationError {
+    email: String
+    password: String
   }
 
+  type LoginResponse {
+    status: Boolean
+    statusCode: Int!
+    message: String
+    token: String
+    data: User
+    fieldErrors: LoginValidationError
+  }
 
- type ValidationError {                
- field: String!
- message: String!
-}
+  type ValidationError {
+    field: String
+    message: String
+  }
 
-   type ResponseSendOtp {
-   status: String!
-   message: String!
-   data: String
-   errors: [ValidationError]  # Added this field for validation errors
- }
-
+  type ResponseSendOtp {
+    status: String!
+    message: String!
+    data: String
+    errors: [ValidationError] # Added this field for validation errors
+  }
 
   input RegisterInput {
     firstName: String!
@@ -53,22 +57,29 @@ const userAuthTypeDefs = gql`
     phoneNumber: String!
     email: String!
     password: String!
-    confirmPassword:String!
+    confirmPassword: String!
     city: String
     state: String
     country: String
     pincode: String
   }
-  
-type Query {
-  getUser: Response
-}
+
+  type Query {
+    getUser: Response
+  }
 
   type Mutation {
     registerUser(input: RegisterInput): Response!
-   sendOTP(firstName: String, lastName: String, phoneNumber: String, email: String, password: String, confirmPassword: String): ResponseSendOtp! 
+    sendOTP(
+      firstName: String
+      lastName: String
+      phoneNumber: String
+      email: String
+      password: String
+      confirmPassword: String
+    ): ResponseSendOtp!
     verifyOTP(phoneNumber: String!, otp: String!): Response!
-    loginUser(email: String!, password: String!): LoginResponse!
+    loginUser(email: String, password: String): LoginResponse!
     updateProfileImage(userId: ID!, profileImage: Upload): Response
   }
 `;

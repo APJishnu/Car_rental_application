@@ -109,42 +109,60 @@ class AuthHelper {
       data: newUser,
     };
   }
-
   async loginUser(email, password) {
-    const user = await User.findOne({ where: { email } });
+    try {
+      const user = await User.findOne({ where: { email } });
 
-    if (!user) {
+      console.log("Received Email:", email); // Check what's being received
+      if (!user) {
+        return {
+          status: false,
+          statusCode: 404,
+          message: "User not found",
+          token: null,
+          data: null,
+          fieldErrors: { email: "The email address is not registered." },
+        };
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return {
+          status: false,
+          statusCode: 401,
+          message: "Invalid password",
+          token: null,
+          data: null,
+          fieldErrors: { password: "Incorrect Password" },
+        };
+      }
+
+      const token = generateToken(user);
       return {
-        status: "fail",
-        message: "User not found",
+        status: true,
+        statusCode: 200,
+        message: "Login successful",
+        token,
+        data: {
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+        },
+        fieldErrors: null,
+      };
+    } catch (err) {
+      console.error("Error during user authentication:", err); // Log unexpected errors for debugging
+      return {
+        status: false,
+        statusCode: 500,
+        message: "An internal server error occurred.",
         token: null,
         data: null,
+        fieldErrors: null,
       };
     }
-
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      return {
-        status: "fail",
-        message: "Invalid password",
-        token: null,
-        data: null,
-      };
-    }
-
-    const token = generateToken(user);
-    return {
-      status: "success",
-      message: "Login successful",
-      token,
-      data: {
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-      },
-    };
   }
 
   // authHelper.js
@@ -208,7 +226,6 @@ class AuthHelper {
       throw new Error("Failed to update profile image");
     }
   }
-
 
   // Upload image to Minio
   async uploadToMinio(file, folder) {

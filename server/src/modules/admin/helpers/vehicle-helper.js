@@ -139,15 +139,9 @@ class VehicleHelper {
   }
 
   static async updateVehicle({ id, name, description, primaryImage, otherImages, quantity, year }) {
+    console.log(primaryImage,otherImages)
     try {
-
-      // Check if a vehicle with the same name and manufacturerId already exists
-      const existingVehicle = await VehicleRepository.findVehicleByNameAndManufacturer(name);
-      if (existingVehicle) {
-        throw new Error('Vehicle with the same name and manufacturer already exists');
-      }
-
-
+      
       const vehicle = await VehicleRepository.getVehicleById(id);
       if (!vehicle) {
         throw new Error('Vehicle not found');
@@ -155,24 +149,30 @@ class VehicleHelper {
       let primaryImageUrl = vehicle.primaryImageUrl;
       let otherImageUrls = vehicle.otherImageUrls;
 
+
+      
       // Handle primary image upload if new image is provided
       if (primaryImage) {
         primaryImageUrl = await this.uploadToMinio(primaryImage, `vehicle/${name}/primary`);
       }
 
+
+      const allNull = otherImages.every(image => image === null);
       // Handle other images upload if new images are provided
-      if (otherImages && otherImages.length > 0) {
+      if (otherImages && otherImages.length > 0 &&!allNull) {
+
+        console.log("hai")
         otherImageUrls = await Promise.all(
           otherImages.map((image) => this.uploadToMinio(image, `vehicle/${name}/other`))
         );
       }
 
+    
       // Update the vehicle in the database
       const updatedVehicle = await VehicleRepository.updateVehicleById(id, {
         name,
         description,
         quantity,
-
         year,
         primaryImageUrl,
         otherImageUrls,
