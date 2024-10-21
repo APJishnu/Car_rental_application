@@ -39,7 +39,7 @@ const CarCard: React.FC<CarCardProps> = ({ image, model, price,totalPrice, featu
         </div>
         {totalPrice < 1 && (
         <button className={styles.rentButton} onClick={onRentNow}>
-          Rent Now
+          Check Details 
         </button>
             )}
        

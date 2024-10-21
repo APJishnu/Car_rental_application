@@ -56,14 +56,18 @@ const userAuthResolvers = {
           { firstName, lastName, phoneNumber, email, password, confirmPassword },
           { abortEarly: false }
         );
-    
         // Map the validation errors to the desired output format
-        const validationErrors = error
-          ? error.details.map(err => ({
-              field: err.path[0],  // The field name
-              message: `"${err.path[0]}" ${err.message}`, // Include quotes around the field name
-            }))
-          : [];
+       // Function to remove quotes from error messages
+const removeQuotes = (message) => message.replace(/['"]/g, '');
+
+// Map the validation errors to the desired output format
+const validationErrors = error
+  ? error.details.map(err => ({
+      field: err.path[0],  // The field name
+      message: removeQuotes(err.message), // Remove quotes from the message
+    }))
+  : [];
+
     
         console.log(validationErrors); // For debugging purposes
     

@@ -92,9 +92,15 @@ const REGISTER_USER = gql`
   }
 `;
 
+interface FieldError {
+  field: string;
+  message: string;
+}
+
 const RegistrationForm: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(0); // Manage the current step
   const [formData, setFormData] = useState<FormData>({}); // Store form data across steps
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
 
   const router = useRouter(); // Use the Next.js router
   // Mutations
@@ -113,13 +119,12 @@ const RegistrationForm: React.FC = () => {
   };
 
   const StepOneForm = () => {
-    const [form] = Form.useForm(); // Create a form instance
-
+    const [form] = Form.useForm();
     const onFinish = async (values: any) => {
-      setFormData((prevData) => ({ ...prevData, ...values }));
-
       try {
-        // Call sendOTP mutation with additional fields
+        // Clear previous errors
+        setFieldErrors({});
+
         const { data } = await sendOTP({
           variables: {
             firstName: values.firstName,
@@ -131,104 +136,142 @@ const RegistrationForm: React.FC = () => {
           },
         });
 
-        // Handle success and error responses from the backend
         if (data.sendOTP.status === "success") {
+          setFormData((prevData) => ({ ...prevData, ...values }));
           message.success(data.sendOTP.message);
-          next(); // Proceed to the next step if OTP is sent successfully
+          next();
         } else {
-          // If there are validation errors, set form field errors
+          // Handle validation errors without form refresh
           if (data.sendOTP.errors && Array.isArray(data.sendOTP.errors)) {
-            const fieldErrors = data.sendOTP.errors.map((error: any) => ({
-                name: error.field, // Field name to update
-                 errors: [error.message], // Error message to display
-            }));
-
-            // Set fields with the corresponding error messages
-            form.setFields(fieldErrors);
-            await form.validateFields(); 
-            console.log("Field errors set:", fieldErrors); 
-            // Loop through each error and display the message
-
-
-            data.sendOTP.errors.forEach((error: any) => {
-              message.error(error.message); // Display individual error message
-              console.log(error.message); // Log each error message
+            // Create an object to store all field errors
+            const errors: { [key: string]: string } = {};
+            const antdErrors: { [key: string]: { errors: string[] } } = {};
+            
+            data.sendOTP.errors.forEach((error: FieldError) => {
+              errors[error.field] = error.message;
+              antdErrors[error.field] = {
+                errors: [error.message],
+              };
             });
 
+            // Set errors for display in p tags
+            setFieldErrors(errors);
+
+            // Set errors for Ant Design form validation
+            form.setFields(
+              Object.entries(antdErrors).map(([field, error]) => ({
+                name: field,
+                errors: error.errors,
+              }))
+            );
           } else {
-            message.error(data.sendOTP.message); // Display error message if OTP send fails
+            message.error(data.sendOTP.message);
           }
         }
       } catch (error) {
-        // Handle unexpected errors (like network errors)
         console.error("An unexpected error occurred:", error);
-        message.error(
-          "An unexpected error occurred while sending OTP. Please try again later."
-        );
+        message.error("An unexpected error occurred. Please try again later.");
       }
     };
 
+    // Helper function to render error message with smooth transition
+const renderError = (fieldName: string) => {
+  if (fieldErrors[fieldName]) {
+    return (
+      <p className={`${styles.errorMessage} ${styles.showError}`}>
+        <span>*{fieldErrors[fieldName]}</span> 
+      </p>
+    );
+  }
+  return null;
+};
+
+
     return (
       <Form
-      form={form} // Attach form instance to the Form component
-      name="basicRegistration"
-      onFinish={onFinish}
-      layout="vertical"
-      className={styles.form}
-  >
-      <p className={styles.title}>Register</p>
-      <p className={styles.message}>Signup now to get full access.</p>
+        form={form}
+        name="basicRegistration"
+        onFinish={onFinish}
+        layout="vertical"
+        className={styles.form}
+        preserve={true}
+      >
+        <p className={styles.title}>Register</p>
+        <p className={styles.message}>Signup now to get full access.</p>
 
-      <div className={styles.flex}>
-          <Form.Item 
-              name="firstName" 
-          >
+        <div className={styles.flex}>
+          <div className={styles.inputContainer}>
+            <Form.Item 
+              name="firstName"
+            >
               <Input className={styles.input} placeholder="Firstname" />
-          </Form.Item>
+            </Form.Item>
+            {renderError("firstName")}
+          </div>
 
-          <Form.Item 
+          <div className={styles.inputContainer}>
+            <Form.Item 
               name="lastName"
-          >
+            >
               <Input className={styles.input} placeholder="Lastname" />
+            </Form.Item>
+            {renderError("lastName")}
+          </div>
+        </div>
+
+        <div className={styles.inputContainer}>
+          <Form.Item 
+            name="phoneNumber"
+          
+          >
+            <Input className={styles.input} placeholder="Phone Number" />
           </Form.Item>
-      </div>
+          {renderError("phoneNumber")}
+        </div>
 
-      <Form.Item 
-          name="phoneNumber" 
-      >
-          <Input className={styles.input} placeholder="Phone Number" />
-      </Form.Item>
+        <div className={styles.inputContainer}>
+          <Form.Item 
+            name="email"
+            
+          >
+            <Input className={styles.input} placeholder="Email" />
+          </Form.Item>
+          {renderError("email")}
+        </div>
 
-      <Form.Item 
-          name="email" 
-      >
-          <Input className={styles.input} placeholder="Email" />
-      </Form.Item>
+        <div className={styles.inputContainer}>
+          <Form.Item 
+            name="password"
+          
+          >
+            <Input.Password className={styles.input} placeholder="Password" />
+          </Form.Item>
+          {renderError("password")}
+        </div>
 
-      <Form.Item 
-          name="password" 
-      >
-          <Input.Password className={styles.input} placeholder="Password" />
-      </Form.Item>
+        <div className={styles.inputContainer}>
+          <Form.Item 
+            name="confirmPassword"
+           
+          >
+            <Input.Password className={styles.input} placeholder="Confirm password" />
+          </Form.Item>
+          {renderError("confirmPassword")}
+        </div>
 
-      <Form.Item 
-          name="confirmPassword" 
-      >
-          <Input.Password className={styles.input} placeholder="Confirm password" />
-      </Form.Item>
-
-      <Form.Item>
+        <Form.Item>
           <Button className={styles.submit} type="primary" htmlType="submit">
-              Submit
+            Submit
           </Button>
-      </Form.Item>
+        </Form.Item>
 
-      <p className={styles.signin}>
+        <p className={styles.signin}>
           Already have an account? <a href="/user/user-login">Signin</a>
-      </p>
-  </Form>
+        </p>
+      </Form>
     );
   };
+
 
   // Step 2: Phone Verification Form (OTP)
   const StepTwoForm = () => {
@@ -361,7 +404,7 @@ const RegistrationForm: React.FC = () => {
       if (data.registerUser.status === "success") {
         message.success(data.registerUser.message);
 
-        router.push("/"); // This will redirect to the home page
+        router.push("/user/user-login"); // This will redirect to the home page
       } else {
         message.error(data.registerUser.message);
       }

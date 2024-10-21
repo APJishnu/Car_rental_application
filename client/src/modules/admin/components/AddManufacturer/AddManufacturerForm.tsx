@@ -3,131 +3,154 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import { ADD_MANUFACTURER } from '@/graphql/admin-mutations/manufacture'; // Adjust the import path as needed
-import { message, Form, Input, Upload, Button, Select } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import styles from './AddManufacturerForm.module.css'; // Adjust import path as needed
 import CountrySelect from 'react-select-country-list';
+import { Alert } from 'antd';
 
 const AddManufacturerForm: React.FC = () => {
-  const [form] = Form.useForm();
+  const [formData, setFormData] = useState({ name: '', country: '' });
   const [image, setImage] = useState<File | null>(null);
-  const [fileList, setFileList] = useState<any[]>([]); // Manage file list for Upload component
-  const [country, setCountry] = useState<string>(''); // State for selected country
+  const [fileList, setFileList] = useState<any[]>([]);
   const [addManufacturer] = useMutation(ADD_MANUFACTURER);
+  const [alertMessage, setAlertMessage] = useState<string>('');
+  const [alertType, setAlertType] = useState<'success' | 'error'>('success'); // State for alert type
+  const countryOptions = CountrySelect().getData();
 
-  const handleFinish = async (values: any) => {
-    const { name } = values;
-  
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
+
+  const handleCountryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedCountry = e.target.value;
+    setFormData((prevData) => ({ ...prevData, country: selectedCountry }));
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const uploadedFile = e.target.files[0];
+      setFileList([uploadedFile]);
+      setImage(uploadedFile);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
     if (!image) {
-      message.error('No image selected');
+      setAlertType('error');
+      setAlertMessage('No image selected');
       return;
     }
-  
-    const formData = new FormData();
-    formData.append('name', name);
-    formData.append('country', country);
-    formData.append('image', image);
-  
+
+    const form = new FormData();
+    form.append('name', formData.name);
+    form.append('country', formData.country);
+    form.append('image', image);
+
     try {
-       await addManufacturer({
+      await addManufacturer({
         variables: {
-          name,
-          country,
+          name: formData.name,
+          country: formData.country,
           image,
         },
-        context: {
-          fetchOptions: {
-            formData,
-          },
-        },
       });
-  
-      message.success('Manufacturer added successfully!');
-      form.resetFields();
+      setAlertType('success');
+      setAlertMessage('Manufacturer added successfully!');
+      setFormData({ name: '', country: '' });
       setFileList([]);
       setImage(null);
-      setCountry('');
     } catch (error: any) {
       console.error('Error adding manufacturer:', error);
-      // Display the specific error message
-      message.error(error.message || 'Error adding manufacturer');
-    }
-  };
-  
-
-  const handleChange = ({ fileList: newFileList }: { fileList: any[] }) => {
-    setFileList(newFileList);
-    if (newFileList.length > 0) {
-      setImage(newFileList[0].originFileObj); // Set the image to the uploaded file
-    } else {
-      setImage(null); // Reset image if no file is uploaded
-    }
-  };
-
-  // Get country options from react-select-country-list
-  const countryOptions = CountrySelect().getData().map((country) => ({
-    label: country.label, // Full country name
-    value: country.value,  // Country code
-  }));
-
-  const handleCountryChange = (value: string) => {
-    // Find the full name of the country using the value (country code)
-    const selectedCountry = countryOptions.find(option => option.value === value);
-    if (selectedCountry) {
-      setCountry(selectedCountry.label); // Store full country name
+      setAlertType('error');
+      setAlertMessage(error.message || 'Error adding manufacturer');
     }
   };
 
   return (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={handleFinish}
-      className="add-manufacturer-form"
-    >
-      <Form.Item
-        label="Name"
-        name="name"
-        rules={[{ required: true, message: 'Please input the manufacturer name!' }]}
-      >
-        <Input />
-      </Form.Item>
+    <form className={styles.form} onSubmit={handleSubmit}>
+      <h2 className={styles.title}>Add Manufacturer</h2>
+      <p className={styles.message}>Fill in the details below.</p>
 
-      <Form.Item
-        label="Country"
-        name="country"
-        rules={[{ required: true, message: 'Please select a country!' }]}
-      >
-        <Select
-          options={countryOptions}
-          onChange={handleCountryChange} // Update country state with full name
-          placeholder="Select a country"
-          showSearch
-          filterOption={(input, option) =>
-            (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
-          }
+      {alertMessage && (
+        <Alert
+          message={alertMessage}
+          type={alertType}
+          showIcon
+          closable
+          onClose={() => setAlertMessage('')} // Close alert on clicking the close button
+          className={styles.alert}
         />
-      </Form.Item>
+      )}
 
-      <Form.Item label="Image" name="image">
-        <Upload
-          fileList={fileList} // Use fileList prop
-          beforeUpload={(file) => {
-            setFileList([file]); // Set the uploaded file to fileList
-            return false; // Prevent automatic upload
-          }}
-          onChange={handleChange} // Handle file change
-          showUploadList={true}
+      <div className={styles.fieldGroup}>
+
+      <div className={styles.formGroup}>
+        <label htmlFor="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          className={styles.input}
+        />
+      </div>
+
+      <div className={styles.formGroup}>
+        <label htmlFor="country">Country</label>
+        <select
+          id="country"
+          name="country"
+          value={formData.country}
+          onChange={handleCountryChange}
+          required
+          className={styles.select}
         >
-          <Button icon={<UploadOutlined />}>Upload Image</Button>
-        </Upload>
-      </Form.Item>
+          <option value="">Select a country</option>
+          {countryOptions.map((country) => (
+            <option key={country.value} value={country.value}>
+              {country.label}
+            </option>
+          ))}
+        </select>
+      </div>
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit">
-          Add Manufacturer
-        </Button>
-      </Form.Item>
-    </Form>
+      <div className={styles.formGroup}>
+        <label htmlFor="image" className={styles.uploadLabel}>
+          Image
+          <span className={styles.uploadIcon}>📸</span>
+        </label>
+        <input
+          type="file"
+          id="image"
+          accept="image/*"
+          onChange={handleImageChange}
+          className={styles.fileInput}
+          hidden // Hide the default file input
+        />
+        <label htmlFor="image" className={styles.customUpload}>
+          {fileList.length > 0 ? fileList[0].name : 'Choose an image'}
+        </label>
+        {fileList.length > 0 && (
+          <div className={styles.preview}>
+            <p>Uploaded Image:</p>
+            <img
+              src={URL.createObjectURL(fileList[0])}
+              alt="Preview"
+              className={styles.imagePreview}
+            />
+          </div>
+        )}
+      </div>
+
+      <button type="submit" className={styles.submitButton}>
+        Add Manufacturer
+      </button>
+      </div>
+    </form>
   );
 };
 

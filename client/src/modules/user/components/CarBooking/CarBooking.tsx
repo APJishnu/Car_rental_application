@@ -452,17 +452,19 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
             </div>
           </div>
 
-          <div className={styles.ownerSection}>
-            <p>
-              <strong>Owner:</strong> {/* Owner data can be added here */}
-            </p>
-            <button
-              className={styles.expandButton}
-              onClick={handleToggleBooking}
-            >
-              {isBookingSectionVisible ? "Hide Booking" : "Rent Now"}
-            </button>
-          </div>
+          {pickupDate && dropoffDate && (
+        <div className={styles.ownerSection}>
+          <p>
+            <strong>Owner:</strong> {/* Owner data can be added here */}
+          </p>
+          <button
+            className={styles.expandButton}
+            onClick={handleToggleBooking}
+          >
+            {isBookingSectionVisible ? "Hide Booking" : "Rent Now"}
+          </button>
+        </div>
+      )}
 
           <div className={styles.reviewSection}>
             <h3>User Reviews</h3>

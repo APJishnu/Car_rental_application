@@ -17,6 +17,28 @@
   margin-top: 20px;
  
 }
+/* Error message styling */
+.errorMessage {
+  color: #ff4d4f; /* Red error color (Ant Design theme color) */
+  padding: 0px 1px; /* Add padding for spacing */
+  border-radius: 5px; /* Rounded corners for a smooth look */
+  font-size: 14px; /* Adjust font size for readability */
+  margin-top: -20px; /* Space above the error */
+  opacity: 0; /* Start with 0 opacity for animation */
+  transform: translateY(-10px); /* Slight slide up effect */
+  transition: opacity 0.8s ease, transform 0.8s ease; /* Smooth transition */
+}
+
+.errorMessage span{
+  font-size: 10px!important;
+}
+
+/* Class to trigger the error message */
+.showError {
+  opacity: 1; /* Show error with full opacity */
+  transform: translateY(0); /* Slide back into place */
+}
+
 
 .form {
   display: flex;

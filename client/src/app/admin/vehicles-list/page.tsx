@@ -2,11 +2,35 @@
 "use client";
 import React, { useState } from "react";
 import { useQuery, useMutation, gql } from "@apollo/client";
-import { Card, Button, Image, Space, Modal, Tooltip, Input, Select ,Empty} from "antd"; // Importing Ant Design components
+import {
+  Card,
+  Button,
+  Image,
+  Space,
+  Modal,
+  Tooltip,
+  Input,
+  Select,
+  Empty,
+} from "antd"; // Importing Ant Design components
 import Swal from "sweetalert2"; // SweetAlert2 for popups
 import styles from "./vehicle-list.module.css"; // Your CSS module
-import { useRouter } from 'next/navigation';
-import { EditOutlined, DeleteOutlined, PlusCircleOutlined, InfoCircleOutlined, LeftOutlined, RightOutlined, CarOutlined, ToolOutlined, TeamOutlined, FireOutlined } from '@ant-design/icons';
+import { useRouter } from "next/navigation";
+import {
+  PlusOutlined,
+  CloseOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  PlusCircleOutlined,
+  InfoCircleOutlined,
+  LeftOutlined,
+  RightOutlined,
+  CarOutlined,
+  ToolOutlined,
+  TeamOutlined,
+  FireOutlined,
+} from "@ant-design/icons";
+import { ADD_VEHICLE_EXCEL } from "@/graphql/admin-mutations/vehicles";
 
 // Define the Vehicle type
 type Vehicle = {
@@ -61,7 +85,7 @@ const GET_VEHICLES = gql`
       year
       primaryImageUrl
       otherImageUrls
-      isRented 
+      isRented
     }
   }
 `;
@@ -74,10 +98,17 @@ const DELETE_VEHICLE = gql`
   }
 `;
 
-
 const ADD_RENTABLE = gql`
-  mutation AddRentable($vehicleId: ID!, $pricePerDay: Float!, $availableQuantity: Int!) {
-    addRentable(vehicleId: $vehicleId, pricePerDay: $pricePerDay, availableQuantity: $availableQuantity) {
+  mutation AddRentable(
+    $vehicleId: ID!
+    $pricePerDay: Float!
+    $availableQuantity: Int!
+  ) {
+    addRentable(
+      vehicleId: $vehicleId
+      pricePerDay: $pricePerDay
+      availableQuantity: $availableQuantity
+    ) {
       id
       vehicleId
       pricePerDay
@@ -86,13 +117,96 @@ const ADD_RENTABLE = gql`
   }
 `;
 
-
 const VehicleListPage: React.FC = () => {
+  const [excelFile, setExcelFile] = useState<File | null>(null); // To store the uploaded file
+
+  const [isProcessingExcel, setIsProcessingExcel] = useState(false); // To indicate processing state
+  const [currentExcelRow, setCurrentExcelRow] = useState(0); // To track the current processing row
+  const [totalExcelRows, setTotalExcelRows] = useState(0); // To store the total number of rows in the Excel file
+  const [showUploadButton, setShowUploadButton] = useState(false); // To control the visibility of the upload button
+
+  const handleExcelUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setExcelFile(file);
+    setShowUploadButton(true); // Show the button to add vehicles
+  };
+  const handleAddVehicles = async () => {
+    if (!excelFile) return;
+
+    try {
+      setIsProcessingExcel(true);
+      setCurrentExcelRow(0); // Reset row counter for progress tracking
+
+      // Start processing the Excel file
+      const response = await addVehicleExcel({
+        variables: {
+          excelFile: excelFile,
+        },
+      });
+
+      console.log("Response from Excel upload:", response);
+
+      // Check if response.data is defined and if the operation was successful
+      if (response && response.data && response.data.addVehicleExcel.success) {
+        const { processedVehiclesCount, message } =
+          response.data.addVehicleExcel;
+
+        setTotalExcelRows(processedVehiclesCount); // Ensure this is set if needed
+
+        await Swal.fire({
+          title: "Success",
+          text: message, // Show the success message from backend
+          icon: "success",
+        });
+      } else {
+        // If there's an error message, show it
+        const errorMessage =
+          response.data.addVehicleExcel.message || "Unknown error occurred";
+        await Swal.fire({
+          title: "Error",
+          text: errorMessage, // Show the error message from backend
+          icon: "error",
+        });
+      }
+    } catch (error: any) {
+      console.error("Error uploading Excel file:", error);
+      const errorMessage = error.graphQLErrors?.[0]?.message || error.message;
+
+      await Swal.fire({
+        title: "Error",
+        text: `Error uploading Excel file: ${errorMessage}`,
+        icon: "error",
+      });
+    } finally {
+      setIsProcessingExcel(false);
+      setShowUploadButton(false); // Hide the upload button after processing
+    }
+  };
+
+  // Define the new mutation for uploading the Excel file
+  const [addVehicleExcel] = useMutation(ADD_VEHICLE_EXCEL, {
+    onCompleted: (data) => {
+      console.log("Excel file processed:", data);
+      Swal.fire("Success!", "Excel file uploaded successfully.", "success");
+    },
+    onError: (error) => {
+      console.error("Error uploading Excel file:", error);
+      Swal.fire({
+        title: "Error!",
+        text: error.message,
+        icon: "error",
+      });
+    },
+  });
+
   const router = useRouter(); // Initialize router
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null); // State to hold selected vehicle for modal
   const [currentImageIndexes, setCurrentImageIndexes] = useState<number[]>([]); // Index for showing current images for each vehicle
-  const [filter, setFilter] = useState<'all' | 'rented' | 'unrented'>('all'); // Filter state
-  const { loading, error, data, refetch } = useQuery<GetVehiclesData>(GET_VEHICLES);
+  const [filter, setFilter] = useState<"all" | "rented" | "unrented">("all"); // Filter state
+  const { loading, error, data, refetch } =
+    useQuery<GetVehiclesData>(GET_VEHICLES);
   const [deleteVehicle] = useMutation<DeleteVehicleData>(DELETE_VEHICLE, {
     onCompleted: () => {
       refetch(); // Refetch vehicles after deletion
@@ -116,9 +230,12 @@ const VehicleListPage: React.FC = () => {
   });
 
   // State for managing rentable modal
-  const [selectedRentableVehicle, setSelectedRentableVehicle] = useState<Vehicle | null>(null);
+  const [selectedRentableVehicle, setSelectedRentableVehicle] =
+    useState<Vehicle | null>(null);
   const [pricePerDay, setPricePerDay] = useState<number | null>(null);
-  const [availableQuantity, setAvailableQuantity] = useState<number | null>(null);
+  const [availableQuantity, setAvailableQuantity] = useState<number | null>(
+    null
+  );
 
   // Handle delete action with confirmation popup
   const handleDelete = (id: string) => {
@@ -160,24 +277,31 @@ const VehicleListPage: React.FC = () => {
   };
 
   const handleRentableSubmit = () => {
-    if (pricePerDay !== null && availableQuantity !== null && selectedRentableVehicle) {
+    if (
+      pricePerDay !== null &&
+      availableQuantity !== null &&
+      selectedRentableVehicle
+    ) {
       addRentable({
         variables: {
-          vehicleId: selectedRentableVehicle.id,  // Ensure this is the correct ID type
+          vehicleId: selectedRentableVehicle.id, // Ensure this is the correct ID type
           pricePerDay,
           availableQuantity,
         },
-      }).catch(err => {
+      }).catch((err) => {
         console.error("Error adding to rentable:", err);
         Swal.fire("Error!", err.message, "error"); // Display error message
       });
     } else {
-      Swal.fire("Error!", "Please provide both price per day and available quantity.", "error");
+      Swal.fire(
+        "Error!",
+        "Please provide both price per day and available quantity.",
+        "error"
+      );
     }
   };
 
-
-  console.log(selectedRentableVehicle)
+  console.log(selectedRentableVehicle);
 
   // Handle next image for a specific vehicle
   const handleNextImage = (index: number, otherImageUrls: string[]) => {
@@ -194,7 +318,8 @@ const VehicleListPage: React.FC = () => {
     setCurrentImageIndexes((prevIndexes) => {
       const newIndexes = [...prevIndexes];
       const vehicleCount = otherImageUrls.length;
-      newIndexes[index] = (newIndexes[index] - 1 + (vehicleCount + 1)) % (vehicleCount + 1); // Decrement index and loop back
+      newIndexes[index] =
+        (newIndexes[index] - 1 + (vehicleCount + 1)) % (vehicleCount + 1); // Decrement index and loop back
       return newIndexes;
     });
   };
@@ -208,48 +333,138 @@ const VehicleListPage: React.FC = () => {
 
   // Filter the vehicles based on selected filter
   const filteredVehicles = data?.getVehicles.filter((vehicle) => {
-    if (filter === 'rented') return !!vehicle.isRented; // Show rented vehicles
-    if (filter === 'unrented') return !vehicle.isRented; // Show unrented vehicles
+    if (filter === "rented") return !!vehicle.isRented; // Show rented vehicles
+    if (filter === "unrented") return !vehicle.isRented; // Show unrented vehicles
     return true; // Show all vehicles
   });
-
 
   if (loading) return <p>Loading vehicles...</p>;
   if (error) return <p>Error loading vehicles: {error.message}</p>;
 
+
+
+  const handleAddVehicleClick = () => {
+    window.location.href = '/admin/add-vehicle'; // Navigate to the add-vehicle page
+  };
+
   return (
     <div className={styles.mainDiv}>
-      <h1 className={styles.title}>Vehicle List</h1>
+      <h1 className={styles.title}>VEHICLE LIST</h1>
+
       {/* Filter Buttons */}
-      <div style={{ marginBottom: '20px', textAlign: 'center' }}>
-        <Button onClick={() => setFilter('all')} type={filter === 'all' ? 'primary' : 'default'}>All Vehicles</Button>
-        <Button onClick={() => setFilter('rented')} type={filter === 'rented' ? 'primary' : 'default'} style={{ marginLeft: '10px' }}>Rented Vehicles</Button>
-        <Button onClick={() => setFilter('unrented')} type={filter === 'unrented' ? 'primary' : 'default'} style={{ marginLeft: '10px' }}>Unrented Vehicles</Button>
+      <div
+        className={styles.buttonsDiv}
+        style={{  textAlign: "center" }}
+      >
+        <div className={styles.andButtons}>
+          <Button
+            onClick={() => setFilter("all")}
+            type={filter === "all" ? "primary" : "default"}
+          >
+            All Vehicles
+          </Button>
+          <Button
+            onClick={() => setFilter("rented")}
+            type={filter === "rented" ? "primary" : "default"}
+            style={{ marginLeft: "10px" }}
+          >
+            Rented Vehicles
+          </Button>
+          <Button
+            onClick={() => setFilter("unrented")}
+            type={filter === "unrented" ? "primary" : "default"}
+            style={{ marginLeft: "10px" }}
+          >
+            Unrented Vehicles
+          </Button>
+        </div>
+
+        <div style={{display:'flex',gap:'20px',alignItems:'center'}}>
+        <Tooltip title="Add vehicles using the uploaded Excel file">
+          <div className={styles.excelUploadSection}>
+            <div className={styles.excelUploadContainer}>
+              {/* Show upload and add icon only if not processing */}
+              {!isProcessingExcel ? (
+                <div className={styles.flex}>
+                  <label
+                    className={styles.customFileUpload}
+                    htmlFor="excelUpload"
+                  >
+                    <div className={styles.iconWithText}>
+                      <img
+                        className={styles.icon}
+                        src="/microsoft-excel.svg"
+                        alt="Excel Icon"
+                      />
+                      <span className={styles.text}>
+                        {excelFile ? excelFile.name : "Upload Excel File"}
+                      </span>
+                    </div>
+                  </label>
+
+                  <input
+                    type="file"
+                    id="excelUpload"
+                    accept=".xlsx,.xls"
+                    onChange={handleExcelUpload}
+                    style={{ display: "none" }}
+                  />
+
+                  {/* Show "+" icon to add vehicles if a file is selected */}
+                  {excelFile && (
+                    <PlusOutlined
+                      onClick={handleAddVehicles}
+                      className={styles.addIcon} // Custom class for styling
+                    />
+                  )}
+                </div>
+              ) : (
+                // Show progress bar while processing
+                <div className={styles.progressBar}>
+                  <div
+                    className={styles.progressFill}
+                    style={{
+                      width: `${(currentExcelRow / totalExcelRows) * 100}%`,
+                    }}
+                  />
+                  <span>
+                    Processing: {currentExcelRow} / {totalExcelRows}
+                  </span>
+                </div>
+              )}
+            </div>
+          </div>
+        </Tooltip>
+
+
+        <Tooltip title="add Vehicle Manualy">
+              <div className={styles.addVehicleDiv} style={{fontSize:'12px'}}>
+                <button onClick={handleAddVehicleClick}>Add vehicle<PlusOutlined  title="Add vehicle" className={styles.addIcon} /></button>
+  
+              </div>
+        </Tooltip>
+        </div>
       </div>
 
-
       {filteredVehicles?.length === 0 ? (
-       <div className={styles.customEmptyContainer}>
-       <Empty
-         image={Empty.PRESENTED_IMAGE_DEFAULT}
-         description="No vehicles available"
-         className={styles.animatedEmpty} // Add class to apply animation
-       />
-     </div>
+        <div className={styles.customEmptyContainer}>
+          <Empty
+            image={Empty.PRESENTED_IMAGE_DEFAULT}
+            description="No vehicles available"
+            className={styles.animatedEmpty} // Add class to apply animation
+          />
+        </div>
       ) : (
-
         <div className={styles.cardContainer}>
           {filteredVehicles?.map((vehicle, index) => (
-            <Card
-              key={vehicle.id}
-              hoverable
-              className={styles.vehicleCard}
-            >
+            <Card key={vehicle.id} hoverable className={styles.vehicleCard}>
               {/* Image Navigation */}
               <div className={styles.imageContainer}>
                 <Button
                   className={styles.scrollButton}
-                  onClick={() => handlePrevImage(index, vehicle.otherImageUrls || [])} // Scroll left
+                  onClick={() =>
+                    handlePrevImage(index, vehicle.otherImageUrls || [])
+                  } // Scroll left
                   icon={<LeftOutlined />}
                   disabled={currentImageIndexes[index] === 0} // Disable if showing primary image
                 />
@@ -264,13 +479,17 @@ const VehicleListPage: React.FC = () => {
                 />
                 <Button
                   className={styles.scrollButton}
-                  onClick={() => handleNextImage(index, vehicle.otherImageUrls || [])} // Scroll right
+                  onClick={() =>
+                    handleNextImage(index, vehicle.otherImageUrls || [])
+                  } // Scroll right
                   icon={<RightOutlined />}
                   disabled={vehicle.otherImageUrls?.length === 0} // Disable if no other images
                 />
               </div>
-              <Card.Meta title={vehicle.name} description={`Year: ${vehicle.year}| Rented: ${vehicle.isRented ? 'Yes' : 'No'}`} />
-
+              <Card.Meta
+                title={vehicle.name}
+                description={`Year: ${vehicle.year}| Rented: ${vehicle.isRented ? "Yes" : "No"}`}
+              />
 
               {/* Vehicle Info (Transmission, Fuel Type, Number of Seats) */}
               <div className={styles.vehicleInfo}>
@@ -291,13 +510,17 @@ const VehicleListPage: React.FC = () => {
                 </div>
               </div>
 
-
               <div className={styles.cardActions}>
-                <Space style={{ marginTop: '16px' }} className={styles.cardActions}>
+                <Space
+                  style={{ marginTop: "16px" }}
+                  className={styles.cardActions}
+                >
                   <Tooltip title="Edit Vehicle">
                     <Button
                       icon={<EditOutlined />}
-                      onClick={() => router.push(`/admin/edit-vehicle?vehicle=${vehicle.id}`)}
+                      onClick={() =>
+                        router.push(`/admin/edit-vehicle?vehicle=${vehicle.id}`)
+                      }
                       shape="circle"
                       size="large"
                     />
@@ -311,13 +534,21 @@ const VehicleListPage: React.FC = () => {
                       size="large"
                     />
                   </Tooltip>
-                  <Tooltip title={vehicle.isRented ? "Rented" : "Add to Rentable"}>
+                  <Tooltip
+                    title={vehicle.isRented ? "Rented" : "Add to Rentable"}
+                  >
                     <Button
                       icon={<PlusCircleOutlined />}
                       onClick={() => handleAddRentable(vehicle)}
                       shape="circle"
                       size="large"
-                      style={{ backgroundColor: vehicle.isRented ? '#52c42b' : undefined, color: vehicle.isRented ? 'white' : '#52c42b', borderColor: vehicle.isRented ? '#52c42b' : '#52c42b' }} // Green color for rented vehicles
+                      style={{
+                        backgroundColor: vehicle.isRented
+                          ? "#52c42b"
+                          : undefined,
+                        color: vehicle.isRented ? "white" : "#52c42b",
+                        borderColor: vehicle.isRented ? "#52c42b" : "#52c42b",
+                      }} // Green color for rented vehicles
                       disabled={vehicle.isRented ? true : false} // Disable button if rented
                     />
                   </Tooltip>
@@ -335,8 +566,7 @@ const VehicleListPage: React.FC = () => {
             </Card>
           ))}
         </div>
-      )
-      }
+      )}
 
       {/* Vehicle Details Modal */}
       <Modal
@@ -345,7 +575,10 @@ const VehicleListPage: React.FC = () => {
         onCancel={handleModalClose}
         footer={null}
       >
-        <Image src={selectedVehicle?.primaryImageUrl} alt={selectedVehicle?.name} />
+        <Image
+          src={selectedVehicle?.primaryImageUrl}
+          alt={selectedVehicle?.name}
+        />
         <p>{selectedVehicle?.description}</p>
         <p>Quantity: {selectedVehicle?.quantity}</p>
         <p>Year: {selectedVehicle?.year}</p>
@@ -360,25 +593,27 @@ const VehicleListPage: React.FC = () => {
       >
         <Select
           placeholder="Select available quantity"
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
           onChange={(value) => setAvailableQuantity(value)}
         >
-          {Array.from({ length: parseInt(selectedRentableVehicle?.quantity || '0') }, (_, i) => (
-            <Select.Option key={i + 1} value={i + 1}>
-              {i + 1}
-            </Select.Option>
-          ))}
+          {Array.from(
+            { length: parseInt(selectedRentableVehicle?.quantity || "0") },
+            (_, i) => (
+              <Select.Option key={i + 1} value={i + 1}>
+                {i + 1}
+              </Select.Option>
+            )
+          )}
         </Select>
         <Input
           type="number"
           placeholder="Price per day"
-          style={{ marginTop: '12px' }}
-          value={pricePerDay || ''}
+          style={{ marginTop: "12px" }}
+          value={pricePerDay || ""}
           onChange={(e) => setPricePerDay(parseFloat(e.target.value))}
         />
       </Modal>
     </div>
-
   );
 };
 

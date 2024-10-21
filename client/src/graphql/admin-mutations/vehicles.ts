@@ -41,3 +41,14 @@ export const ADD_VEHICLE = gql`
     }
   }
 `;
+
+
+export const ADD_VEHICLE_EXCEL = gql`
+  mutation addVehicleExcel($excelFile: Upload!) {
+    addVehicleExcel(excelFile: $excelFile) {
+      success
+      message
+      processedVehiclesCount
+    }
+  }
+`;

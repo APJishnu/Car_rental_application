@@ -1,9 +1,7 @@
-// services/LoginServices/AdminLoginServices.ts
-
 import { useMutation } from '@apollo/client';
-import { ADMIN_LOGIN } from '@/graphql/admin-mutations/admin-login'; // Update with the correct path to your mutations file
-import Cookies from 'js-cookie'; // Import js-cookie
-import {useRouter} from 'next/navigation'
+import { ADMIN_LOGIN } from '@/graphql/admin-mutations/admin-login';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 interface AdminLoginVariables {
   email: string;
@@ -12,19 +10,28 @@ interface AdminLoginVariables {
 
 interface AdminLoginResponse {
   adminLogin: {
+    status: boolean;
+    statusCode: number;
+    message: string;
     token: string;
-    admin: {
-      id: string;
-      email: string;
-      name: string;
+    fieldErrors?: {
+      email?: string;
+      password?: string;
+    };
+    data: {
+      admin: {
+        id: string;
+        email: string;
+        name: string;
+        role: string;
+      };
     };
   };
 }
 
 const useAdminLogin = () => {
-  const router = useRouter()
-  const [adminLogin, { loading, error }] = useMutation<AdminLoginResponse, AdminLoginVariables>(ADMIN_LOGIN);
-
+  const router = useRouter();
+  const [adminLogin] = useMutation<AdminLoginResponse, AdminLoginVariables>(ADMIN_LOGIN);
 
   const login = async (email: string, password: string) => {
     try {
@@ -32,26 +39,31 @@ const useAdminLogin = () => {
         variables: { email, password },
       });
 
-      if (data) {
-        const { token, admin } = data.adminLogin;
-
-        
+      if (data?.adminLogin.statusCode === 200) {
+        const { token, data: { admin } } = data.adminLogin;
 
         Cookies.set('adminToken', token, { expires: 1 / 24 }); // Store token for 1 hour
-       
-
         return { token, admin };
+      } else if (data?.adminLogin.fieldErrors) {
+        throw {
+          response: {
+            fieldErrors: data.adminLogin.fieldErrors, // Return field-specific errors
+          },
+        };
+      } else {
+        throw new Error(data?.adminLogin.message || 'Login failed');
       }
-    } catch (err: unknown) {
-
-      if (err instanceof Error) {
+    } catch (err: any) {
+      if (err.response?.fieldErrors) {
+        throw err; // Field errors will be handled by the form
+      } else if (err instanceof Error) {
         throw new Error(err.message);
       }
       throw new Error('An unexpected error occurred during login');
     }
   };
 
-  return { login, loading, error };
+  return { login };
 };
 
 export default useAdminLogin;

@@ -1,78 +1,96 @@
-"use client";
+"use client"
 
 import React, { useState } from 'react';
 import useAdminLogin from '../../services/LoginServices/AdminLogin';
 import Input from '@/themes/InputField/InputField'; 
 import Button from '@/themes/Button/Button'; 
-import { Spin } from 'antd'; // Import Spin from antd
-import { LoadingOutlined } from '@ant-design/icons'; // Import LoadingOutlined icon
+import { Spin } from 'antd'; 
+import { LoadingOutlined, UserOutlined, LockOutlined, EyeOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import styles from './LoginForm.module.css';
-import { useRouter } from 'next/navigation'; 
+import { useRouter } from 'next/navigation';
 
-// Define the type for your form state and error message
 interface LoginFormState {
   email: string;
   password: string;
 }
 
-// Custom loading indicator styled as white
+interface FieldErrors {
+  email?: string;
+  password?: string;
+}
+
 const loadingIcon = <LoadingOutlined style={{ fontSize: 24, color: 'white' }} spin />;
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState<LoginFormState['email']>('');
   const [password, setPassword] = useState<LoginFormState['password']>('');
-  const [loginError, setLoginError] = useState<string>('');
-  const [loading, setLoading] = useState<boolean>(false); // Local loading state
+  const [loginError, setLoginError] = useState<string>(''); // General error for login failure
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({}); // Field-specific errors
+  const [loading, setLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const { login } = useAdminLogin();
-  const router = useRouter(); // Initialize router
-
+  const router = useRouter();
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoginError(''); // Reset error
-    setLoading(true); // Set loading to true
-
+    setLoginError('');
+    setFieldErrors({}); // Clear field errors on new submission
+    setLoading(true);
+  
     try {
       await login(email, password);
-      // Wait for 1 second before navigating
       setTimeout(() => {
-        router.push('/admin/dashboard'); // Navigate to dashboard after login
+        router.push('/admin/dashboard');
       }, 1000);
-
-      console.log('Logged in successfully');
-    } catch (err) {
-      if (err instanceof Error) {
-        setLoginError(err.message);
+    } catch (err: any) {
+      if (err.response?.fieldErrors) {
+        setFieldErrors(err.response.fieldErrors); // Set field-specific errors
+      } else if (err instanceof Error) {
+        setLoginError(err.message); // General error
       } else {
         setLoginError('An unexpected error occurred during login.');
       }
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
     }
   };
+  
 
   return (
     <div className={styles.mainContainer}>
+      {loading && <div className={styles.loadingOverlay}><Spin size="large" /></div>}
       <div className={styles.container}>
-        <h2 className={styles.heading}>Admin Login</h2>
+        <h2 className={styles.heading}>ADMIN LOGIN</h2>
         <form onSubmit={handleSubmit} className={styles.form}>
-          <Input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            required
-          />
-          <Input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            required
-          />
-          {loginError && <p className={styles.error}>{loginError}</p>}
+        <div className={styles.inputGroup}>
+  <UserOutlined className={styles.icon} />
+  <Input
+    type="text"
+    id="email"
+    value={email}
+    onChange={(e) => setEmail(e.target.value)}
+    placeholder="Enter your email"
+  />
+ 
+</div>
+{fieldErrors.email && <p className={styles.error}>* <span>{fieldErrors.email}</span></p>} {/* Show email error */}
+<div className={styles.inputGroup}>
+  <LockOutlined className={styles.icon} />
+  <Input
+    type={showPassword ? 'text' : 'password'}
+    id="password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    placeholder="Enter your password"
+  />
+  <span onClick={() => setShowPassword(!showPassword)} className={styles.eyeIcon}>
+    {showPassword ? <EyeInvisibleOutlined /> : <EyeOutlined />}
+  </span>
+
+</div>
+{fieldErrors.password && 
+  <p className={styles.error}>* <span>{fieldErrors.password}</span></p>} {/* Show password error */}
+          {loginError && <p className={styles.error}>{loginError}</p>} {/* Show general error */}
           <Button type="submit" className={styles.loginButton} disabled={loading}>
             {loading ? loadingIcon : 'Login'}
           </Button>
@@ -82,4 +100,4 @@ const LoginForm: React.FC = () => {
   );
 };
 
-export default LoginForm;  
+export default LoginForm;

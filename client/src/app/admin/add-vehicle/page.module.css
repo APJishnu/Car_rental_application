@@ -1,4 +1,6 @@
 .MainDiv{
     padding-top: 50px;
     text-align: center;
+    background:linear-gradient(90deg,rgb(240, 246, 255), rgb(222, 238, 255));
+    padding: 40px;
 }

@@ -1,3 +1,5 @@
+// authTypeDefs.ts
+
 import { gql } from 'apollo-server-express';
 
 const authTypeDefs = gql`
@@ -10,8 +12,21 @@ const authTypeDefs = gql`
     updatedAt: String!
   }
 
-  type AuthPayload {
-    token: String!
+  type FieldErrors {
+    email: String
+    password: String
+  }
+
+  type AuthResponse {
+    status: Boolean!
+    statusCode: Int!
+    message: String!
+    token: String
+    fieldErrors: FieldErrors  
+    data: AdminData
+  }
+
+  type AdminData {
     admin: Admin!
   }
 
@@ -19,10 +34,9 @@ const authTypeDefs = gql`
     getAdmin(id: ID!): Admin
   }
     
-type Mutation {
-  adminLogin(email: String!, password: String!): AuthPayload!  # Ensure this matches the return type
-}
-
+  type Mutation {
+    adminLogin(email: String!, password: String!): AuthResponse!
+  }
 `;
 
 export default authTypeDefs;

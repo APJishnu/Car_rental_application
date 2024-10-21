@@ -1,25 +1,126 @@
-.mainDiv{
+.mainDiv {
   padding: 20px;
   background-color: #f9f9f9;
   height: 100vh;
-  
+}
+.title {
+  padding-top: 5px;
+  letter-spacing: 3px;
 }
 
 .cardContainer {
   display: flex;
-  flex-wrap: wrap;   /* Keeps the cards wrapping */
+  flex-wrap: wrap; /* Keeps the cards wrapping */
   gap: 16px;
-  height: 85%;     /* Set a fixed height for the scrollable area */
-  overflow-y: auto;  /* Enables vertical scrolling */
+  height: 85%; /* Set a fixed height for the scrollable area */
+  overflow-y: auto; /* Enables vertical scrolling */
   padding: 10px;
   scroll-behavior: smooth;
-  transition: opacity 0.5s ease; 
-  opacity: 1; 
+  transition: opacity 0.5s ease;
+  opacity: 1;
   scrollbar-width: none; /* Hides the scrollbar in Firefox */
-}/* Reduce opacity when scrolling up */
+} /* Reduce opacity when scrolling up */
 
 .cardContainer::-webkit-scrollbar {
   display: none;
+}
+
+.buttonsDiv {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  justify-content: space-between;
+}
+
+.buttonsDiv Button {
+  padding: 20px;
+  border: 2px solid;
+}
+
+.excelUploadSection {
+  padding: 7px;
+  border-radius: 8px;
+  border: 2px solid #008e4c;
+  border-color: #008e4c;
+  background-color: #f9f9f9;
+  font-size: 10px;
+  max-width: 200px;
+  width: 100%;
+  
+}
+
+.excelUploadContainer {
+  display: flex;
+  align-items: center;
+}
+
+.custumFileUpload {
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+  padding: 0px 0px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+}
+.flex {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.iconWithText {
+  display: flex;
+  align-items: center;
+}
+
+.text {
+  margin-right: 0px; /* Spacing between text and icons */
+}
+.icon {
+  width: 25px;
+  height: 25px;
+}
+
+.addIcon {
+  cursor: pointer;
+  font-size: 18px; /* Adjust size as needed */
+  color: #1890ff; /* Ant Design primary color */
+  margin-left: 10px; /* Spacing between icons */
+}
+
+.progressBar {
+  margin-top: 10px; /* Spacing above the progress bar */
+  width: 100%;
+  background-color: #f0f0f0; /* Light background for progress bar */
+}
+
+.progressFill {
+  height: 8px; /* Height of the progress fill */
+  background-color: #1890ff; /* Progress fill color */
+  transition: width 0.2s ease; /* Smooth transition for width change */
+}
+
+.addVehicleDiv {
+  display: flex;
+  align-items: center;
+  width: 100%!important;
+  max-width: 200px;
+  
+}
+.addVehicleDiv button {
+  padding: 10px;
+  background-color: #ffffff;
+  border-color: #1890ff;
+  border-radius: 10px;
+  font-size: 10px;
+  color: #1890ff;
+  width: 100%;
+  height: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
 }
 
 /* Reduce opacity when scrolling up */
@@ -34,8 +135,12 @@
 
 /* Additional class when scroll event is active (for smooth effect) */
 .isScrolling {
-  transform: scale(1.01); /* Slight zoom effect to give a subtle effect during scrolling */
-  transition: opacity 0.5s ease, transform 0.3s ease;
+  transform: scale(
+    1.01
+  ); /* Slight zoom effect to give a subtle effect during scrolling */
+  transition:
+    opacity 0.5s ease,
+    transform 0.3s ease;
 }
 .vehicleCard {
   width: 290px;
@@ -53,7 +158,7 @@
 
 .displayImage {
   max-width: 100%;
-  height: 120px!important;
+  height: 120px !important;
 }
 
 .scrollButton {
@@ -79,12 +184,11 @@
   align-items: center;
 }
 
-.cardActions{
+.cardActions {
   display: flex;
   justify-content: space-between;
   width: 100%;
 }
-
 
 /* Empty Message */
 
@@ -95,7 +199,9 @@
 }
 
 .animatedEmpty {
-  animation: fadeIn 1s ease-in-out, bounce 2s infinite;
+  animation:
+    fadeIn 1s ease-in-out,
+    bounce 2s infinite;
   margin-top: 100px;
 }
 
@@ -121,7 +227,11 @@
 
 /* Keyframes for bounce effect */
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
   40% {
@@ -129,5 +239,111 @@
   }
   60% {
     transform: translateY(-5px);
+  }
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 768px) {
+  .title {
+    text-align: center;
+    font-size: 25px; /* Larger title font on tablet-sized screens */
+  }
+
+  /* Card container and card responsiveness */
+  .cardContainer {
+    justify-content: center; /* Center cards on smaller screens */
+    gap: 12px;
+  }
+
+  .vehicleCard {
+    width: 90%; /* Wider cards on tablet-sized screens */
+    max-width: none;
+  }
+
+  /* Buttons section: stack buttons vertically */
+  .buttonsDiv {
+    flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* Center-align the buttons */
+    gap: 12px; /* Reduce gap for smaller screens */
+    width: 100%; /* Ensure buttons take full width */
+  }
+  .buttonsDiv .andButtons {
+    align-items: center; /* Center-align the buttons */
+    display: flex;
+    width: 100%; /* Ensure buttons take full width */
+    font-size: 10px;
+  }
+
+  .buttonsDiv Button {
+    width: 100%; /* Buttons take up 80% of the available width */
+    max-width: 200px; /* Max width to maintain consistency */
+    padding: 12px 20px; /* Adjust padding for better touch experience */
+    font-size: 14px; /* Increase font size for readability */
+    border-radius: 8px; /* Rounded corners for better look */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Light shadow for a floating effect */
+  }
+
+  .addVehicleDiv button{
+    height: 40px;
+    display: flex;
+    font-size: 12px;
+    padding: 5px;
+    align-items: center;
+  }
+  /* Excel upload section styling for smaller screens */
+  .excelUploadSection {
+    width: 100%; /* Full width for smaller screens */
+    padding: 2px;
+    height: 40px;
+  }
+
+  /* Vehicle info responsiveness */
+  .vehicleInfo {
+    align-items: center; /* Center align for consistency */
+    text-align: center; /* Center text for better presentation */
+  }
+
+  /* Scroll button responsiveness */
+  .scrollButton {
+    font-size: 20px; /* Slightly smaller scroll button for mobile */
+  }
+}
+
+
+@media (max-width: 480px) {
+  /* Card container adjustments for very small screens */
+  .cardContainer {
+    gap: 8px;
+  }
+
+  /* Full-width cards on very small screens */
+  .vehicleCard {
+    width: 100%; /* Full width on mobile screens */
+  }
+
+  /* Button adjustments for small screens */
+  .buttonsDiv Button {
+    width: 100%; /* Buttons take full width */
+    max-width: 150px; /* Slightly smaller max width */
+    padding: 10px 0px; /* Adjust padding for mobile */
+    font-size: 10px; /* Smaller font size for mobile screens */
+    border-radius: 6px; /* Maintain rounded corners */
+  }
+
+  .buttonsDiv .andButtons {
+    align-items: center; /* Center-align the buttons */
+    display: flex;
+    width: 100%; /* Ensure buttons take full width */
+  }
+
+  /* Excel upload section for mobile */
+  .excelUploadSection {
+    width: 100%;
+  }
+
+  /* Vehicle info adjustments */
+  .vehicleInfo {
+    align-items: center;
+    text-align: center;
   }
 }

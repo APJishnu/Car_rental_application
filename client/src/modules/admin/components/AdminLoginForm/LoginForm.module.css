@@ -3,36 +3,121 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: var(--secondary-color);
+  background: linear-gradient(90deg, rgb(203, 203, 255), white);
   width: 100%;
-  z-index: 1000;
+  position: relative; /* For loading overlay */
+}
+
+.loadingOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100; /* Overlay on top */
 }
 
 .container {
   width: 100%;
   max-width: 350px;
-  background-color: var(--primary-color);
+  background-color: white;
   border-radius: 16px;
-  padding: 28px;
+  padding: 40px;
+  animation: fadeIn 0.5s ease-in-out;
   
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .heading {
   text-align: center;
-  font-size: 23px;
-  font-weight:bold;
+  font-size: 25px;
+  font-weight: bold;
   color: var(--heading-color);
-  padding-bottom: 20px;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
 }
 
 .form {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 10px;
+}
+
+.inputGroup {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.inputGroup .icon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #555;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 12px 40px 12px 45px;
+  font-size: 16px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s;
+}
+
+.inputGroup input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
+
+.eyeIcon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #888;
+}
+
+.eyeIcon:hover {
+  color: black;
 }
 
 .error {
-  color: #ff6b6b; /* Red for error messages */
+  color: #ff6b6b;
   text-align: center;
+  font-size: 12px;
+  padding: 0;
+  margin: 0;
+}
+
+.loginButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: linear-gradient(0deg, rgb(0, 0, 105), rgb(184, 211, 255));
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.loginButton:hover {
+  background: linear-gradient(0deg, rgb(0, 0, 211), rgb(184, 211, 255));
 }

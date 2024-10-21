@@ -5,7 +5,6 @@ import AddManufacturerForm from '../../../modules/admin/components/AddManufactur
 const AddManufacturerPage: React.FC = () => {
   return (
     <div>
-      <h1>Add Manufacturer</h1>
       <AddManufacturerForm />
     </div>
   );

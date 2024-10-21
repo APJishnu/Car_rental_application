@@ -16,6 +16,7 @@ import {
   PieChart,
   Pie,
   Cell,
+  LabelList ,
   ResponsiveContainer,
   LineChart,
   Line,
@@ -67,7 +68,7 @@ interface Booking {
   userId: string;
   pickupDate: string;
   dropoffDate: string;
-  status:string;
+  status: string;
   totalPrice: number;
   razorpayOrderId: string;
   paymentMethod: string;
@@ -318,64 +319,110 @@ const Dashboard: React.FC = () => {
   const handleShowMore = () => {
     setShowAll(true);
   };
+  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
   return (
     <div className={styles.dashboard}>
-      <h2>Admin Dashboard</h2>
+      <h2>ADMIN DASHBOARD</h2>
 
       {/* Date Range Picker */}
-      <DatePicker.RangePicker value={dateRange} onChange={handleDateChange} />
+      <DatePicker.RangePicker className={styles.DatePicker} value={dateRange} onChange={handleDateChange} />
 
       <div className={styles.dashboardOverflowDiv}>
         {/* Chart Section */}
-        <div className={styles.chartSection}>
-          <h3>Payment Method Distribution</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <PieChart>
-              <Pie
-                data={chartData}
-                dataKey="value"
-                nameKey="name"
-                cx="50%"
-                cy="50%"
-                outerRadius={100}
-                fill="#82ca9d"
-                label
-              >
-                {chartData.map((entry, index) => (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={`#${Math.floor(Math.random() * 16777215).toString(16)}`}
-                  />
-                ))}
-              </Pie>
-            </PieChart>
-          </ResponsiveContainer>
-        </div>
 
-        {/* Revenue Line Chart Section */}
-        <div className={styles.chartSection}>
-          <h3>
-            Total Revenue Per Day (
-            {dateRange[0] && dateRange[1]
-              ? `${dateRange[0]?.format("YYYY-MM-DD")} to ${dateRange[1]?.format("YYYY-MM-DD")}`
-              : "Last 7 Days"}
-            )
-          </h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <LineChart
-              data={revenueLineChartData}
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="totalRevenue" stroke="#8884d8" />
-              <Brush />
-            </LineChart>
-          </ResponsiveContainer>
+        <div className={styles.chartsDiv}>
+          <div className={styles.chartSection}>
+            <h3>Payment Method Distribution</h3>
+            <ResponsiveContainer width="100%" height={300}>
+            <PieChart width={400} height={400}>
+      <Pie
+        data={chartData}
+        dataKey="value"
+        nameKey="name"
+        cx="50%"
+        cy="50%"
+        outerRadius={100}
+        innerRadius={60}
+      >
+       <LabelList className={styles.lablePie} dataKey="name" position="outside" fontSize={10} fill="#FF5733" />  {/* Adds the payment method name as labels */}
+        {chartData.map((entry, index) => (
+          <Cell
+            key={`cell-${index}`}
+            fill={COLORS[index % COLORS.length]}
+          />
+        ))}
+      </Pie>
+    </PieChart>
+            </ResponsiveContainer>
+          </div>
+
+          {/* Revenue Line Chart Section */}
+          <div className={styles.chartSection2}>
+            <h3>
+              Total Revenue Per Day (
+              {dateRange[0] && dateRange[1]
+                ? `${dateRange[0]?.format("YYYY-MM-DD")} to ${dateRange[1]?.format("YYYY-MM-DD")}`
+                : "Last 7 Days"}
+              )
+            </h3>
+            <ResponsiveContainer width="100%" height={300}>
+            
+    
+      <LineChart
+        data={revenueLineChartData}
+        margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+      >
+        {/* Customized Grid */}
+        <CartesianGrid strokeDasharray="3 3" stroke="#ddd" />
+
+        {/* X and Y Axes */}
+        <XAxis
+          dataKey="date"
+          tick={{ fill: '#8884d8', fontSize: 12 }}
+          tickLine={false}
+        />
+        <YAxis
+          tick={{ fill: '#8884d8', fontSize: 12 }}
+          tickLine={false}
+          axisLine={false}
+        />
+
+        {/* Tooltip */}
+        <Tooltip contentStyle={{ backgroundColor: '#f5f5f5', borderColor: '#8884d8' }} />
+
+        {/* Legend */}
+        <Legend verticalAlign="top" height={36} iconType="circle" />
+
+        {/* Adding a gradient to the line */}
+        <defs>
+          <linearGradient id="colorUv" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
+            <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
+          </linearGradient>
+        </defs>
+
+        {/* Line with smoothed shape and stroke */}
+        <Line
+          type="monotone"
+          dataKey="totalRevenue"
+          stroke="#8884d8"
+          strokeWidth={2}
+          dot={{ r: 4, stroke: '#8884d8', strokeWidth: 2, fill: '#fff' }} // Custom dots
+          activeDot={{ r: 6 }}
+        />
+
+        {/* Adding Brush for better navigation */}
+        <Brush
+          height={30}
+          stroke="#8884d8"
+          startIndex={0}
+          endIndex={revenueLineChartData.length - 1}
+          travellerWidth={12}
+        />
+      </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
         {/* Booking List Section */}
@@ -391,7 +438,7 @@ const Dashboard: React.FC = () => {
                 dropoffDate.isSame(today.add(3, "day"), "day") ||
                 dropoffDate.isBefore(today, "day");
 
-                // Check if the booking status is 'booked'
+              // Check if the booking status is 'booked'
               const isBookingBooked = booking.status === "booked";
 
               const date = dropoffDate.isSame(today.add(2, "day"));
@@ -474,14 +521,18 @@ const Dashboard: React.FC = () => {
                       Release
                     </Button>
                   )}
-                  {!isBookingBooked &&(
+                  {!isBookingBooked && (
                     <Tag
-                    color="blue"
-                    style={{ fontSize: "1.1em", fontWeight: "bold" ,padding:"5px"}}
-                  >
-                    <CheckCircleOutlined style={{ marginRight: "5px" }} />
-                    Released..
-                  </Tag>
+                      color="blue"
+                      style={{
+                        fontSize: "1.1em",
+                        fontWeight: "bold",
+                        padding: "5px",
+                      }}
+                    >
+                      <CheckCircleOutlined style={{ marginRight: "5px" }} />
+                      Released..
+                    </Tag>
                   )}
                 </List.Item>
               );

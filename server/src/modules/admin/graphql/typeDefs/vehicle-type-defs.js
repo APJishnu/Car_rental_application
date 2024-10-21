@@ -42,6 +42,12 @@ const vehicleTypeDefs = gql`
     year: String!
   }
 
+   type AddVehicleExcelResponse {
+    success: Boolean!
+    message: String
+    processedVehiclesCount: Int!
+  }
+
   type Query {
     getVehicles: [Vehicle!]!  # Query to fetch the list of vehicles
     getVehicleById(id: String!): Vehicle
@@ -58,6 +64,8 @@ const vehicleTypeDefs = gql`
      deleteVehicle(id: String!): Vehicle
 
      updateVehicle(id: String!, input: EditVehicleInput!): Vehicle!  
+
+     addVehicleExcel(excelFile: Upload!): AddVehicleExcelResponse!
 
   }
 `;

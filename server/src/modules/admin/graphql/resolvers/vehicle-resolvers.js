@@ -2,6 +2,11 @@ import { GraphQLUpload } from 'graphql-upload';
 import VehicleHelper from '../../helpers/vehicle-helper.js'; // Helper for handling vehicle creation
 import ManufacturerHelper from '../../helpers/manufacturer-helper.js'; // For fetching manufacturers
 import RentableVehicleHelper from '../../helpers/rentable-vehicle-helper.js';
+import urlToFile from '../../../../utils/url-to-file.js';
+import ExcelHandler from '../../../../utils/excel-handler.js'
+
+
+// Your resolver and helper function logic
 
 const vehicleResolvers = {
   Upload: GraphQLUpload, // Scalar for file uploads
@@ -47,6 +52,7 @@ const vehicleResolvers = {
 
 
   Mutation: {
+    
     addVehicle: async (_, { input, primaryImage, otherImages }) => {
       const { name, description, transmission, fuelType, numberOfSeats, quantity, manufacturerId, year } = input;
 
@@ -70,6 +76,63 @@ const vehicleResolvers = {
         throw new Error(error.message || 'Failed to add vehicle');
       }
     },
+
+    async addVehicleExcel(_, { excelFile }) {
+      try {
+        const { createReadStream } = await excelFile;
+        const buffer = await ExcelHandler.getExcelBuffer(createReadStream);
+        const jsonData = await ExcelHandler.parseExcel(buffer);
+
+        let processedVehiclesCount = 0;
+
+        for (const row of jsonData) {
+          // Convert primary image URL to File
+          const primaryImageFile = await urlToFile(row.primaryImageUrl);
+
+          // Convert other image URLs to Files
+          const otherImageFiles = row.otherImageUrls
+            ? await Promise.all(
+                row.otherImageUrls.split(',').map((url) => urlToFile(url.trim()))
+              )
+            : [];
+
+          const vehicleData = {
+            name: row.name,
+            description: row.description,
+            transmission: row.transmission,
+            fuelType: row.fuelType,
+            numberOfSeats: row.numberOfSeats.toString(),
+            primaryImage: primaryImageFile,
+            otherImages: otherImageFiles,
+            quantity: row.quantity.toString(),
+            manufacturerId: "43",
+            year: row.year.toString(),
+          };
+
+          try {
+            await VehicleHelper.createVehicle(vehicleData);
+            processedVehiclesCount++;
+          } catch (error) {
+            console.error('Error adding vehicle:', error.message);
+            throw new Error(error.message || 'Failed to add vehicle');
+          }
+        }
+
+        return {
+          success: true,
+          processedVehiclesCount,
+          message: `Successfully processed ${processedVehiclesCount} vehicles.`,
+        };
+      } catch (error) {
+        console.error('Error processing Excel file:', error);
+        return {
+          success: false,
+          message: 'Failed to process the Excel file: ' + error.message,
+          processedVehiclesCount: 0, // Return zero in case of failure
+        };
+      }
+    },
+    
 
 
     // Your current deleteVehicle mutation
