@@ -17,7 +17,7 @@
   text-align: center;
 }
 .title{
-  color: rgb(138, 0, 0);
+  color: rgb(0, 0, 0);
 }
 
 .stepsSection {
@@ -67,7 +67,7 @@
   width: 55px;
   height: 25px;
   padding: 0px;
-  color: rgb(138, 0, 0);
+  color: rgb(35, 35, 35);
 }
 
 .stepContent {
@@ -79,7 +79,7 @@
   font-size: 18px;
   font-weight: 600;
   margin-bottom: 5px;
-  color: rgb(138, 0, 0);
+  color: rgb(15, 15, 15);
 }
 
 .stepDescription {

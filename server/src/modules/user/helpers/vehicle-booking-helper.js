@@ -5,7 +5,8 @@ import sequelize from "../../../config/database.js";
 dotenv.config();
 
 function verifyPaymentSignature(paymentDetails) {
-  const { razorpayOrderId, razorpayPaymentId, razorpaySignature } =paymentDetails;
+  const { razorpayOrderId, razorpayPaymentId, razorpaySignature } =
+    paymentDetails;
 
   const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
   hmac.update(`${razorpayOrderId}|${razorpayPaymentId}`);
@@ -30,28 +31,78 @@ async function fetchPaymentDetails(paymentId) {
 }
 
 import VehicleBookingRepo from "../repositories/vehicle-booking-repo.js";
+import RentableVehicleHelper from "../../admin/helpers/rentable-vehicle-helper.js";
 
 class VehicleBookingHelper {
-  static async getAvailableVehicles(pickupDate, dropoffDate) {
+  static async getAvailableVehicles(
+    pickupDate,
+    dropoffDate,
+    query,
+    transmission,
+    fuelType,
+    seats,
+    priceSort
+  ) {
     try {
-      // Business logic for fetching available vehicles
-      const rentableVehicles = await VehicleBookingRepo.getRentableVehicles();
-
-      const availableVehicles = [];
-
-      for (const rentable of rentableVehicles) {
-        const isAvailable = await VehicleBookingRepo.checkVehicleAvailability(
-          rentable.vehicleId,
-          pickupDate,
-          dropoffDate
-        );
-        console.log(isAvailable);
-        if (isAvailable) {
-          availableVehicles.push(rentable);
+      console.log("in try outside");
+      if (query || transmission || fuelType || seats || priceSort) {
+        const rentableVehicles = await RentableVehicleHelper.searchRentableVehicles({
+          query,
+          transmission, 
+          fuelType,    
+          seats,     
+          priceSort,
+        });
+    
+        const availableVehicles = [];
+    
+        // Step 4: Check availability for each rentable vehicle
+        for (const rentable of rentableVehicles) {
+          const isAvailable = await VehicleBookingRepo.checkVehicleAvailability(
+            rentable.vehicleId,
+            pickupDate,
+            dropoffDate
+          );
+    
+          console.log(`Vehicle ID ${rentable.vehicleId} availability:`, isAvailable);
+    
+          if (isAvailable) {
+            availableVehicles.push(rentable);
+          }
         }
+    
+        console.log("Available Vehicles after filtering:", availableVehicles);
+        return {
+          status: "success",
+          statusCode: 200,
+          message: "success",
+          data: availableVehicles,
+        };
+      } else {
+        // Business logic for fetching available vehicles
+        const rentableVehicles = await VehicleBookingRepo.getRentableVehicles();
+
+        const availableVehicles = [];
+
+        for (const rentable of rentableVehicles) {
+          const isAvailable = await VehicleBookingRepo.checkVehicleAvailability(
+            rentable.vehicleId,
+            pickupDate,
+            dropoffDate
+          );
+          console.log(isAvailable);
+          if (isAvailable) {
+            availableVehicles.push(rentable);
+          }
+        }
+        console.log("available", availableVehicles);
+        return {
+          status: "success",
+          statusCode: 200,
+          message: "success",
+          data: availableVehicles,
+        };
       }
-      console.log("available", availableVehicles);
-      return availableVehicles;
     } catch (error) {
       throw new Error(
         "Failed to fetch available vehicles. Please try again later."

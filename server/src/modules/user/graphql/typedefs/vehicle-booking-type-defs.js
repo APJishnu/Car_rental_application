@@ -45,7 +45,6 @@ const VehicleBookingTypeDefs = gql`
     updatedAt: String!
   }
 
-  # Input for creating a booking
   input CreateBookingInput {
     vehicleId: ID!
     pickupDate: String!
@@ -54,19 +53,18 @@ const VehicleBookingTypeDefs = gql`
     userContact: String!
   }
 
-type PaymentOrder {
+  type PaymentOrder {
     status: Boolean!
     message: String!
     statusCode: Int!
     data: PaymentOrderData
-}
+  }
 
-type PaymentOrderData {
+  type PaymentOrderData {
     razorpayOrderId: String
     amount: Float
     currency: String
-}
-
+  }
 
   input PaymentInput {
     razorpayPaymentId: String!
@@ -83,7 +81,7 @@ type PaymentOrderData {
     status: String
     totalPrice: Float!
     razorpayOrderId: String
-    paymentMethod: String!
+    paymentMethod: String
     rentable: Rentable
   }
 
@@ -115,7 +113,7 @@ type PaymentOrderData {
     comment: String!
     rating: Float!
     booking: Booking!
-    user: UserDetailsReview! # Ensure it includes UserDetailsReview type
+    user: UserDetailsReview! 
   }
 
   type ReviewResponse {
@@ -123,22 +121,38 @@ type PaymentOrderData {
     message: String!
   }
 
-  # Query for getting available vehicles
+  type GetAvailableVehiclesResponse {
+    status: String!
+    statusCode: Int!
+    message: String!
+    data: [Rentable]
+  }
+
+  
+
   type Query {
-    getAvailableVehicles(pickupDate: String!, dropoffDate: String!): [Rentable]
+
+    getAvailableVehicles(
+    pickupDate: String!
+    dropoffDate: String!
+    query: String
+    transmission: [String]         
+    fuelType: [String]             
+    seats: [Int]                  
+    priceSort: String              
+  ): GetAvailableVehiclesResponse
+
     fetchBookings: FetchBookingsResponse!
     fetchReviews(vehicleId: ID!): [Review!]!
   }
 
   # Mutation for creating a Razorpay payment order and verifying payment + booking creation
   type Mutation {
-    # Mutation for creating the Razorpay payment order
     createPaymentOrder(
       totalPrice: Float!
       bookingInput: CreateBookingInput!
     ): PaymentOrder!
 
-    # Mutation for verifying the payment and creating a booking
     verifyPaymentAndCreateBooking(
       paymentDetails: PaymentInput!
       bookingInput: CreateBookingInput!

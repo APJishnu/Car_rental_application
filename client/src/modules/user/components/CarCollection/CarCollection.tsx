@@ -1,34 +1,37 @@
 "use client";
 
-import { useQuery, gql } from '@apollo/client';
-import CarCard from '../CarCardsSection/CarCards';
-import styles from './CarCollection.module.css';
-import { useRouter } from 'next/navigation';
-
-
+import { useQuery, gql } from "@apollo/client";
+import CarCard from "../CarCardsSection/CarCards";
+import styles from "./CarCollection.module.css";
+import { useRouter } from "next/navigation";
 
 // GraphQL Query to get rentable vehicles
 const GET_RENTABLE_VEHICLES = gql`
   query GetRentableVehicles {
-    getRentableVehicles {
-      id
-      vehicleId
-      pricePerDay
-      availableQuantity
-      vehicle {
+    getRentableVehiclesUser {
+      status
+      statusCode
+      message
+      data {
         id
-        name
-        description
-        transmission
-        fuelType
-        numberOfSeats
-        year
-        primaryImageUrl
-        manufacturer {
+        vehicleId
+        pricePerDay
+        availableQuantity
+        vehicle {
           id
           name
-          country
-          imageUrl
+          description
+          transmission
+          fuelType
+          numberOfSeats
+          year
+          primaryImageUrl
+          manufacturer {
+            id
+            name
+            country
+            imageUrl
+          }
         }
       }
     }
@@ -39,28 +42,23 @@ const CarCollection: React.FC = () => {
   const router = useRouter();
   const { loading, error, data } = useQuery(GET_RENTABLE_VEHICLES); // Use Apollo Client to fetch data
 
-
-
-
-
   const handleRentNow = (carId: string) => {
     router.push(`/user/car-booking?carId=${carId}`); // Navigates to dynamic car booking page
   };
-
 
   if (loading) return <p>Loading...</p>; // Loading state
   if (error) return <p>Error: {error.message}</p>; // Error handling
 
   // Cars to display, either search results or all data if no search performed
-  const carsToDisplay = data.getRentableVehicles;
-
+  const carsToDisplay = data.getRentableVehiclesUser.data;
 
   return (
     <div className={styles.carCollection}>
       <div className={styles.carCollectionSecondDiv}>
         <h2>Our Impressive Collection of Cars</h2>
-        <p className={styles.subheading}>Ranging from elegant sedans to powerful sports cars...</p>
-
+        <p className={styles.subheading}>
+          Ranging from elegant sedans to powerful sports cars...
+        </p>
 
         <div className={styles.filters}>
           <button className={styles.filterButton}>Popular Car</button>
@@ -79,7 +77,7 @@ const CarCollection: React.FC = () => {
               price={car.pricePerDay}
               totalPrice={0}
               features={{
-                passengers: car.vehicle.numberOfSeats || '',
+                passengers: car.vehicle.numberOfSeats || "",
                 transmission: car.vehicle.transmission,
                 fuelType: car.vehicle.fuelType,
               }}

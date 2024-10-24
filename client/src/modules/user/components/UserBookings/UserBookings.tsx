@@ -27,7 +27,7 @@ import {
   CheckOutlined, // Icon for return accepted
 } from "@ant-design/icons"; // Importing icons
 import Cookies from "js-cookie";
-import styles from "./page.module.css";
+import styles from "./UserBookings.module.css";
 const { Step } = Steps;
 
 // GraphQL Query
@@ -236,6 +236,7 @@ const BookingList: React.FC = () => {
   if (bookings?.length === 0 && statusCode === 200) {
     return (
       <Result
+      style={{padding:"160px"}}
         status="404"
         title="No Bookings Found"
         subTitle={message || "It seems you haven't made any bookings yet."}
@@ -360,7 +361,7 @@ const BookingList: React.FC = () => {
                       </div>
 
                       <div className={styles.bookingInfoDiv}>
-                        <p>Payment Method: {booking.paymentMethod}</p>
+                        <p>Payment Method: {booking?.paymentMethod}</p>
                         <p>Total Price: ₹{booking.totalPrice}</p>
                         {/* Status Handling */}
                         {booking.status === "released" ? (
@@ -401,7 +402,7 @@ const BookingList: React.FC = () => {
                     <button
                       className={styles.actionButton}
                       onClick={() =>
-                        openModal(booking.id, booking.rentable.vehicleId)
+                        openModal(booking.id, booking.rentable?.vehicleId)
                       }
                     >
                       <EditOutlined /> Add Review

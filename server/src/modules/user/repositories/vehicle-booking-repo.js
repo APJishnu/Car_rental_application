@@ -33,6 +33,7 @@ class VehicleBookingRepo {
         return response
     }
 
+
     static async checkVehicleAvailability(vehicleId, pickupDate, dropoffDate) {
 
       const transaction = await sequelize.transaction();
@@ -125,7 +126,10 @@ class VehicleBookingRepo {
       try {
         // Fetch all bookings by userId and include Rentable, Vehicle, and Manufacturer
         return await Booking.findAll({
-          where: { userId },
+          where: { 
+            userId,
+            status: 'booked' // Filter to only get bookings with 'Booked' status
+          },
           include: [
             {
               model: Rentable,
@@ -150,6 +154,7 @@ class VehicleBookingRepo {
               ],
             },
           ],
+          logging: console.log 
         });
       } catch (error) {
         console.error("Error in BookingRepo:", error);

@@ -1,0 +1,116 @@
+.container {
+  position: relative;
+  height: 5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 200px;
+}
+
+.priceText {
+  font-size: 24px;
+  text-align: center;
+  font-weight: bold;
+  color: #002e7e;
+  margin-top: 10px;
+  margin-bottom: 0;
+  z-index: 10;
+  background-color: rgba(255, 255, 255, 0);
+  border-radius: 0.5rem;
+  padding: 0 1rem;
+}
+
+.moneyLayer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.coin {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #FFD700;
+  border: 1px solid #DAA520;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #DAA520;
+  font-size: 14px;
+}
+
+.note {
+  position: absolute;
+  width: 22px;
+  height: 10px;
+  background: #9FE2BF;
+  border: 1px solid #2E8B57;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2E8B57;
+  font-size: 12px;
+}
+
+/* Animation keyframes */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes sway {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  50% {
+    transform: translateX(10px) rotate(5deg);
+  }
+}
+
+/* Money element positions and animations */
+.coin1 {
+  left: 25%;
+  top: 35%;
+  animation: float 3s ease-in-out infinite;
+}
+
+.coin2 {
+  left: 66%;
+  top: 33%;
+  animation: float 2.5s ease-in-out infinite 0.2s;
+}
+
+.coin3 {
+  left: 50%;
+  top: 90%;
+  animation: float 3.2s ease-in-out infinite 0.5s;
+}
+
+.note1 {
+  left: 16%;
+  top: 75%;
+  animation: sway 3s ease-in-out infinite 0.1s;
+  transform: rotate(12deg);
+}
+
+.note2 {
+  left: 50%;
+  top: 13%;
+  animation: sway 2.5s ease-in-out infinite 0.4s;
+  transform: rotate(-6deg);
+}
+
+.note3 {
+  right: 25%;
+  top: 80%;
+  animation: sway 3.5s ease-in-out infinite 0.6s;
+  transform: rotate(-12deg);
+}

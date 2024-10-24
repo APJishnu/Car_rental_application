@@ -23,6 +23,7 @@ class AuthHelper {
     if (existingUser) {
       return {
         status: "error",
+        statusCode: 400,
         message: "User with this phone number already exists",
         data: null,
       };
@@ -44,24 +45,61 @@ class AuthHelper {
   async verifyOTP(phoneNumber, otp) {
     const formattedNumber = phoneNumber.startsWith("+")
       ? phoneNumber
-      : `+91${phoneNumber}`;
-    // Verify the OTP using Twilio's Verify API
-    const verificationCheck = await twilioClient.verify.v2
-      .services(process.env.TWILIO_VERIFY_SERVICE_SID)
-      .verificationChecks.create({ to: `+91${8714804072}`, code: otp });
+      : `+91${phoneNumber}`; // Ensure the phone number is in the correct format
 
-    // Check if the verification was successful
-    if (verificationCheck.status === "approved") {
-      return {
-        status: "success",
-        message: "Phone verification successful",
-        data: null,
-      };
-    } else {
+    try {
+      // Verify the OTP using Twilio's Verify API
+      const verificationCheck = await twilioClient.verify.v2
+        .services(process.env.TWILIO_VERIFY_SERVICE_SID)
+        .verificationChecks.create({ to: `+91${8714804072}`, code: otp });
+
+      // Check if the verification was successful
+      if (verificationCheck.status === "approved") {
+        return {
+          status: "success",
+          statusCode: 200,
+          message: "Phone number verified successfully",
+          data: {
+            isPhoneVerified: true,
+            phoneVerifiedAt: new Date().toISOString(),
+          },
+        };
+      } else {
+        return {
+          status: "error",
+          statusCode: 400,
+          message: "OTP verification failed",
+          errors: [
+            {
+              field: "otp",
+              message: "Invalid OTP. Please try again.",
+            },
+          ],
+        };
+      }
+    } catch (error) {
+      console.error("Error during OTP verification:", error);
+
+      // Check for specific Twilio error codes
+      if (error.code === 20404) {
+        return {
+          status: "error",
+          statusCode: 404,
+          message: "The requested verification service was not found.",
+        };
+      }
+
+      // Handle other errors that may occur
       return {
         status: "error",
-        message: "Invalid or expired OTP",
-        data: null,
+        statusCode: 500,
+        message: "An unexpected error occurred during OTP verification.",
+        errors: [
+          {
+            field: "otp",
+            message: "An error occurred. Please try again later.",
+          },
+        ],
       };
     }
   }
@@ -71,18 +109,40 @@ class AuthHelper {
       email,
       password,
       phoneNumber,
+      isPhoneVerified,
+      phoneVerifiedAt,
       firstName,
       lastName,
-      city,
-      state,
-      country,
-      pincode,
+      confirmPassword, // Extract confirmPassword for validation if needed
+      additionalDetails, // Destructure additionalDetails
     } = input;
+
+    // Destructure properties from additionalDetails
+    const { city, state, country, pincode } = additionalDetails;
 
     // Check if the user already exists
     const existingUser = await authRepo.findByPhoneNumber(phoneNumber);
     if (existingUser) {
-      return { status: "error", message: "User already exists", data: null };
+      return {
+        status: "error",
+        statusCode: 400, // Set appropriate status code for user already exists
+        message: "User already exists",
+        errors: null, // No field-specific errors in this case
+        data: null,
+      };
+    }
+
+    // Validate password and confirmPassword
+    if (password !== confirmPassword) {
+      return {
+        status: "error",
+        statusCode: 400,
+        message: "Passwords do not match",
+        errors: [
+          { field: "confirmPassword", message: "Passwords do not match" },
+        ], // Return specific error
+        data: null,
+      };
     }
 
     // Prepare user data for storage
@@ -92,12 +152,12 @@ class AuthHelper {
       phoneNumber,
       email,
       password: await bcrypt.hash(password, 10), // Hash the password
-      isPhoneVerified: true, // Set to true since the phone number is verified
+      isPhoneVerified: isPhoneVerified, // Set to true since the phone number is verified
       city,
       state,
       country,
       pincode,
-      phoneVerifiedAt: new Date(), // Set verification date
+      phoneVerifiedAt: phoneVerifiedAt, // Set verification date
     };
 
     // Save the user data to the database
@@ -105,10 +165,13 @@ class AuthHelper {
 
     return {
       status: "success",
+      statusCode: 201, // Use a 201 status code for successful creation
       message: "Registration completed successfully.",
+      errors: null, // No errors, as the operation was successful
       data: newUser,
     };
   }
+
   async loginUser(email, password) {
     try {
       const user = await User.findOne({ where: { email } });

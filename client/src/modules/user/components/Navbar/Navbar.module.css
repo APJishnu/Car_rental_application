@@ -88,14 +88,16 @@
   margin: var(--spacing) 0;
   color: var(--color-accent);
   text-align: center;
-  transition: color 0.3s;
+  transition: all 0.7s;
+  padding: 0.30rem 0.5rem;
+  border-radius: 10px;
 }
 
 .navLink:hover {
   color: var(--color-background);
   background-color: var(--color-accent);
-  padding: 0.25rem 0.5rem;
-  border-radius: 4px;
+  padding: 0.35rem 0.9rem;
+  border-radius: 20px;
 }
 
 .btnContainer {
@@ -224,9 +226,9 @@
     /* Keep the menu fixed */
     width: 100%;
     /* Adjust width for desktop */
-    height: 100px;
+    height: 80px;
     /* Full height */
-    top: 80px;
+    top: 0px;
     padding: 0px !important;
     left: 0;
     flex-direction: row;
@@ -235,7 +237,7 @@
     border-bottom: 3px solid rgb(163, 163, 163);
     justify-content: center;
     align-items: center;
-    box-shadow: 0px 500px 100px 400px rgba(239, 250, 255, 0.778);
+    box-shadow: 0px 480px 0px 400px rgba(0, 0, 0, 0.165);
 
   }
 

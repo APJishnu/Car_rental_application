@@ -10,11 +10,14 @@ const RentableTypeDefs = gql`
     country: String!
     image: String
   }
+
   type DeleteStatus {
-   status:Boolean
-   statusCode:Int
-   data:String
+    status: Boolean!
+    statusCode: Int!
+    message: String!
+    data: String
   }
+
 
   type Vehicle {
     id: ID!
@@ -35,9 +38,17 @@ const RentableTypeDefs = gql`
     vehicle: Vehicle  # Include vehicle details
   }
 
-  type Query {
-    getRentableVehicles: [Rentable!]!
+
+  type RentableResponse {
+    status: String!
+    statusCode: Int!
+    message: String!
+    data: [Rentable!]!
   }
+   type Query {
+     getRentableVehicles(query: String): RentableResponse!  
+  }
+
 
   type Mutation {
     addRentable(vehicleId: ID!, pricePerDay: Float!, availableQuantity: Int!): Rentable

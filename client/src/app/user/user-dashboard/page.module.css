@@ -1,0 +1,100 @@
+.container {
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    padding-top: 100px;
+  }
+  
+  .dashboardCard {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #333;
+  }
+  
+  .tabContainer {
+    width: 100%;
+  }
+  
+  .tabList {
+    display: flex;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 1rem;
+    gap: 1rem;
+  }
+  
+  .tabButton {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    border-bottom: 2px solid transparent;
+  }
+  
+  .tabButton:hover {
+    color: #333;
+  }
+  
+  .activeTab {
+    color: #0066cc;
+    border-bottom: 2px solid #0066cc;
+  }
+  
+  .icon {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  .tabContent {
+    padding: 1rem 0;
+  }
+  
+  .tabPanel {
+    animation: fadeIn 0.3s ease;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+    }
+    
+    .dashboardCard {
+      padding: 1rem;
+    }
+    
+    .tabButton {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.875rem;
+    }
+    
+    .icon {
+      width: 1rem;
+      height: 1rem;
+    }
+  }

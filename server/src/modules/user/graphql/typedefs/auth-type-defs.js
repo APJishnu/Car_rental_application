@@ -44,24 +44,51 @@ const userAuthTypeDefs = gql`
     message: String
   }
 
+  type ResponseRegisterUser {
+    status: String!
+    statusCode: Int!
+    message: String!
+    data: User
+    errors: [ValidationError]
+  }
+
   type ResponseSendOtp {
     status: String!
     message: String!
     data: String
-    errors: [ValidationError] # Added this field for validation errors
+    errors: [ValidationError]
+  }
+
+  input AdditionalDetailsInput {
+    city: String
+    state: String
+    country: String
+    pincode: String
   }
 
   input RegisterInput {
     firstName: String!
     lastName: String!
     phoneNumber: String!
+    isPhoneVerified: Boolean!
+    phoneVerifiedAt: String
     email: String!
     password: String!
     confirmPassword: String!
-    city: String
-    state: String
-    country: String
-    pincode: String
+    additionalDetails: AdditionalDetailsInput
+  }
+
+  type VerifyOTP {
+    isPhoneVerified: Boolean
+    phoneVerifiedAt: String
+  }
+
+  type VerifyOTPResponse {
+    status: String!
+    statusCode: Int!
+    message: String!
+    errors: [ValidationError]
+    data: VerifyOTP
   }
 
   type Query {
@@ -69,7 +96,7 @@ const userAuthTypeDefs = gql`
   }
 
   type Mutation {
-    registerUser(input: RegisterInput): Response!
+    registerUser(input: RegisterInput): ResponseRegisterUser!
     sendOTP(
       firstName: String
       lastName: String
@@ -78,7 +105,7 @@ const userAuthTypeDefs = gql`
       password: String
       confirmPassword: String
     ): ResponseSendOtp!
-    verifyOTP(phoneNumber: String!, otp: String!): Response!
+    verifyOTP(phoneNumber: String!, otp: String): VerifyOTPResponse!
     loginUser(email: String, password: String): LoginResponse!
     updateProfileImage(userId: ID!, profileImage: Upload): Response
   }

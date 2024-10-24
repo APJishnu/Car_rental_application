@@ -3,7 +3,7 @@
 
     width: 100%;
     padding: 50px 120px;
-
+    background-color: #e8e8e8;
     margin-top: -25px;
 
   }
@@ -19,6 +19,7 @@
     border-radius: 10px;
     position: relative;
     padding: 30px 30px;
+    box-shadow:0px 0px 100px rgb(225, 232, 255);
   }
 
   .secondMainDiv ::-webkit-scrollbar {
@@ -81,7 +82,7 @@
   .price {
     font-size: 24px;
     font-weight: bold;
-    color: #5b6982;
+    color: #002e7e;
     margin-top: 10px;
     margin-bottom: 0px;
   }
@@ -241,7 +242,7 @@
   /* Heading */
   .reviewSection h3 {
     font-size: 24px;
-    color: #333;
+    color: #370090;
     margin-bottom: 15px;
     font-weight: bold;
   }
@@ -279,6 +280,12 @@
     width: 100px;
     height: 100px;
   }
+  .ratingRow{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 
   .progressBar {
     display: flex;
@@ -310,6 +317,8 @@
     width: 100%;
     padding-top: 20px;
   }
+
+
   /* Review Items */
   .reviewItem {
     display: flex;
@@ -350,250 +359,6 @@
     margin-bottom: 5px;
   }
 
-  /* Modal Overlay */
-  .confirmOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: none;
-    /* Hidden by default */
-    justify-content: center;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    /* Semi-transparent background */
-  }
-
-  /* Modal Visibility */
-  .confirmOverlay.visible {
-    display: flex;
-    /* Show the modal when visible */
-    animation: fadeIn 0.3s;
-    /* Smooth fade-in effect */
-  }
-
-  /* Modal Content Container */
-  .confirmOverlayContent {
-    background-color: white;
-    padding: 20px;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-  }
-
-
-  .modalContent {
-    padding: 10px;
-    background:rgb(209, 240, 255);
-    clip-path: polygon(3% 0, 97% 0, 100% 3%, 100% 97%, 97% 100%, 3% 100%, 0 97%, 0 3%);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    /* Optional shadow */
-  }
-
-  .modalTitle {
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
-  .carImageContainer {
-    display: flex;
-    justify-content: center;
-  }
-
-  .carImage {
-    width: 100%;
-    max-width: 350px;
-    border-radius: 8px;
-    object-fit: contain;
-  }
-
-  .secondCard{
-    padding-top: 30px;
-    margin-left: 0px;
-    width: 100%;
-    max-width: 580px;
-  }
-
-  .rideInfo {
-    font-size: 16px;
-    color: #37383a;
-    margin-bottom: 15px;
-    
-  }
-
-  .closeButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
-  }
-
-  .confirmInput {
-    color: #000000;
-    border: 1px solid #000000;
-    border-radius: 0px;
-    width: 100%;
-    padding: 10px;
-  }
-
-  .confirmInput:hover {
-    background-color: #ebebeb;
-    border: 1px solid #000000;
-    /* Dark border */
-  }
-
-  .confirmInput::placeholder {
-    color: #000000;
-    /* Light grey placeholder text */
-  }
-
-
-  .cardModal {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-
-  }
-
-  .dateModal {
-    height: 100%;
-    width: 100%;
-    max-width: 200px;
-    padding: 10px;
-    background: radial-gradient(circle, rgb(255, 255, 255), rgb(194, 235, 255));
-
-
-    clip-path: polygon(4% 0, 96% 0, 100% 3%, 100% 97%, 96% 100%, 4% 100%, 0 97%, 0 3%);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    /* Optional shadow */
-  }
-
-  .dateModalDotDiv {
-    width: 100%;
-    border: 2px dashed rgb(143, 143, 143);
-    clip-path: polygon(4% 0, 96% 0, 100% 3%, 100% 97%, 96% 100%, 4% 100%, 0 97%, 0 3%);
-    height: 100%;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 10px;
-  }
-
-  .dateModal p span {
-    font-size: 26px;
-    font-weight: 700;
-    color: rgb(0, 0, 0);
-  }
-
-  /* Modal Title */
-  .modalTitle {
-    font-size: 20px;
-    color: #333;
-    margin-bottom: 20px;
-    text-align: center;
-    font-weight: bold;
-  }
-
-  .rideInfo {
-    margin: 10px 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  .priceTable {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .priceTable td {
-    padding: 8px 10px;
-    border-bottom: 1px solid #ccc;
-  }
-  
-  .priceTable td:first-child {
-    text-align: left;
-  }
-  
-  .priceTable td:last-child {
-    text-align: right;
-  }
-  
-  .priceTable strong {
-    font-weight: bold;
-  }
-  
-
-  /* DatePicker Styling */
-  .datePicker {
-    width: 100%;
-    /* Full width for the date picker */
-    margin-bottom: 20px;
-    /* Spacing below the date picker */
-  }
-
-  .inputWithButton{
-    width: 100%;
-    display: flex;
-    align-items:center ;
-    justify-content: space-between;
-    gap: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
-  }
-
-  
-  /* Confirm Button */
-  .modalButton {
-    width: 100%;
-    max-width: 100px;
-    height: 40px;
-    border-radius: 25px;
-    background-color: #000000;
-    border: none;
-    font-size: 16px;
-    font-weight: bold;
-    color: white;
-  }
-
-  .modalButton:hover {
-    background-color: #0d0735;
-    border: 1px solid black;
-  }
-
-  /* Close Button */
-  .closeButton {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    font-size: 24px;
-    color: #555;
-    cursor: pointer;
-  }
-
-  /* Fade-in animation */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
 
 
   /* Desktop Styles */

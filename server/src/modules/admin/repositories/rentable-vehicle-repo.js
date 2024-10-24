@@ -23,6 +23,31 @@ class RentableRepo {
         }
     }
 
+    // In your RentableRepo.js
+
+static async findAllRentableByIds(ids) {
+  try {
+    return await Rentable.findAll({
+      where: {
+        id: ids,
+      },
+      include: [
+        {
+          model: Vehicle,
+          as: 'vehicle',
+          include: {
+            model: Manufacturer,
+            as: 'manufacturer',
+          },
+        },
+      ],
+    });
+  } catch (error) {
+    throw new Error('Database error occurred while fetching rentable vehicles by IDs: ' + error.message);
+  }
+}
+
+
 
     // Find a vehicle by name and manufacturer ID (to check for duplicates)
   static async findRenatableVehicleById(vehicleId) {

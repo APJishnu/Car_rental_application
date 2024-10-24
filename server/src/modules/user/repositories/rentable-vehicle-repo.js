@@ -29,6 +29,25 @@ class RentableVehicleRepository {
       throw new Error('Error fetching rentable vehicle: ' + error.message);
     }
   }
+
+  static async findAllRentable() {
+    try {
+        return await Rentable.findAll({
+            include: [
+                {
+                    model: Vehicle,
+                    as: 'vehicle', // Use the alias defined in Vehicle
+                    include: {
+                        model: Manufacturer, // Include the Manufacturer model
+                        as: 'manufacturer', // Use the alias defined in Manufacturer
+                    },
+                },
+            ],
+        });
+    } catch (error) {
+        throw new Error('Database error occurred while fetching rentable vehicles: ' + error.message);
+    }
+}
 }
 
 export default RentableVehicleRepository;

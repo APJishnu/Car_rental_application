@@ -94,18 +94,10 @@ const Navbar: React.FC = () => {
         {
           key: "profile",
           label: (
-            <a href="/user/user-details" className={styles.menuItem}>
+            <a href="/user/user-dashboard" className={styles.menuItem}>
               <FaUser style={{ marginRight: "8px" }} /> My Profile
             </a>
           ), // Show profile with user icon
-        },
-        {
-          key: "Orders History",
-          label: (
-            <a href="/user/user-bookings" className={styles.menuItem}>
-              <FileTextFilled style={{ marginRight: "8px" }} /> Orders History
-            </a>
-          ),
         },
         
         {

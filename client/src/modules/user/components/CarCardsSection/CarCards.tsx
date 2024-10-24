@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './CarCards.module.css';
-import {DoubleRightOutlined} from '@ant-design/icons'
+import { DoubleRightOutlined,UserOutlined, CarFilled, FireFilled } from '@ant-design/icons'; 
 import { Typography } from 'antd';
 
 const { Text } = Typography;
@@ -33,10 +33,10 @@ const CarCard: React.FC<CarCardProps> = ({ image, model, price,totalPrice, featu
         
        
         <div className={styles.features}>
-          <span>{features.passengers} Person</span>
-          <span>{features.transmission}</span>
-          <span>{features.fuelType}</span>
-        </div>
+            <span><UserOutlined /> {features.passengers} Person</span>
+            <span><CarFilled /> {features.transmission}</span>
+            <span><FireFilled /> {features.fuelType}</span>
+          </div>
         {totalPrice < 1 && (
         <button className={styles.rentButton} onClick={onRentNow}>
           Check Details 

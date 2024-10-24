@@ -3,14 +3,22 @@ import { ApolloError } from 'apollo-server-express';
 
 const RentableResolvers = {
   Query: {
-    getRentableVehicles: async () => {
+    getRentableVehicles: async (_, { query ,  }) => {
       try {
-        return await RentableVehicleHelper.getAllRentableVehicles(); // Call the helper method
+          const vehicles = await RentableVehicleHelper.getAllRentableVehicles(query);
+     
+        return {
+          status: "success",                  // Indicate the status of the response
+          statusCode: 200,                    // HTTP status code
+          message: "Vehicles fetched successfully", // A message describing the response
+          data: vehicles                       // The actual data being returned
+        };
       } catch (error) {
-        throw new Error('Error fetching rentable vehicles: ' + error.message);
+        throw new ApolloError('Error fetching rentable vehicles: ' + error.message, 'FETCH_VEHICLES_ERROR');
       }
     },
   },
+
   Mutation: {
     addRentable: async (_, { vehicleId, pricePerDay, availableQuantity }) => {
       try {
@@ -21,10 +29,17 @@ const RentableResolvers = {
     },
     deleteRentableVehicle: async (_, { id }) => {
       try {
-        return await RentableVehicleHelper.deleteRentableVehicle(id);
+        const result = await RentableVehicleHelper.deleteRentableVehicle(id);
+        
+        return {
+          status: true,                    // Indicate success
+          statusCode: 200,                 // HTTP status code for successful operation
+          message: "Rentable vehicle deleted successfully", // A message describing the response
+          data: result.data                     // The actual data being returned (if applicable)
+        };
       } catch (error) {
         console.error('Error in deleteRentableVehicle resolver:', error);
-        throw new Error('Failed to delete vehicle');
+        throw new ApolloError('Failed to delete vehicle: ' + error.message, 'DELETE_VEHICLE_ERROR');
       }
     }
     

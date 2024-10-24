@@ -50,7 +50,15 @@ const RentableVehicleTypeDefs = gql`
     vehicle: Vehicle
   }
 
+  type RentableResponse {
+    status: String!
+    statusCode: Int!
+    message: String!
+    data: [Rentable!]!
+  }
+
   type Query {
+    getRentableVehiclesUser: RentableResponse 
     rentableVehicleWithId(id: ID!): Rentable
   }
 

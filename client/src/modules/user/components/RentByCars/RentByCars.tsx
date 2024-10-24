@@ -7,6 +7,7 @@ import { DatePicker } from 'antd';
 import { GET_MANUFACTURERS } from '@/graphql/admin-queries/manufacture';
 import moment from 'moment';
 import Modal from '../../../../themes/Modal/Modal'; // Import the modal
+import { FaCar, FaArrowRight } from 'react-icons/fa'; // Import car icon
 
 
 const { RangePicker } = DatePicker;
@@ -79,7 +80,11 @@ const FilterOptions: React.FC = () => {
             className={styles.DatePicker}
           />
         </div>
-        <button className={styles.findVehicleBtn} onClick={handleFindVehicle}>Find a Vehicle</button>
+
+        <div className={styles.arrowIcon}>
+          <FaArrowRight size={24} />
+        </div>
+        <button className={styles.findVehicleBtn} onClick={handleFindVehicle}><FaCar className={styles.carIcon} /> Find a Vehicle</button>
       </div>
       {isModalVisible && (
                 <Modal

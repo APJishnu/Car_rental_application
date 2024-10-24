@@ -99,7 +99,7 @@ const LoginForm: React.FC = () => {
         >
           <Input className={styles.input} placeholder="Email" />
         </Form.Item>
-
+    
         <Form.Item
           name="password" // Field name for password
         >

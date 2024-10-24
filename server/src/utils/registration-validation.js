@@ -63,3 +63,58 @@ export const sendOtpValidationSchema = Joi.object({
       'string.empty': 'Confirm password is required.',
     }),
 });
+
+
+
+
+export const otpValidationSchema = Joi.object({
+  phoneNumber: Joi.string()
+    .pattern(/^[0-9]{10}$/)
+    .required()
+    .messages({
+      'string.pattern.base': 'Phone number must be 10 digits',
+      'string.empty': 'Phone number is required',
+      'any.required': 'Phone number is required'
+    }),
+  otp: Joi.string()
+    .pattern(/^[0-9]{6}$/)
+    .required()
+    .messages({
+      'string.pattern.base': 'OTP must be exactly 6 digits',
+      'string.empty': 'OTP is required',
+      'any.required': 'OTP is required'
+    })
+});
+
+
+
+
+
+export const additionalDetailsSchema = Joi.object({
+  city: Joi.string()
+    .required()
+    .messages({
+      'string.empty': 'City is required',
+      'any.required': 'City is required'
+    }),
+  state: Joi.string()
+    .required()
+    .messages({
+      'string.empty': 'State is required',
+      'any.required': 'State is required'
+    }),
+  country: Joi.string()
+    .required()
+    .messages({
+      'string.empty': 'Country is required',
+      'any.required': 'Country is required'
+    }),
+  pincode: Joi.string()
+    .pattern(/^[0-9]{6}$/)
+    .required()
+    .messages({
+      'string.pattern.base': 'Pincode must be exactly 6 digits',
+      'string.empty': 'Pincode is required',
+      'any.required': 'Pincode is required'
+    }),
+});
