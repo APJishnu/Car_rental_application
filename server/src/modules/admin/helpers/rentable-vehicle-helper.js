@@ -40,63 +40,80 @@ class RentableVehicleHelper {
     fuelType,
     seats,
     priceSort,
+    priceRange, 
   }) {
     try {
+      // Build search params
       const searchParams = {
-        q: query || "*", 
-        query_by: "vehicle.name,vehicle.manufacturer.name",
-        filter_by: [],
-        sort_by: priceSort === "asc" ? "pricePerDay:asc" : "pricePerDay:desc", 
+        q: query || "*", // Fallback to all results if no query
+        query_by: "vehicle.name,vehicle.manufacturer.name", // Search within these fields
+        filter_by: [], // Will hold filters
+        sort_by: `pricePerDay:${priceSort || 'asc'}`,
       };
-
-      if (
-        transmission &&
-        Array.isArray(transmission) &&
-        transmission.length > 0
-      ) {
+  
+      // Transmission filter
+      if (transmission && Array.isArray(transmission) && transmission.length > 0) {
         searchParams.filter_by.push(
           `vehicle.transmission:=[${transmission.join(",")}]`
         );
       }
+  
+      // Fuel type filter
       if (fuelType && Array.isArray(fuelType) && fuelType.length > 0) {
         searchParams.filter_by.push(
           `vehicle.fuelType:=[${fuelType.join(",")}]`
         );
       }
+  
+      // Seats filter
       if (seats && Array.isArray(seats) && seats.length > 0) {
         searchParams.filter_by.push(
-          `vehicle.numberOfSeats:>=${Math.min(...seats)}`
-        ); 
+          `vehicle.numberOfSeats:=[${seats.join(",")}]`
+        );
       }
 
+        // Price range filter
+    if (priceRange && Array.isArray(priceRange) && priceRange.length === 2) {
+      const [minPrice, maxPrice] = priceRange;
+      searchParams.filter_by.push(`pricePerDay:>=${minPrice} && pricePerDay:<=${maxPrice}`);
+    }
+  
+      // If there are filters, join them with '&&', otherwise, delete the filter key
       if (searchParams.filter_by.length > 0) {
         searchParams.filter_by = searchParams.filter_by.join(" && ");
       } else {
-        delete searchParams.filter_by; 
+        delete searchParams.filter_by; // No filters, so remove the key
       }
-
-      // Perform the search in Typesense with the constructed searchParams
+  
+      // Debugging: Check the searchParams before performing the search
+      console.log("Search Params:", searchParams);
+  
+      // Perform the search using Typesense
       const typesenseResponse = await typesense
         .collections("cars")
         .documents()
         .search(searchParams);
-
-      // If no hits are found, return an empty array
+  
+      // If no hits, return an empty array
       if (!typesenseResponse.hits.length) {
         return [];
       }
-
+  
+      // Extract the vehicle IDs from the search results
       const vehicleIds = typesenseResponse.hits.map((hit) => hit.document.id);
-
+  
+      // Fetch vehicles based on the IDs
       const vehicles = await RentableRepo.findAllRentableByIds(vehicleIds);
-
-      console.log(vehicles, "in searching cksabbc");
+  
+      console.log(vehicles, "Vehicles found in search");
       return vehicles;
     } catch (error) {
       console.error("Error searching for rentable vehicles:", error);
       throw new Error("Failed to search rentable vehicles");
     }
   }
+  
+  
 
   static async addRentable(data) {
     try {

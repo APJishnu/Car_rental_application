@@ -14,6 +14,7 @@ interface CarListSectionProps {
   fuelType: string[];
   seats: number[];
   priceSort?: "asc" | "desc";
+  priceRange: [number, number];
   onRentNow: (carId: string) => void;
 }
 
@@ -25,6 +26,7 @@ const FindCarCollection: React.FC<CarListSectionProps> = ({
   fuelType,
   seats,
   priceSort,
+  priceRange, 
   onRentNow,
 }) => {
   const calculateTotalPrice = (pricePerDay: number) => {
@@ -44,6 +46,7 @@ const FindCarCollection: React.FC<CarListSectionProps> = ({
       fuelType: fuelType.length > 0 ? fuelType : undefined,
       seats: seats.length > 0 ? seats : undefined,
       priceSort: priceSort || undefined,
+       priceRange: priceRange || undefined, 
     },
     skip: !pickupDate || !dropoffDate,
   });

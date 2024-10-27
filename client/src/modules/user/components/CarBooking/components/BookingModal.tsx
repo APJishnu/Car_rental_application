@@ -184,19 +184,19 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     <tbody>
                       <tr>
                         <td>
-                          <strong>Price per Day:</strong>
+                          <span>Price per Day:</span>
                         </td>
                         <td>₹{car.pricePerDay}</td>
                       </tr>
                       <tr>
                         <td>
-                          <strong>Number of Days:</strong>
+                          <span>Number of Days:</span>
                         </td>
                         <td>{numberOfDays} Days</td>
                       </tr>
                       <tr>
                         <td>
-                          <strong>Base Price:</strong>
+                          <span>Base Price:</span>
                         </td>
                         <td>
                           ₹
@@ -207,13 +207,13 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                       </tr>
                       <tr>
                         <td>
-                          <strong>
+                          <span>
                             GST ({(GST_PERCENTAGE * 100).toFixed(2)}%):
-                          </strong>
+                          </span>
                         </td>
                         <td>₹{gstAmount.toFixed(2)}</td>
                       </tr>
-                      <tr>
+                      <tr className={styles.totalPrice}>
                         <td>
                           <strong>Total Price:</strong>
                         </td>

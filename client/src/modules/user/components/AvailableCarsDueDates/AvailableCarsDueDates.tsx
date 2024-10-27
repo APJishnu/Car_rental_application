@@ -19,6 +19,7 @@ const AvailableCarsDueDates: React.FC = () => {
   const [fuelType, setFuelType] = useState<string[]>([]);
   const [seats, setSeats] = useState<number[]>([]);
   const [priceSort, setPriceSort] = useState<"asc" | "desc" | undefined>(undefined);
+  const [priceRange, setPriceRange] = useState<[number, number]>([500, 10000]);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const toggleFilter = () => setIsFilterOpen(!isFilterOpen);
@@ -56,6 +57,7 @@ const AvailableCarsDueDates: React.FC = () => {
         handleFuelTypeChange={setFuelType}
         handleSeatsChange={setSeats}
         handlePriceSortChange={setPriceSort}
+        handlePriceRangeChange={setPriceRange} // New handler for price range
         onSearch={() => {}} // This will trigger the CarListSection to refetch
       />
 
@@ -68,6 +70,7 @@ const AvailableCarsDueDates: React.FC = () => {
           fuelType={fuelType}
           seats={seats}
           priceSort={priceSort}
+            priceRange={priceRange}
           onRentNow={handleRentNow}
         />
       </div>

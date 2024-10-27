@@ -1,241 +1,260 @@
-.mainDiv{
-    display: flex;
+.mainDiv {
+  display: flex;
+  width: 100%;
+  padding-top: 80px;
+}
+
+.carCollection {
+  text-align: center;
+  padding: 0px;
+
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #f0f0f0;
+  min-height: 100vh;
+  position: relative;
+}
+
+.topBar {
+  width: 100%;
+  padding: 20px 60px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 0px;
+  z-index: 10;
+  position: fixed;
+  transition: box-shadow 0.3s ease; /* Smooth transition */
+}
+
+.topBar.scrolled {
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.337); /* Add box shadow when scrolled */
+}
+
+.searchDiv {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.searchField {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  flex: 1;
+  max-width: 500px;
+  padding: 12px;
+  border-radius: 6px;
+  color: #080097;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.searchField:focus {
+  border-color: #080097 !important;
+  box-shadow: 0 0 0 2px rgba(8, 0, 151, 0.1);
+}
+
+@media (min-width: 769px) {
+  .filterButtonPhone {
+    display: none;
+  }
+}
+
+.filterButton {
+  background-color: #000000 !important;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 20px;
+  height: 40px;
+  transition: all 0.2s ease;
+  border-radius: 20px;
+  position: relative;
+}
+
+.filterButton:hover {
+  background-color: #fefefe !important;
+  color: black !important;
+  border: 1px solid black;
+  border-radius: 20px;
+}
+
+.filterPanel {
+  position: relative;
+  top: 0;
+  width: 320px;
+  height: 100vh;
+  background: rgb(255, 255, 255);
+  box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.8s ease;
+  padding-top: 0px;
+  display: none;
+  position: relative;
+  padding-top: 80px;
+  padding-bottom: 20px;
+  border-right: 2px solid rgb(214, 214, 214);
+  overflow: auto;
+}
+
+.filterPanelOpen {
+  display: block;
+}
+
+.filterContent {
+  padding: 5px 20px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.filterGroup {
+  width: 100%;
+  margin-bottom: 10px;
+  text-align: left;
+  padding: 0px!important;
+}
+
+.checkboxGroup .ant-checkbox-group {
+  display: flex;
+  flex-direction: column; /* Stack the checkboxes vertically */
+}
+
+.checkboxGroup .ant-checkbox-wrapper {
+  margin-bottom: 0px!important; /* Set the gap between options */
+}
+
+.sortingGroup {
+  width: 100%;
+  margin-bottom: 24px;
+  text-align: left;
+}
+.sortIcons{
+  display: flex;
+  justify-content: space-between;
+}
+
+.filterGroup p {
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 5px;
+  padding: 2px;
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  border-bottom: 1px solid rgba(123, 123, 123, 0.127);
+}
+
+.filterGroup :global(.ant-checkbox-group) {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filterGroup :global(.ant-checkbox-wrapper) {
+  margin-left: 0 !important;
+  color: #475569;
+}
+
+.carCollectionSecondDiv {
+  width: 100%;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+  padding: 24px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: margin-left 0.3s ease;
+  padding-top: 120px;
+  padding-left: 60px;
+  padding-right: 60px;
+}
+
+.carsGrid {
+  display: flex;
+  grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+  gap: 24px;
+}
+.customSelect {
+  width: 100%;
+  padding: 10px;
+  max-width: 200px;
+  border-radius: 10px;
+  border-color: #e2e8f0;
+}
+
+@media (max-width: 768px) {
+  .mainDiv {
+    flex-direction: column;
     width: 100%;
     padding-top: 80px;
   }
-  
-  .carCollection {
-    text-align: center;
-    padding: 0px;
-    
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #f0f0f0;
-    min-height: 100vh;
-    position: relative;
-  }
-  
-  .topBar {
-    width: 100%;
-    padding: 20px 60px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 0px;
-    z-index: 10;
-    position: fixed;
-  
-  
-  }
-  
+
   .searchDiv {
     display: flex;
     gap: 16px;
     align-items: center;
     justify-content: space-between;
-  
   }
-  
-  .searchField {
-    background-color: #ffffff !important;
-    border: 1px solid #e2e8f0 !important;
-    flex: 1;
-    max-width: 500px;
-    padding: 12px;
-    border-radius: 6px;
-    color: #080097;
-    transition: all 0.2s ease;
-    width: 100%;
-    
-  }
-  
-  .searchField:focus {
-    border-color: #080097 !important;
-    box-shadow: 0 0 0 2px rgba(8, 0, 151, 0.1);
-  }
-  
-  @media (min-width:769px){
-    .filterButtonPhone{
-      display: none;
-    }
-  }
-  
-  .filterButton {
-    background-color: #000000 !important;
-    border: none;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 0 20px;
-    height: 40px;
-    transition: all 0.2s ease;
-    border-radius: 20px;
-    position: relative;
-  }
-  
-  .filterButton:hover {
-    background-color: #fefefe !important;
-    color: black !important;
-    border: 1px solid black;
-    border-radius: 20px;
-  }
-  
   .filterPanel {
-    position: relative;
-    top: 0;
-    width:320px;
-    height: 100vh;
-    background: rgb(248, 248, 248);
-    box-shadow: 4px 0 8px rgba(0, 0, 0, 0.1);
-    transition: all 0.8s ease;
-    padding-top: 0px;
-    display: none;
-    position: relative;
+    width: 100%;
+    height: 0px;
+    top: -100px;
+    position: fixed;
+    overflow: hidden;
+    z-index: 50;
+    border-radius: 0px 0px 30px 30px;
+    transform: all 0.7s ease;
     padding-top: 80px;
-    padding-bottom: 20px;
-    border-right: 2px solid rgb(214, 214, 214);
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 45px;
+    box-shadow: 0px 0px 20px rgb(145, 145, 145);
   }
-  
+
   .filterPanelOpen {
+    height: 480px;
+    top: 0px;
+    overflow: hidden;
+    transform: all 0.5s ease;
+  }
+
+  .filterContent {
+    box-shadow: inset 0px 0px 10px rgb(230, 230, 230);
+    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    border-radius: 30px;
+    overflow: hidden;
+  }
+
+  .filterGroup {
     display: block;
   }
-  
-  .filterContent {
-    padding: 24px;
-    height: 100%;
-    overflow-y: auto;
+  .topBar {
+    margin-top: -10px;
+    padding: 20px;
   }
-  
-  .filterGroup {
-    width: 100%;
-    margin-bottom: 24px;
-    text-align: left;
+
+  .searchField {
+    max-width: none;
   }
-  
-  
-  .filterGroup p {
-    font-weight: 600;
-    color: #1e293b;
-    margin-bottom: 12px;
-    font-size: 0.95rem;
-  }
-  
-  .filterGroup :global(.ant-checkbox-group) {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  
-  .filterGroup :global(.ant-checkbox-wrapper) {
-    margin-left: 0 !important;
-    color: #475569;
-  }
-  
-  .carCollectionSecondDiv {
-    width: 100%;
-    height: 100vh;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scroll-behavior: smooth;
-    padding: 24px;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: margin-left 0.3s ease;
-    padding-top: 120px;
-    padding-left: 60px;
-    padding-right: 60px;
-  }
-  
-  .carsGrid {
-    display: flex;
-    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
-    gap: 24px;
-  }
-  .customSelect{
-    width:100%;
-    padding: 10px;
-    max-width: 200px;
-    border-radius: 10px;
-    border-color:#e2e8f0 ;
-  }
-  
-  @media (max-width: 768px) {
-    .mainDiv{
-      flex-direction: column;
-      width: 100%;
-      padding-top: 80px;
-    }
-    
-  .searchDiv {
-    display: flex;
-    gap: 16px;
-    align-items: center;
-    justify-content: space-between;
-  
-  }
-    .filterPanel {
-      width: 100%;
-      height: 0px;
-      top: -100px;
-      position: fixed;
-      overflow: hidden;
-      z-index: 50;
-      border-radius: 0px 0px 30px 30px;
-      transform: all 0.7s ease;
-      padding-top: 80px;
-      padding-left: 10px;
-      padding-right: 10px;
-      padding-bottom: 45px;
-     box-shadow: 0px 0px 20px rgb(145, 145, 145);
-    }
-  
-    .filterPanelOpen {
-      height: 450px;
-      top: 0px;
-      overflow: hidden;
-      transform: all 0.5s ease;
-    }
-  
-    .filterContent{
-      box-shadow: inset 0px 0px 10px rgb(230, 230, 230);
-      justify-content: center;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-      gap: 10px;
-      border-radius: 30px;
-      overflow: hidden;
-    }
-  
-    .filterGroup{
-      display: block;
-      
-    }
-    .topBar {
-      margin-top: -10px;
-      padding: 20px;
-    }
-  
-  
-    .searchField {
-      max-width: none;
-    }
-  
-   .filterButtonPhone{
+
+  .filterButtonPhone {
     background-color: #ffffff;
     box-shadow: none;
     color: black;
-   }
-  
-  
-    .carCollectionSecondDiv {
-      padding: 16px;
-      overflow-x: auto;
+  }
+
+  .carCollectionSecondDiv {
+    padding: 16px;
+    overflow-x: auto;
     overflow-y: hidden;
     padding-top: 100px;
     padding-left: 20px;
     padding-right: 20px;
-    }
   }
+}

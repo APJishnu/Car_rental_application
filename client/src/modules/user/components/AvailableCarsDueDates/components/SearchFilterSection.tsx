@@ -1,12 +1,14 @@
 // components/SearchFilterSection/SearchFilterSection.tsx
-import React from 'react';
-import { Input, Checkbox, Button } from 'antd';
+import React, { useEffect, useState } from "react";
+import { Input, Checkbox, Button, Slider } from "antd";
 import {
   SearchOutlined,
   FilterOutlined,
   CloseOutlined,
-} from '@ant-design/icons';
-import styles from '../AvailableCarsDueDates.module.css';
+  SortAscendingOutlined,
+  SortDescendingOutlined,
+} from "@ant-design/icons";
+import styles from "../AvailableCarsDueDates.module.css";
 
 interface SearchFilterProps {
   query: string;
@@ -20,6 +22,7 @@ interface SearchFilterProps {
   handleFuelTypeChange: (values: string[]) => void;
   handleSeatsChange: (values: number[]) => void;
   handlePriceSortChange: (value: "asc" | "desc" | undefined) => void;
+  handlePriceRangeChange: (range: [number, number]) => void;
   onSearch: () => void;
 }
 
@@ -35,11 +38,45 @@ const SearchFilterSection: React.FC<SearchFilterProps> = ({
   handleFuelTypeChange,
   handleSeatsChange,
   handlePriceSortChange,
+  handlePriceRangeChange,
   onSearch,
 }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [currentSort, setCurrentSort] = useState<"asc" | "desc" | undefined>(
+    undefined
+  );
+  const [localPriceRange, setLocalPriceRange] = useState<[number, number]>([
+    500, 10000,
+  ]); // Local state for price range
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0); // Check if scrolled down
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const handleSortChange = (value: "asc" | "desc") => {
+    setCurrentSort(value);
+    handlePriceSortChange(value); // Pass the value to the parent component
+  };
+
+  const handlePriceSliderChange = (value: [number, number]) => {
+    setLocalPriceRange(value); // Update local price range
+  };
+
+  const handleApplyPriceRange = () => {
+    handlePriceRangeChange(localPriceRange); // Call parent handler only when user wants to apply
+  };
+
   return (
     <>
-      <div className={`${styles.filterPanel} ${isFilterOpen ? styles.filterPanelOpen : ""}`}>
+      <div
+        className={`${styles.filterPanel} ${isFilterOpen ? styles.filterPanelOpen : ""}`}
+      >
         {isFilterOpen && (
           <Button
             className={styles.filterButtonPhone}
@@ -54,6 +91,7 @@ const SearchFilterSection: React.FC<SearchFilterProps> = ({
           <div className={styles.filterGroup}>
             <p>Fuel Type</p>
             <Checkbox.Group
+             className={styles.checkboxGroup} // Add this line
               options={[
                 { label: "Petrol", value: "petrol" },
                 { label: "Diesel", value: "diesel" },
@@ -67,9 +105,11 @@ const SearchFilterSection: React.FC<SearchFilterProps> = ({
           <div className={styles.filterGroup}>
             <p>Seats</p>
             <Checkbox.Group
+            className={styles.checkboxGroup} // Add this line
               options={[
                 { label: "4 Seats", value: 4 },
                 { label: "5 Seats", value: 5 },
+                { label: "6 Seats", value: 6 },
                 { label: "7 Seats", value: 7 },
               ]}
               onChange={handleSeatsChange}
@@ -80,6 +120,7 @@ const SearchFilterSection: React.FC<SearchFilterProps> = ({
           <div className={styles.filterGroup}>
             <p>Transmission</p>
             <Checkbox.Group
+            className={styles.checkboxGroup} // Add this line
               options={[
                 { label: "Automatic", value: "automatic" },
                 { label: "Manual", value: "manual" },
@@ -89,23 +130,44 @@ const SearchFilterSection: React.FC<SearchFilterProps> = ({
             />
           </div>
 
+          {/* Price Range Slider */}
           <div className={styles.filterGroup}>
-            <p>Sort by Price</p>
-            <select
-              name="priceSort"
-              value="priceSort"
-              id="priceSort"
-              className={styles.customSelect}
-              onChange={(e) => handlePriceSortChange(e.target.value as "asc" | "desc")}
-            >
-              <option value="asc">Low to High</option>
-              <option value="desc">High to Low</option>
-            </select>
+            <p>Price Range (per day)</p>
+            <Slider
+              range
+              min={100} // Set your minimum price range here
+              max={10000} // Set your maximum price range here
+              step={100}
+              value={localPriceRange}
+              onChange={
+                handlePriceSliderChange as (value: number | number[]) => void
+              } // Ensure proper typing
+              onAfterChange={handleApplyPriceRange} // Apply changes when user stops dragging the slider
+            />
+            <div className={styles.priceRangeDisplay}>
+              <span>{`₹${localPriceRange[0]}`}</span> -{" "}
+              <span>{`₹${localPriceRange[1]}`}</span>
+            </div>
+          </div>
+
+          <div className={styles.sortingGroup}>
+            <div className={styles.sortIcons}>
+              <Button
+                type={currentSort === "asc" ? "primary" : "default"}
+                icon={<SortAscendingOutlined />}
+                onClick={() => handleSortChange("asc")}
+              />
+              <Button
+                type={currentSort === "desc" ? "primary" : "default"}
+                icon={<SortDescendingOutlined />}
+                onClick={() => handleSortChange("desc")}
+              />
+            </div>
           </div>
         </div>
       </div>
 
-      <div className={styles.topBar}>
+      <div className={`${styles.topBar} ${isScrolled ? styles.scrolled : ""}`}>
         <div className={styles.searchDiv}>
           <Input
             className={styles.searchField}

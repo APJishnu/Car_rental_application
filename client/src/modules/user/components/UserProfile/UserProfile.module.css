@@ -3,26 +3,32 @@
     min-height: 100vh;
     background-color: #f0f2f5;
     padding: 2rem 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+
   }
   
   .wrapper {
-    max-width: 1024px;
     margin: 0 auto;
     padding: 0 1rem;
+    width: 100%;
   }
   
   .profileCard {
     background: white;
     border-radius: 1.25rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-    overflow: hidden;
     transition: all 0.3s ease;
+   
   }
   
   .coverSection {
     position: relative;
     padding-bottom: 7rem;
     margin-bottom: 1.5rem;
+    display: flex;
   }
   
   .coverBackground {
@@ -30,6 +36,7 @@
     inset: 0;
     height: 16rem;
     background: linear-gradient(135deg, #1a365d 0%, #2d3748 100%);
+    
   }
   
   .profileImageContainer {
@@ -42,8 +49,9 @@
   
   .profileImageWrapper {
     position: relative;
-    display: inline-block;
+    display: flex;
     transition: transform 0.2s ease;
+    align-items: center;
   }
   
   .profileImageWrapper:hover {
@@ -83,9 +91,12 @@
   
   .userInfo {
     position: absolute;
-    bottom: 1.5rem;
+    bottom: 0rem;
     left: 15rem;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
   
   .userName {
@@ -130,6 +141,10 @@
     padding: 2rem;
     border: 1px solid #e2e8f0;
     transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
   }
   
   .infoCard:hover {
@@ -141,7 +156,6 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 1.5rem;
     font-size: 1.25rem;
     font-weight: 600;
     color: #2d3748;
@@ -177,12 +191,25 @@
     margin: 0.5rem 0;
     line-height: 1.5;
   }
+
+  .editForm Input{
+    padding: 10px;  
+    width: 100%;
+    gap: 0px;
+  }
+
+  .formActions{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
   
   .rightColumn {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
     width: 100%;
+    gap: 10px;
   }
   
   .primaryButton,
@@ -202,23 +229,26 @@
   }
   
   .primaryButton {
-    background: #3182ce;
-    color: white;
-  }
-  
-  .primaryButton:hover {
-    background: #2c5282;
-    transform: translateY(-2px);
-  }
-  
-  .secondaryButton {
     background: #2d3748;
     color: white;
   }
   
-  .secondaryButton:hover {
+  .primaryButton:hover {
     background: #1a202c;
     transform: translateY(-2px);
+  }
+  
+  .secondaryButton {
+    border: 1px solid #2d3748;
+    color:#2d3748;
+    background-color: white;
+  }
+  
+  .secondaryButton:hover {
+    background: #1a202c;
+    color:#ffffff;
+    transform: translateY(-2px);
+    border: 1px solid #2d3748;
   }
   
   .settingsCard {
@@ -226,6 +256,9 @@
     border-radius: 1rem;
     padding: 1.5rem;
     border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
   
   .settingRow {

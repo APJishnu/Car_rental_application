@@ -139,7 +139,8 @@ const VehicleBookingTypeDefs = gql`
     transmission: [String]         
     fuelType: [String]             
     seats: [Int]                  
-    priceSort: String              
+    priceSort: String  
+    priceRange: [Int]        
   ): GetAvailableVehiclesResponse
 
     fetchBookings: FetchBookingsResponse!

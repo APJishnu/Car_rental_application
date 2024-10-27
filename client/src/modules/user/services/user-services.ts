@@ -17,10 +17,15 @@ interface UserResponse {
   message: string;
   data: User | null; // `data` can be null if the user is not found
 }
+interface FieldError {
+  field: string;
+  message: string;
+}
 
 interface GetUserResponse {
   getUser: UserResponse;
 }
+
 
 
 // Updated GraphQL query to include status, message, and data
@@ -54,6 +59,54 @@ mutation UpdateProfileImage($userId: ID!, $profileImage:Upload) {
   }
 }
 `
+// GraphQL mutation for updating user profile
+const UPDATE_USER_INFO = gql`
+  mutation UpdateUserInfo(
+    $userId: ID!
+    $firstName: String
+    $lastName: String
+    $email: String
+    $city: String
+    $state: String
+    $country: String
+    $pincode: String
+  ) {
+    updateUserInfo(
+      userId: $userId
+      firstName: $firstName
+      lastName: $lastName
+      email: $email
+      city: $city
+      state: $state
+      country: $country
+      pincode: $pincode
+    ) {
+      status
+      statusCode
+      message
+      data {
+        id
+        firstName
+        lastName
+        email
+        phoneNumber
+        profileImage
+        city
+        state
+        country
+        pincode
+      }
+       fieldErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+
+
+
 
 // Define the function to fetch user data using Apollo Client's useLazyQuery
 export const useFetchUserData = () => {
@@ -109,5 +162,60 @@ export const useUpdateProfileImage = () => {
     updateProfileImage: update,
     loading,
     error,
+  };
+};
+
+
+// Custom hook for updating user profile
+export const useUpdateUserInfo = () => {
+  const [updateUserProfile, { loading, error, data }] = useMutation(UPDATE_USER_INFO);
+
+  // Define the update function with the expected input
+  const update = async ({
+    userId,
+    firstName,
+    lastName,
+    email,
+    city,
+    state,
+    country,
+    pincode,
+  }: {
+    userId: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    city?: string;
+    state?: string;
+    country?: string;
+    pincode?: string;
+  }) => {
+    try {
+      const response = await updateUserProfile({
+        variables: {
+          userId,
+          firstName,
+          lastName,
+          email,
+          city,
+          state,
+          country,
+          pincode,
+        },
+      });
+      console.log(response)
+
+      return response?.data.updateUserInfo || null;
+    } catch (err) {
+      console.error("Error updating user profile:", err);
+      throw new Error("Could not update user profile.");
+    }
+  };
+
+  return {
+    updateUserInfo: update,
+    loading,
+    error,
+    data,
   };
 };

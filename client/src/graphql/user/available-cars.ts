@@ -9,6 +9,7 @@ export const GET_AVAILABLE_VEHICLES = gql`
     $fuelType: [String]
     $seats: [Int]
     $priceSort: String
+    $priceRange: [Int] 
   ) {
     getAvailableVehicles(
       pickupDate: $pickupDate
@@ -18,6 +19,7 @@ export const GET_AVAILABLE_VEHICLES = gql`
       fuelType: $fuelType
       seats: $seats
       priceSort: $priceSort
+      priceRange:$priceRange
     ) {
       status
       statusCode

@@ -3,7 +3,6 @@ import authRepo from "../repositories/auth-repo.js";
 import bcrypt from "bcrypt";
 import User from "../models/auth-model.js"; // Ensure the path is correct
 import twilio from "twilio"; // Make sure to install twilio
-import TemporaryOTP from "../models/temp-otp-storage.js"; // Import your model
 import { generateToken } from "../../../utils/jwt-helper.js"; // Import the token utility
 import mime from "mime-types";
 import minioClient from "../../../config/minio.js";
@@ -233,12 +232,10 @@ class AuthHelper {
     try {
       // Check if the profile image is null (i.e., remove the current image)
       if (!profileImage) {
-        // Fetch user data
         const user = await authRepo.findById(userId);
         if (!user) {
           throw new Error("User not found");
         }
-
         console.log(user);
 
         const existingImageUrl = user.profileImage;
@@ -335,6 +332,44 @@ class AuthHelper {
       );
     } catch (error) {
       console.error("Error removing image from Minio:", error.message);
+    }
+  }
+
+  async updateUserInfoHelper({
+    userId,
+    firstName,
+    lastName,
+    email,
+    city,
+    state,
+    country,
+    pincode,
+  }) {
+    const updateData = {};
+    if (firstName) updateData.firstName = firstName;
+    if (lastName) updateData.lastName = lastName;
+    if (email) updateData.email = email;
+    if (city) updateData.city = city;
+    if (state) updateData.state = state;
+    if (country) updateData.country = country;
+    if (pincode) updateData.pincode = pincode;
+
+    try {
+      const updatedUser = await authRepo.updateUserInfo(userId, updateData);
+      console.log(updatedUser);
+      return {
+        status: true,
+        statusCode: 200,
+        message: "User information updated successfully",
+        data: updatedUser,
+      };
+    } catch (error) {
+      return {
+        status: false,
+        statusCode: 500,
+        message: error.message,
+        data: null,
+      };
     }
   }
 }

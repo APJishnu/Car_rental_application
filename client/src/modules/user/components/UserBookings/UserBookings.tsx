@@ -5,7 +5,6 @@ import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import {
   List,
   Card,
-  Image,
   Spin,
   Result,
   Alert,
@@ -14,18 +13,17 @@ import {
   Menu,
   Steps,
   Rate,
-  message as antdMessage, // For notification after submitting the review
+  message as antdMessage,
 } from "antd";
 import {
   DownOutlined,
   CheckCircleOutlined,
   ExclamationCircleOutlined,
   InfoCircleOutlined,
-  QuestionCircleOutlined, // Icon for reporting an issue
-  HistoryOutlined, // Icon for viewing history
-  EditOutlined, // Icon for adding a review
-  CheckOutlined, // Icon for return accepted
-} from "@ant-design/icons"; // Importing icons
+  QuestionCircleOutlined,
+  HistoryOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import Cookies from "js-cookie";
 import styles from "./UserBookings.module.css";
 const { Step } = Steps;
@@ -99,7 +97,7 @@ interface Booking {
   dropoffDate: string;
   totalPrice: number;
   paymentMethod: string;
-  status: string; // Added status here
+  status: string;
   rentable: {
     vehicleId: string;
     vehicle: {
@@ -114,15 +112,15 @@ interface Booking {
   };
 }
 
+type TabType = 'ALL' | 'RETURN_IN_TRANSIT' | 'RETURNED';
+
 const BookingList: React.FC = () => {
   const token = Cookies.get("userToken");
-  const [fetchBookings, { loading, data, error }] =
-    useLazyQuery(FETCH_BOOKINGS);
+  const [fetchBookings, { loading, data, error }] = useLazyQuery(FETCH_BOOKINGS);
   const [addReview] = useMutation(ADD_REVIEW);
-  const [dateRange, setDateRange] = useState<[string, string]>([
-    "Aug 20, 2022",
-    "Oct 20, 2022",
-  ]);
+  const [dateRange, setDateRange] = useState<[string, string]>(["Aug 20, 2022", "Oct 20, 2022"]);
+  const [activeTab, setActiveTab] = useState<TabType>('ALL');
+  const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentBookingId, setCurrentBookingId] = useState<string | null>(null);
@@ -141,6 +139,45 @@ const BookingList: React.FC = () => {
       });
     }
   }, [token, fetchBookings]);
+
+  useEffect(() => {
+    if (data?.fetchBookings?.data) {
+      const bookings = data.fetchBookings.data;
+      let filtered;
+
+      switch (activeTab) {
+        case 'RETURN_IN_TRANSIT':
+          filtered = bookings.filter((booking: Booking) => 
+            booking.status === "booked" && new Date(booking.dropoffDate) >= new Date()
+          );
+          break;
+        case 'RETURNED':
+          filtered = bookings.filter((booking: Booking) => 
+            booking.status === "released"
+          );
+          break;
+        default:
+          filtered = bookings;
+      }
+
+      setFilteredBookings(filtered);
+    }
+  }, [data, activeTab]);
+
+  const getTabCounts = () => {
+    if (!data?.fetchBookings?.data) return { all: 0, inTransit: 0, received: 0 };
+    
+    const bookings = data.fetchBookings.data;
+    return {
+      all: bookings.length,
+      inTransit: bookings.filter((booking: Booking) => 
+        booking.status === "booked" && new Date(booking.dropoffDate) >= new Date()
+      ).length,
+      received: bookings.filter((booking: Booking) => 
+        booking.status === "released"
+      ).length
+    };
+  };
 
   const openModal = (bookingId: string, vehicleId: string) => {
     setCurrentBookingId(bookingId);
@@ -170,13 +207,13 @@ const BookingList: React.FC = () => {
         },
         context: {
           headers: {
-            Authorization: `Bearer ${token}`, // Pass the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         },
       });
       if (data.addReview.status) {
         antdMessage.success("Review added successfully!");
-        closeModal(); // Close modal after successful submission
+        closeModal();
       } else {
         antdMessage.error(data.addReview.message || "Failed to add review.");
       }
@@ -187,7 +224,7 @@ const BookingList: React.FC = () => {
 
   if (loading) {
     return (
-      <div style={{ textAlign: "center", marginTop: "50px" }}>
+      <div className={styles.loadingContainer}>
         <Spin size="large" />
       </div>
     );
@@ -195,13 +232,8 @@ const BookingList: React.FC = () => {
 
   if (error) {
     return (
-      <div style={{ marginTop: "20px" }}>
-        <Alert
-          message="Error"
-          description={error.message}
-          type="error"
-          showIcon
-        />
+      <div className={styles.errorContainer}>
+        <Alert message="Error" description={error.message} type="error" showIcon />
       </div>
     );
   }
@@ -236,15 +268,13 @@ const BookingList: React.FC = () => {
   if (bookings?.length === 0 && statusCode === 200) {
     return (
       <Result
-      style={{padding:"160px"}}
+        style={{padding:"160px"}}
         status="404"
         title="No Bookings Found"
         subTitle={message || "It seems you haven't made any bookings yet."}
       />
     );
   }
-
-  console.log(bookings);
 
   const menu = (
     <Menu>
@@ -254,13 +284,30 @@ const BookingList: React.FC = () => {
     </Menu>
   );
 
+  const tabCounts = getTabCounts();
+
   return (
     <div className={styles.bookingList}>
       <div className={styles.header}>
         <div className={styles.tabs}>
-          <button className={styles.tabButton}>ALL (2)</button>
-          <button className={styles.tabButton}>RETURN IN TRANSIT (2)</button>
-          <button className={styles.tabButton}>RETURNS RECEIVED (0)</button>
+          <button 
+            className={`${styles.tabButton} ${activeTab === 'ALL' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('ALL')}
+          >
+            ALL ({tabCounts.all})
+          </button>
+          <button 
+            className={`${styles.tabButton} ${activeTab === 'RETURN_IN_TRANSIT' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('RETURN_IN_TRANSIT')}
+          >
+            RETURN IN TRANSIT ({tabCounts.inTransit})
+          </button>
+          <button 
+            className={`${styles.tabButton} ${activeTab === 'RETURNED' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('RETURNED')}
+          >
+            RETURNED ({tabCounts.received})
+          </button>
         </div>
         <div className={styles.actions}>
           <Dropdown overlay={menu}>
@@ -271,18 +318,17 @@ const BookingList: React.FC = () => {
           <button className={styles.primaryButton}>Request RTO</button>
         </div>
       </div>
+
       <List
         className={styles.cardsMainDiv}
-        dataSource={bookings}
+        dataSource={filteredBookings}
         renderItem={(booking: Booking) => {
-          // Get today's date and format it to match the booking's dropoffDate format
-          const today = new Date().toISOString().split("T")[0]; // Format YYYY-MM-DD
+          const today = new Date().toISOString().split("T")[0];
           const isDropoffToday = booking.dropoffDate === today;
-
-          // Determine the current step based on the booking's status and dropoff date
-          let currentStep = 1; // Default to Pickup step
+          let currentStep = 1;
+          
           if (booking.status === "released" || isDropoffToday) {
-            currentStep = 2; // Set to Dropoff step if return is verified or dropoff is today
+            currentStep = 2;
           }
 
           return (
@@ -298,7 +344,7 @@ const BookingList: React.FC = () => {
                           className={styles.manufacturerLogo}
                         />
                       ) : (
-                        <div>No Manufacturer Image</div> // Fallback for missing image
+                        <div>No Manufacturer Image</div>
                       )}
 
                       {booking.rentable?.vehicle?.primaryImageUrl ? (
@@ -308,7 +354,7 @@ const BookingList: React.FC = () => {
                           className={styles.vehicleImage}
                         />
                       ) : (
-                        <div>No Vehicle Image</div> // Fallback for missing image
+                        <div>No Vehicle Image</div>
                       )}
                     </div>
                     <h3 className={styles.carName}>
@@ -329,33 +375,25 @@ const BookingList: React.FC = () => {
                             className={styles.steps}
                             icon={
                               currentStep >= 1 ? (
-                                <CheckCircleOutlined
-                                  style={{ color: "green" }}
-                                /> // Change color to black
+                                <CheckCircleOutlined style={{ color: "green" }} />
                               ) : (
-                                <ExclamationCircleOutlined
-                                  style={{ color: "red" }}
-                                /> // Change color to gray for the exclamation icon
+                                <ExclamationCircleOutlined style={{ color: "red" }} />
                               )
                             }
                             title={`Pickup Date: ${booking.pickupDate}`}
-                            style={{ color: "black" }} // Ensure the title is black
+                            style={{ color: "black" }}
                           />
                           <Step
                             className={styles.steps}
                             icon={
                               currentStep >= 2 ? (
-                                <CheckCircleOutlined
-                                  style={{ color: "green" }}
-                                /> // Change color to black
+                                <CheckCircleOutlined style={{ color: "green" }} />
                               ) : (
-                                <ExclamationCircleOutlined
-                                  style={{ color: "orange" }}
-                                /> // Change color to gray for the exclamation icon
+                                <ExclamationCircleOutlined style={{ color: "orange" }} />
                               )
                             }
                             title={`Dropoff Date: ${booking.dropoffDate}`}
-                            style={{ color: "black" }} // Ensure the title is black
+                            style={{ color: "black" }}
                           />
                         </Steps>
                       </div>
@@ -363,7 +401,6 @@ const BookingList: React.FC = () => {
                       <div className={styles.bookingInfoDiv}>
                         <p>Payment Method: {booking?.paymentMethod}</p>
                         <p>Total Price: ₹{booking.totalPrice}</p>
-                        {/* Status Handling */}
                         {booking.status === "released" ? (
                           <Tag
                             icon={<CheckCircleOutlined />}
@@ -415,7 +452,6 @@ const BookingList: React.FC = () => {
         }}
       />
 
-      {/* Custom Modal */}
       {isModalOpen && (
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>

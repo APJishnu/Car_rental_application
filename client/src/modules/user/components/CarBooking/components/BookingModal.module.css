@@ -233,6 +233,8 @@
   .priceTable td {
     padding: 8px 10px;
     border-bottom: 1px solid #ccc;
+    font-size: 15px;
+
   }
   
   .priceTable td:first-child {
@@ -244,9 +246,18 @@
   }
   
   .priceTable strong {
-    font-weight: bold;
+    letter-spacing: 1px;
+    font-weight: 800;
+   color: white;
+    padding: 0px;
+    font-size: 20px!important;
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
   }
-  
+  .priceTable .totalPrice{
+    background-color: #00034d;
+    border-radius: 3px;
+  }
+
 
   /* DatePicker Styling */
   .datePicker {

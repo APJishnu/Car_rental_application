@@ -118,3 +118,59 @@ export const additionalDetailsSchema = Joi.object({
       'any.required': 'Pincode is required'
     }),
 });
+
+
+
+
+// Joi schema for updating user information
+export const validateUpdateUserInfo = Joi.object({
+    userId: Joi.string().required().messages({
+      'string.empty': 'User ID is required',
+      'any.required': 'User ID is required',
+    }),
+    firstName: Joi.string()
+      .required()
+      .pattern(/^[a-zA-Z\s]+$/) // Only letters and spaces
+      .messages({
+        'string.empty': 'First name is required',
+        'string.pattern.base': 'First name can only contain letters and spaces',
+      }),
+    lastName: Joi.string()
+      .required()
+      .pattern(/^[a-zA-Z\s]+$/) // Only letters and spaces
+      .messages({
+        'string.empty': 'Last name is required',
+        'string.pattern.base': 'Last name can only contain letters and spaces',
+      }),
+    email: Joi.string()
+      .email()
+      .required()
+      .messages({
+        'string.email': 'Invalid email format',
+        'string.empty': 'Email is required',
+      }),
+    city: Joi.string()
+      .required()
+      .messages({
+        'string.empty': 'City is required',
+      }),
+    state: Joi.string()
+      .required()
+      .messages({
+        'string.empty': 'State is required',
+      }),
+    country: Joi.string()
+      .required()
+      .messages({
+        'string.empty': 'Country is required',
+      }),
+    pincode: Joi.string()
+      .required()
+      .pattern(/^[0-9]{6}$/) // Assuming pincode must be a 6-digit number
+      .messages({
+        'string.empty': 'Pincode is required',
+        'string.pattern.base': 'Pincode must be a 6-digit number',
+      }),
+  });
+
+ 

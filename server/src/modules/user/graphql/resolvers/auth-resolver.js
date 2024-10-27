@@ -7,7 +7,8 @@ import {
     additionalDetailsSchema,
     otpValidationSchema,
     sendOtpValidationSchema,
-} from "../../../../utils/registration-validation.js";
+    validateUpdateUserInfo,
+} from "../../../../utils/Joi/user-validation.js";
 import { loginSchema } from "../../../../utils/Joi/admin-login-validation.js";
 
 const userAuthResolvers = {
@@ -211,6 +212,32 @@ const userAuthResolvers = {
                     data: null,
                 };
             }
+        },
+
+        updateUserInfo: async (_, args) => {
+
+
+            const { error, value } = validateUpdateUserInfo.validate(args, { abortEarly: false });
+            if (error) {
+                // Create an array of field errors based on Joi validation
+                const fieldErrors = error.details.map((err) => ({
+                  field: err.context.key,
+                  message: err.message,
+                }));
+        
+
+                console.log(fieldErrors)
+                return {
+                  status: false,
+                  statusCode: 400,
+                  message: 'Validation failed.',
+                  data:null,
+                  fieldErrors,
+                };
+              }
+        
+
+            return await authHelper.updateUserInfoHelper(args);
         },
     },
 };

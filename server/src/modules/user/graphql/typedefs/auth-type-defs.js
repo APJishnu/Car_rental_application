@@ -10,7 +10,7 @@ const userAuthTypeDefs = gql`
     lastName: String!
     phoneNumber: String!
     email: String!
-    isPhoneVerified: Boolean!
+    isPhoneVerified: Boolean
     phoneVerifiedAt: String
     profileImage: String
     city: String
@@ -95,20 +95,58 @@ const userAuthTypeDefs = gql`
     getUser: Response
   }
 
+  type UserUpdate {
+    id: ID
+    firstName: String
+    lastName: String
+    phoneNumber: String
+    email: String
+    isPhoneVerified: Boolean
+    phoneVerifiedAt: String
+    profileImage: String
+    city: String
+    state: String
+    country: String
+    pincode: String
+  }
+
+  type FieldError {
+  field: String!
+  message: String!
+}
+
+   type UpdateUserInfoResponse {
+    status: Boolean!
+    statusCode:Int
+    message: String!
+    data: UserUpdate
+    fieldErrors: [FieldError]
+  }
+
+
   type Mutation {
     registerUser(input: RegisterInput): ResponseRegisterUser!
-    sendOTP(
+
+    sendOTP(firstName: String, lastName: String, phoneNumber: String, email: String, password: String, confirmPassword: String): ResponseSendOtp!
+
+    verifyOTP(phoneNumber: String!, otp: String): VerifyOTPResponse!
+
+    loginUser(email: String, password: String): LoginResponse!
+
+    updateProfileImage(userId: ID!, profileImage: Upload): Response
+
+    updateUserInfo(
+      userId: ID!
       firstName: String
       lastName: String
-      phoneNumber: String
       email: String
-      password: String
-      confirmPassword: String
-    ): ResponseSendOtp!
-    verifyOTP(phoneNumber: String!, otp: String): VerifyOTPResponse!
-    loginUser(email: String, password: String): LoginResponse!
-    updateProfileImage(userId: ID!, profileImage: Upload): Response
+      city: String
+      state: String
+      country: String
+      pincode: String
+    ): UpdateUserInfoResponse!
   }
+  
 `;
 
 export default userAuthTypeDefs;

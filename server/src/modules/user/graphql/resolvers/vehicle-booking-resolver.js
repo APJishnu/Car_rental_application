@@ -16,6 +16,7 @@ const VehicleBookingResolver = {
         fuelType,
         seats,
         priceSort,
+        priceRange,
       }
     ) => {
       // Ensure the arrays are not empty
@@ -28,6 +29,12 @@ const VehicleBookingResolver = {
       const seatsArray =
         Array.isArray(seats) && seats.length > 0 ? seats : undefined;
 
+      // Ensure priceRange is defined and is an array with two elements
+      const priceRangeArray =
+        Array.isArray(priceRange) && priceRange.length === 2
+          ? priceRange
+          : undefined;
+
       return await VehicleBookingHelper.getAvailableVehicles(
         pickupDate,
         dropoffDate,
@@ -35,7 +42,8 @@ const VehicleBookingResolver = {
         transmissionArray,
         fuelTypeArray,
         seatsArray,
-        priceSort
+        priceSort,
+        priceRangeArray
       );
     },
 
@@ -114,7 +122,8 @@ const VehicleBookingResolver = {
           console.log("Authorization token is missing.");
           return {
             status: false,
-            message: "Oops! You need to log in to book your ride. Let's get you logged in so you can complete your booking!",
+            message:
+              "Oops! You need to log in to book your ride. Let's get you logged in so you can complete your booking!",
             statusCode: 401, // Unauthorized
             data: null,
           };
