@@ -372,6 +372,38 @@ class AuthHelper {
       };
     }
   }
+
+  async updatePassword(userId, currentPassword, newPassword) {
+    // Validate the current password
+    const isCurrentPasswordValid = await authRepo.validatePassword(
+      userId,
+      currentPassword
+    );
+    if (!isCurrentPasswordValid) {
+      return {
+        status: false,
+        statusCode: 404,
+        message: "Current password is incorrect",
+        fieldErrors: [{field: 'currentPassword',message: "Current password is incorrect" }],
+      };
+    }
+
+    // Proceed to update the password
+    const result = await authRepo.updatePassword(userId, newPassword);
+    if (result) {
+      return {
+        status: true,
+        statusCode: 200,
+        message: "Password updated successfully",
+      };
+    } else {
+      return {
+        status: false,
+        statusCode: 404,
+        message: "Failed to update password",
+      };
+    }
+  }
 }
 
 export default new AuthHelper();

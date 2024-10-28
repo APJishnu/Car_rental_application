@@ -4,74 +4,112 @@
   padding: 20px;
   display: flex;
   justify-content: center;
-
+  box-sizing: border-box;
 }
-
+.filterSection {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
 .filterWrapper {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-wrap: wrap;
   background: linear-gradient(180deg, #f5f5f5, #ffffff);
-  /* Adjust the colors as needed */
-  padding: 15px 20px;
-  border-radius: 8px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  gap: 1.5rem;
+  justify-content: space-between;
+  max-width: 1000px;
   width: 100%;
-  max-width: 1200px;
+  padding: 20px;
+  border-radius: 20px;
 }
 
+.filteringSection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  width: 100%;
+}
 
 .filterItem {
-  display: flex;
-  flex-direction: column;
-  margin-right: 15px;
+  flex: 1;
+  min-width: 200px;
+  max-width: 100%;
 }
 
-.filterItem label {
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 5px;
-}
-
-.filterItem input {
+.locationInput {
+  width: 100%;
   padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
 }
 
-.DatePicker{
-  width: 100% !important;
-  padding: 14px;
-  border-color: rgb(255, 223, 223);
-  color: #000;
+.datePicker {
+  width: 100%;
+  padding: 10px;
 }
-.DatePicker::placeholder{
-  color: #000;
-}
-.DatePicker:hover{
-  outline: #000;
-  border-color: rgb(233, 233, 233)!important;
-  box-shadow:inset 0px 0px 60px rgb(255, 255, 255);
-  color: rgb(23, 155, 255);
+
+.checkboxContainer {
+  display: flex;
+  gap: 0.5rem;
 }
 
 
+
+/* Search Button */
 .findVehicleBtn {
-  margin-top: 25px;
   padding: 12px 20px;
   background-color: #000;
   color: #fff;
   border: none;
-  border-radius: 29px;
+  border-radius: 20px;
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.3s ease;
+  margin: 0px 0;
+  max-height: 42px;
+  height: 100%!important;
+  width: 100%;
+  max-width: 200px;
+  align-self: flex-end;
 }
 
 .findVehicleBtn:hover {
-  background-color: #444;
+  background-color: #444!important;
 }
+
+.arrowIcon {
+  margin: 0 15px;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+/* Autocomplete dropdown styles */
+.autocompleteDropdown {
+  position: absolute;
+  z-index: 1000;
+  background-color: white;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  max-width: 350px;
+}
+
+/* Suggestion item styles */
+.suggestion {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestionActive {
+  background-color: #e6f7ff;
+}
+
+
+
 
 /* Rent by Brands Styles */
 .rentSection {
@@ -174,46 +212,33 @@
 
 /* Responsive Styles for screens 768px and below */
 @media (max-width: 768px) {
-  .filterSection {
-    padding: 15px;
-    /* Slightly reduced padding */
-   padding-top: 1%;
-   background: linear-gradient(180deg, #ffffff 50%, #ffffff 50%);
-  
+  .filterWrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
   }
 
-  .filterWrapper {
-    display: grid;
-    /* Use grid layout */
-    grid-template-columns: repeat(2, 1fr);
-    /* One column for small screens */
-    gap: 10px;
-    /* Spacing between grid items */
-    padding: 10px 20px;
-    /* Adjusted padding */
-    max-width: 580px;
-    margin: 0 auto;
-    
-    /* Center the filter section */
+  .filteringSection {
+    flex-direction: column;
+    gap: 1rem;
   }
 
   .filterItem {
-    margin: 0;
-    /* Remove margin since we have gap in grid */
-  }
-
-  .filterItem input {
+    min-width: unset;
     width: 100%;
-    /* Full width input fields */
+
   }
 
   .findVehicleBtn {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+    max-width: 100%;
+  }
+
+  .checkboxContainer {
+    align-items: flex-start;
     width: 100%;
-    /* Full width button */
-    margin-top: 15px;
-    /* Adjusted margin */
-    padding: 12px;
-    /* Consistent padding */
+    gap: 0.5rem;
   }
 
   .rentHeader {

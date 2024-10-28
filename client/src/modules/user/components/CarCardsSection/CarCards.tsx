@@ -20,12 +20,15 @@ interface CarCardProps {
 }
 
 const CarCard: React.FC<CarCardProps> = ({ image, model, price,totalPrice, features, onRentNow }) => {
+  const truncateText = (text:any, maxLength:any) => {
+    return text.length > maxLength ? `${text.slice(0, maxLength)}...` : text;
+  };
   return (
     <div className={styles.carCard}>
-      <div className={styles.secondCard}>
+      <div className={styles.secondCard} onClick={onRentNow}>
       <img src={image} alt={model} className={styles.carImage} />
       <div className={styles.carDetails}>
-        <div className={styles.headingDiv} style={{display:'flex',alignItems:'center',gap:'10px'}}> <DoubleRightOutlined style={{fontWeight:'100',color:'red'}}/> <h3> {`${model}`}</h3></div>
+        <div className={styles.headingDiv} style={{display:'flex',alignItems:'center',gap:'10px'}}> <DoubleRightOutlined style={{fontWeight:'100',color:'red'}}/>   <h3>{truncateText(model, 20)}</h3> {/* Adjust max length as needed */}</div>
      
         <p className={styles.price}> <Text style={{color:'darkblue',fontSize:'18px'}}>{'₹'}</Text> {price} / DAY
         </p>

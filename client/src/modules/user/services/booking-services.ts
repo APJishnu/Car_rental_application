@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 
 // Mutation for creating the Razorpay payment order
 const CREATE_PAYMENT_ORDER_MUTATION = gql`
-  mutation CreatePaymentOrder($totalPrice: Float!, $bookingInput: CreateBookingInput!) {
+  mutation CreatePaymentOrder(
+    $totalPrice: Float!
+    $bookingInput: CreateBookingInput!
+  ) {
     createPaymentOrder(totalPrice: $totalPrice, bookingInput: $bookingInput) {
       status
       message
@@ -19,8 +22,14 @@ const CREATE_PAYMENT_ORDER_MUTATION = gql`
 `;
 
 const VERIFY_PAYMENT_AND_CREATE_BOOKING_MUTATION = gql`
-  mutation VerifyPaymentAndCreateBooking($paymentDetails: PaymentInput!, $bookingInput: CreateBookingInput!) {
-    verifyPaymentAndCreateBooking(paymentDetails: $paymentDetails, bookingInput: $bookingInput) {
+  mutation VerifyPaymentAndCreateBooking(
+    $paymentDetails: PaymentInput!
+    $bookingInput: CreateBookingInput!
+  ) {
+    verifyPaymentAndCreateBooking(
+      paymentDetails: $paymentDetails
+      bookingInput: $bookingInput
+    ) {
       status
       message
       data {
@@ -45,9 +54,9 @@ interface PaymentOrderVariables {
 // Define the structure of the payment order response
 interface PaymentOrderResponse {
   createPaymentOrder: {
-    status: boolean;  // Change this to boolean as per your backend
+    status: boolean; // Change this to boolean as per your backend
     message: string;
-    statusCode: number;  // Include statusCode
+    statusCode: number; // Include statusCode
     data: {
       razorpayOrderId: string;
       amount: number;
@@ -68,7 +77,7 @@ interface BookingVariables {
 // Define the structure of the verify payment and booking response
 interface BookingResponse {
   verifyPaymentAndCreateBooking: {
-    status: boolean;  // Change this to boolean as per your backend
+    status: boolean; // Change this to boolean as per your backend
     message: string;
     data: {
       id: string;
@@ -81,9 +90,9 @@ interface BookingResponse {
   };
 }
 
-interface Error{
-    status: boolean; 
-    message: string;
+interface Error {
+  status: boolean;
+  message: string;
 }
 
 // Custom hook for managing the booking process
@@ -102,7 +111,10 @@ export const useBooking = () => {
   }, []);
 
   // Apollo Client's useMutation hooks for creating a payment order and verifying payment/creating a booking
-  const [createPaymentOrder, { loading: loadingPaymentOrder, error: paymentOrderError }] = useMutation<PaymentOrderResponse, PaymentOrderVariables>(
+  const [
+    createPaymentOrder,
+    { loading: loadingPaymentOrder, error: paymentOrderError },
+  ] = useMutation<PaymentOrderResponse, PaymentOrderVariables>(
     CREATE_PAYMENT_ORDER_MUTATION,
     {
       context: {
@@ -113,19 +125,25 @@ export const useBooking = () => {
     }
   );
 
-  const [verifyPaymentAndCreateBooking, { loading: loadingBooking, error: bookingError, data: bookingData }] = useMutation<BookingResponse, { paymentDetails: any, bookingInput: BookingVariables }>(
-    VERIFY_PAYMENT_AND_CREATE_BOOKING_MUTATION,
-    {
-      context: {
-        headers: {
-          Authorization: token ? `Bearer ${token}` : "",
-        },
+  const [
+    verifyPaymentAndCreateBooking,
+    { loading: loadingBooking, error: bookingError, data: bookingData },
+  ] = useMutation<
+    BookingResponse,
+    { paymentDetails: any; bookingInput: BookingVariables }
+  >(VERIFY_PAYMENT_AND_CREATE_BOOKING_MUTATION, {
+    context: {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
       },
-    }
-  );
+    },
+  });
 
   // Function to initiate the booking and payment process
-  const handleBooking = async (bookingInput: BookingVariables, handlerfunction: any) => {
+  const handleBooking = async (
+    bookingInput: BookingVariables,
+    handlerfunction: any
+  ) => {
     try {
       if (!razorpayLoaded) return { message: "Razorpay SDK is not loaded." };
 
@@ -137,12 +155,14 @@ export const useBooking = () => {
         },
       });
 
-      if (paymentOrderResponse.data?.createPaymentOrder.status) {  // Check for boolean status
-        const { razorpayOrderId, amount, currency } = paymentOrderResponse.data.createPaymentOrder.data;
+      if (paymentOrderResponse.data?.createPaymentOrder.status) {
+        // Check for boolean status
+        const { razorpayOrderId, amount, currency } =
+          paymentOrderResponse.data.createPaymentOrder.data;
 
         // Step 2: Process the Razorpay payment on the frontend
         const razorpay = new (window as any).Razorpay({
-          key: 'rzp_test_37TZNY8cnWgUm8',
+          key: "rzp_test_37TZNY8cnWgUm8",
           amount: amount,
           name: "LUXEDRIVE", // Updated company name
           description: "Book your favorite vehicle for a smooth ride!",
@@ -169,14 +189,18 @@ export const useBooking = () => {
               // Check the booking creation status
               if (bookingResponse.data?.verifyPaymentAndCreateBooking.status) {
                 return {
-                  status: bookingResponse.data.verifyPaymentAndCreateBooking.status,
-                  message: bookingResponse.data.verifyPaymentAndCreateBooking.message,
+                  status:
+                    bookingResponse.data.verifyPaymentAndCreateBooking.status,
+                  message:
+                    bookingResponse.data.verifyPaymentAndCreateBooking.message,
                   data: bookingResponse.data.verifyPaymentAndCreateBooking.data,
                 };
               } else {
                 return {
                   status: "error",
-                  message: bookingResponse.data?.verifyPaymentAndCreateBooking.message || "Booking creation failed.",
+                  message:
+                    bookingResponse.data?.verifyPaymentAndCreateBooking
+                      .message || "Booking creation failed.",
                   data: {},
                 };
               }
@@ -194,31 +218,30 @@ export const useBooking = () => {
           },
           theme: {
             color: "#007BFF", // Starting color (Deep Blue)
-    
           },
           layout: {
             // Optionally change layout styles
             header: {
-                title: "Your Payment Details",
-                backgroundColor: "#2980b9", // Header background
-                textColor: "#ffffff" // Header text color
+              title: "Your Payment Details",
+              backgroundColor: "#2980b9", // Header background
+              textColor: "#ffffff", // Header text color
             },
             footer: {
-                backgroundColor: "#bdc3c7", // Footer background
-                textColor: "#2c3e50" // Footer text color
-            }
-        },
-        button: {
+              backgroundColor: "#bdc3c7", // Footer background
+              textColor: "#2c3e50", // Footer text color
+            },
+          },
+          button: {
             style: {
-                backgroundColor: "#27ae60", // Green button background
-                color: "#ffffff", // White button text
-                borderRadius: "8px", // Rounded corners
-                padding: "10px 20px", // Padding around the button
-                hover: {
-                    backgroundColor: "#1e7e34" // Darker green on hover
-                }
-            }
-        },
+              backgroundColor: "#27ae60", // Green button background
+              color: "#ffffff", // White button text
+              borderRadius: "8px", // Rounded corners
+              padding: "10px 20px", // Padding around the button
+              hover: {
+                backgroundColor: "#1e7e34", // Darker green on hover
+              },
+            },
+          },
           image: "/carLoading1.svg", // URL of your logo
           modal: {
             ondismiss: () => {
@@ -239,13 +262,13 @@ export const useBooking = () => {
           data: null,
         };
       }
-
     } catch (error) {
       console.error("Error handling booking:", error);
-      const Error = error as Error
+      const Error = error as Error;
       return {
         status: "error",
-        message: Error.message || "Error occurred while processing the booking.",
+        message:
+          Error.message || "Error occurred while processing the booking.",
         data: null,
       };
     }

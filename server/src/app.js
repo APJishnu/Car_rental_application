@@ -10,6 +10,7 @@ import session from 'express-session';
 import cron from 'node-cron';
 import CleanupHelper from './utils/clean-up-otp.js';
 import './modules/user/models/booking-model.js'
+import BookingStatusService  from './config/cron.js'
 
 
 dotenv.config(); // Load environment variables from .env file
@@ -23,6 +24,7 @@ cron.schedule('*/10 * * * *', async () => {
   await CleanupHelper.deleteExpiredOTPs();
 });
 
+BookingStatusService.startStatusUpdateJob();
 
 // Session middleware configuration
 app.use(session({

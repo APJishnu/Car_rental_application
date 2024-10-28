@@ -24,28 +24,34 @@ class RentableRepo {
     }
 
     // In your RentableRepo.js
-
-static async findAllRentableByIds(ids) {
-  try {
-    return await Rentable.findAll({
-      where: {
-        id: ids,
-      },
-      include: [
-        {
-          model: Vehicle,
-          as: 'vehicle',
-          include: {
-            model: Manufacturer,
-            as: 'manufacturer',
-          },
-        },
-      ],
-    });
-  } catch (error) {
-    throw new Error('Database error occurred while fetching rentable vehicles by IDs: ' + error.message);
-  }
-}
+    static async findAllRentableByIds(ids) {
+      try {
+        const queryOptions = {
+          include: [
+            {
+              model: Vehicle,
+              as: 'vehicle',
+              include: {
+                model: Manufacturer,
+                as: 'manufacturer',
+              },
+            },
+          ],
+        };
+    
+        // If ids are provided, add the where clause
+        if (ids && ids.length > 0) {
+          queryOptions.where = {
+            id: ids,
+          };
+        }
+    
+        return await Rentable.findAll(queryOptions);
+      } catch (error) {
+        throw new Error('Database error occurred while fetching rentable vehicles by IDs: ' + error.message);
+      }
+    }
+    
 
 
 

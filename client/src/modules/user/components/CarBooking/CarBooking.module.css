@@ -53,6 +53,54 @@
 
   }
 
+  .BookingButtonsDiv{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+  }
+
+    /* Rent Now Button */
+    .rentNowButton {
+      background-color: #000;
+      color: #fff;
+      padding: 15px 20px;
+      border: 2px solid black;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+      width: 100%!important;
+    }
+  
+    .rentNowButton:hover {
+      background-color: #ffffff;
+      color:#000;
+    }
+  
+    /* Rent Now Button */
+    .wishlistButton {
+      background-color: #fff;
+      color: #000000;
+      padding: 15px 20px;
+      border: 2px solid black;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: 20px;
+      width: 100%!important;
+    }
+  
+    .wishlistButton:hover {
+      background-color: #000000;
+      color: #fff;
+    }
+  
+
+  
+  
   .rightSection {
     display: flex;
     flex-direction: column;
@@ -63,6 +111,7 @@
     /* Enable vertical scrolling if content overflows */
     overflow-x: hidden;
     padding: 20px;
+    padding-top: 0px;
     width: 100%;
     border-left: 1px solid rgba(0, 0, 0, 0.056);
   }
@@ -75,7 +124,10 @@
   .rightSection h2 {
     font-size: 20px;
     color: #000;
-    margin-bottom: 0px;
+    margin-bottom: 5px;
+    letter-spacing: 2px;
+    padding-bottom: 5px;
+    text-shadow: 2px 2px 2px rgb(206, 206, 206);
     border-bottom: 1px solid rgb(52, 52, 52);
   }
 
@@ -143,23 +195,6 @@
     font-size: 16px;
   }
 
-  /* Rent Now Button */
-  .expandButton {
-    background-color: #000;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    margin-top: 20px;
-  }
-
-  .expandButton:hover {
-    background-color: #333;
-  }
-
-
 
   .closeButton {
     background: none;
@@ -184,22 +219,6 @@
     width: 100%;
   }
 
-  .bookButton {
-    background-color: #000;
-    color: white;
-    padding: 12px;
-    border: none;
-    border-radius: 20px;
-    cursor: pointer;
-    font-size: 16px;
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
-    width: 100%;
-  }
-
-  .bookButton:hover {
-    background-color: #333;
-  }
 
   .additionalImagesDiv {
     display: flex;
@@ -242,7 +261,7 @@
   /* Heading */
   .reviewSection h3 {
     font-size: 24px;
-    color: #370090;
+    color: #000290;
     margin-bottom: 15px;
     font-weight: bold;
   }
@@ -253,12 +272,32 @@
     align-items: center;
     justify-content: space-between;
     margin-bottom: 20px;
+    width: 100%;
+    padding-bottom: 20px;
+    border-bottom: 1px solid black;
+  }
+
+  .reviewSummaryFirstDiv{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+   
+  }
+  .reviewStarFirst{
+    max-width: 150px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
   }
 
   .reviewSummary p {
-    font-size: 16px;
-    color: #5b6982;
-    margin-left: 10px;
+    font-size: 30px;
+    font-weight: 900;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    letter-spacing: 2px;
+    color: #000000;
+    margin-left: 0px;
   }
 
   /* Rating Distribution */
@@ -269,6 +308,10 @@
     gap: 10px;
     overflow-x: auto;
     overflow-y: hidden;
+  }
+
+  .ratingLinear{
+    width: 50%;
   }
 
   /* Individual Rating Item */
@@ -287,6 +330,18 @@
     align-items: center;
   }
 
+  .ratingRowLinear{
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    height: 16px;
+  }
+.ratingRowLinear span{
+  width: 10px;
+  padding-top: 5px;
+  height: 10px;
+  font-size: 10px;
+}
   .progressBar {
     display: flex;
     flex-direction: column;

@@ -178,7 +178,7 @@ const Dashboard: React.FC = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="loading-container">
+      <div className={styles.dashboard}>
         <Spin size="large" />
       </div>
     );

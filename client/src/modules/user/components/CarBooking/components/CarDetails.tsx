@@ -9,14 +9,11 @@ import FloatingPrice from './FloatingPrice';
 
 interface CarDetailsProps {
   car: RentableVehicle;
-  onRentClick: () => void;
-  showBookingButton: boolean;
+
 }
 
 export const CarDetails: React.FC<CarDetailsProps> = ({
-  car,
-  onRentClick,
-  showBookingButton,
+  car
 }) => {
   return (
     <div className={styles.carDetails}>
@@ -45,14 +42,6 @@ export const CarDetails: React.FC<CarDetailsProps> = ({
           </Tooltip>
         </div>
       </div>
-
-      {showBookingButton && (
-        <div className={styles.ownerSection}>
-          <button className={styles.expandButton} onClick={onRentClick}>
-            Rent Now
-          </button>
-        </div>
-      )}
     </div>
   );
 };

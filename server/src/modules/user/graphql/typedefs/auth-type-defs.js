@@ -123,6 +123,14 @@ const userAuthTypeDefs = gql`
     fieldErrors: [FieldError]
   }
 
+  type UpdatePasswordResponse {
+    status: Boolean!
+    statusCode: Int!
+    message: String!
+    fieldErrors:[FieldError] 
+        
+  }
+
 
   type Mutation {
     registerUser(input: RegisterInput): ResponseRegisterUser!
@@ -145,6 +153,8 @@ const userAuthTypeDefs = gql`
       country: String
       pincode: String
     ): UpdateUserInfoResponse!
+
+    updatePassword(userId: ID!, currentPassword: String, newPassword: String): UpdatePasswordResponse!
   }
   
 `;

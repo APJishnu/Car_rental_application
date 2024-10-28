@@ -30,8 +30,30 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews }) => {
     <div className={styles.reviewSection}>
       <h3>User Reviews</h3>
       <div className={styles.reviewSummary}>
-        <Rate value={calculateOverallRating()} disabled allowHalf style={{ color: "black" }} />
-        <p>{`Overall Rating: ${calculateOverallRating().toFixed(1)} / 5 ★`}</p>
+        <div className={styles.reviewSummaryFirstDiv}>
+          <div className={styles.reviewStarFirst}>  
+          <p>{`${calculateOverallRating().toFixed(2)}`}</p>
+            <Rate value={calculateOverallRating()} disabled allowHalf style={{ color: "black" }} />
+         </div>
+      
+        </div>
+       
+         {/* Linear Progress Bars for Rating Distribution */}
+      <div className={styles.ratingLinear}>
+        {([5, 4, 3, 2, 1] as const).map((rating) => (
+          <div key={rating} className={styles.ratingRowLinear}>
+              <span>{`${rating}`}</span>
+            <Progress
+              percent={parseFloat(((ratingDistribution[rating] / reviews.length) * 100).toFixed(0))}
+              strokeColor="#000"
+              showInfo={false}
+              style={{ width: "100%" }}
+            />
+            
+          
+          </div>
+        ))}
+      </div>
       </div>
 
       <div className={styles.ratingDistribution}>
@@ -41,10 +63,10 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ reviews }) => {
             type='circle'
             percent={parseFloat(((ratingDistribution[rating] / reviews.length) * 100).toFixed(0))}
             //  format={() => `${rating} ★`}
-              strokeColor={rating > 3 ? "#40A578" : rating === 3 ? "#fadb14" : "#ff4d4f"}
+              strokeColor={rating > 3 ? "#000" : rating === 3 ? "#000" : "#000"}
               size={80}
             />
-            <span>{`${rating} Star${rating === 1 ? '' : 's'}`}</span>
+            <span style={{fontSize:'12px'}}>{`${rating} Star${rating === 1 ? '' : 's'}`}</span>
           </div>
         ))}
       </div>

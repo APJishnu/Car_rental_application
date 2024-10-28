@@ -40,10 +40,10 @@ class RentableVehicleHelper {
     fuelType,
     seats,
     priceSort,
-    priceRange, 
+    priceRange,
   }) {
     try {
-      // Build search params
+      // Build search params for Typesense
       const searchParams = {
         q: query || "*", // Fallback to all results if no query
         query_by: "vehicle.name,vehicle.manufacturer.name", // Search within these fields
@@ -71,12 +71,12 @@ class RentableVehicleHelper {
           `vehicle.numberOfSeats:=[${seats.join(",")}]`
         );
       }
-
-        // Price range filter
-    if (priceRange && Array.isArray(priceRange) && priceRange.length === 2) {
-      const [minPrice, maxPrice] = priceRange;
-      searchParams.filter_by.push(`pricePerDay:>=${minPrice} && pricePerDay:<=${maxPrice}`);
-    }
+  
+      // Price range filter
+      if (priceRange && Array.isArray(priceRange) && priceRange.length === 2) {
+        const [minPrice, maxPrice] = priceRange;
+        searchParams.filter_by.push(`pricePerDay:>=${minPrice} && pricePerDay:<=${maxPrice}`);
+      }
   
       // If there are filters, join them with '&&', otherwise, delete the filter key
       if (searchParams.filter_by.length > 0) {
@@ -85,34 +85,34 @@ class RentableVehicleHelper {
         delete searchParams.filter_by; // No filters, so remove the key
       }
   
-      // Debugging: Check the searchParams before performing the search
       console.log("Search Params:", searchParams);
   
-      // Perform the search using Typesense
-      const typesenseResponse = await typesense
-        .collections("cars")
-        .documents()
-        .search(searchParams);
+      let vehicleIds;
+      try {
+        // Perform the search using Typesense
+        const typesenseResponse = await typesense
+          .collections("cars")
+          .documents()
+          .search(searchParams);
   
-      // If no hits, return an empty array
-      if (!typesenseResponse.hits.length) {
-        return [];
+        // Extract the vehicle IDs from the search results
+        vehicleIds = typesenseResponse.hits.map((hit) => hit.document.id);
+      } catch (error) {
+        // If Typesense is unreachable, log the error and continue with fetching all data
+        console.error("Typesense error or network issue:", error.message);
+        vehicleIds = null; // Set vehicleIds to null to fetch all vehicles
       }
   
-      // Extract the vehicle IDs from the search results
-      const vehicleIds = typesenseResponse.hits.map((hit) => hit.document.id);
-  
-      // Fetch vehicles based on the IDs
+      // Fetch vehicles based on IDs if found, otherwise fetch all
       const vehicles = await RentableRepo.findAllRentableByIds(vehicleIds);
-  
       console.log(vehicles, "Vehicles found in search");
       return vehicles;
+  
     } catch (error) {
       console.error("Error searching for rentable vehicles:", error);
       throw new Error("Failed to search rentable vehicles");
     }
   }
-  
   
 
   static async addRentable(data) {

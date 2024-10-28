@@ -1,11 +1,11 @@
-import { gql, useLazyQuery ,useMutation } from "@apollo/client";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
 interface User {
   id: string;
   firstName: string;
   lastName: string;
   phoneNumber: string;
   email: string;
-  profileImage?:string;
+  profileImage?: string;
   city?: string;
   state?: string;
   country?: string;
@@ -26,7 +26,20 @@ interface GetUserResponse {
   getUser: UserResponse;
 }
 
+interface UpdatePasswordVariables {
+  userId: string;
+  currentPassword: string;
+  newPassword: string;
+}
 
+interface UpdatePasswordResponse {
+  updatePassword: {
+    status: Boolean;
+    statusCode: number;
+    message: string;
+    fieldErrors:[FieldError]
+  };
+}
 
 // Updated GraphQL query to include status, message, and data
 const GET_USER = gql`
@@ -50,15 +63,19 @@ const GET_USER = gql`
   }
 `;
 
-
 const UPDATE_PROFILE_IMAGE = gql`
-mutation UpdateProfileImage($userId: ID!, $profileImage:Upload) {
-  updateProfileImage(userId: $userId, profileImage: $profileImage) {
-    status
-    message
+  mutation UpdateProfileImage($userId: ID!, $profileImage: Upload) {
+    updateProfileImage(userId: $userId, profileImage: $profileImage) {
+      status
+      statusCode
+      message
+      data {
+        id
+        password
+      }
+    }
   }
-}
-`
+`;
 // GraphQL mutation for updating user profile
 const UPDATE_USER_INFO = gql`
   mutation UpdateUserInfo(
@@ -96,7 +113,7 @@ const UPDATE_USER_INFO = gql`
         country
         pincode
       }
-       fieldErrors {
+      fieldErrors {
         field
         message
       }
@@ -104,13 +121,32 @@ const UPDATE_USER_INFO = gql`
   }
 `;
 
-
-
-
+const UPDATE_PASSWORD = gql`
+  mutation UpdatePassword(
+    $userId: ID!
+    $currentPassword: String
+    $newPassword: String
+  ) {
+    updatePassword(
+      userId: $userId
+      currentPassword: $currentPassword
+      newPassword: $newPassword
+    ) {
+      status
+      statusCode
+      message
+      fieldErrors {
+        field
+        message
+      }
+    }
+  }
+`;
 
 // Define the function to fetch user data using Apollo Client's useLazyQuery
 export const useFetchUserData = () => {
-  const [getUser, { loading, data, error }] = useLazyQuery<GetUserResponse>(GET_USER);
+  const [getUser, { loading, data, error }] =
+    useLazyQuery<GetUserResponse>(GET_USER);
 
   const fetchUserData = async (token: string): Promise<UserResponse | null> => {
     try {
@@ -123,7 +159,7 @@ export const useFetchUserData = () => {
         },
       });
 
-      console.log(result.data?.getUser)
+      console.log(result.data?.getUser);
 
       return result.data?.getUser || null;
     } catch (err) {
@@ -140,15 +176,18 @@ export const useFetchUserData = () => {
   };
 };
 
-
-
-
 // Custom hook for updating profile image
 export const useUpdateProfileImage = () => {
-  const [updateProfileImage, { loading, error }] = useMutation(UPDATE_PROFILE_IMAGE);
-  
-  const update = async ({ userId, profileImage }: { userId: string; profileImage: File | null }) => {
+  const [updateProfileImage, { loading, error }] =
+    useMutation(UPDATE_PROFILE_IMAGE);
 
+  const update = async ({
+    userId,
+    profileImage,
+  }: {
+    userId: string;
+    profileImage: File | null;
+  }) => {
     console.log("Updating profile image:", profileImage); // Log the profile image to see what is being passed
     return updateProfileImage({
       variables: {
@@ -165,10 +204,10 @@ export const useUpdateProfileImage = () => {
   };
 };
 
-
 // Custom hook for updating user profile
 export const useUpdateUserInfo = () => {
-  const [updateUserProfile, { loading, error, data }] = useMutation(UPDATE_USER_INFO);
+  const [updateUserProfile, { loading, error, data }] =
+    useMutation(UPDATE_USER_INFO);
 
   // Define the update function with the expected input
   const update = async ({
@@ -203,7 +242,7 @@ export const useUpdateUserInfo = () => {
           pincode,
         },
       });
-      console.log(response)
+      console.log(response);
 
       return response?.data.updateUserInfo || null;
     } catch (err) {
@@ -217,5 +256,38 @@ export const useUpdateUserInfo = () => {
     loading,
     error,
     data,
+  };
+};
+
+export const useUpdatePassword = () => {
+  const [updatePassword, { loading, error }] = useMutation<
+    UpdatePasswordResponse,
+    UpdatePasswordVariables
+  >(UPDATE_PASSWORD);
+
+  const update = async ({
+    userId,
+    currentPassword,
+    newPassword,
+  }: UpdatePasswordVariables) => {
+    try {
+      const response = await updatePassword({
+        variables: {
+          userId,
+          currentPassword,
+          newPassword,
+        },
+      });
+      return response.data?.updatePassword || null;
+    } catch (err) {
+      console.error("Error updating password:", err);
+      throw new Error("Could not update password.");
+    }
+  };
+
+  return {
+    updatePassword: update,
+    loading,
+    error,
   };
 };

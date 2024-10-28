@@ -12,7 +12,7 @@ import {
   Upload,
   message,
   Switch,
-  Form, 
+  Form,
   Input,
 } from "antd";
 import {
@@ -32,20 +32,29 @@ import {
 import styles from "./UserProfile.module.css";
 import { useUpdateProfileImage } from "../../services/user-services";
 import { useUpdateUserInfo } from "../../services/user-services";
+import { useUpdatePassword } from "../../services/user-services";
 import useUserData from "../../services/user-data";
+
+interface PasswordChangeValues {
+  currentPassword: string;
+  newPassword: string;
+}
+
+
 
 const { Title, Text } = Typography;
 
 const UserProfile: React.FC = () => {
   const { profileImage, userData, loading, error } = useUserData();
-  const { updateProfileImage, loading: mutationLoading } =
-    useUpdateProfileImage();
+  const { updateProfileImage, loading: mutationLoading } =useUpdateProfileImage();
+  const { updateUserInfo, loading: updateLoading } = useUpdateUserInfo();
+  const { updatePassword } = useUpdatePassword();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | undefined>();
-  const { updateUserInfo, loading: updateLoading } = useUpdateUserInfo();
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const [isEditMode, setIsEditMode] = useState(false);
+  const [showSecuritySettings, setShowSecuritySettings] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -56,9 +65,7 @@ const UserProfile: React.FC = () => {
     pincode: "",
   });
 
-
   const [form] = Form.useForm();
-
 
   React.useEffect(() => {
     if (userData) {
@@ -104,7 +111,7 @@ const UserProfile: React.FC = () => {
         } else {
           message.error("Failed to update profile");
         }
-      } 
+      }
     } catch (error) {
       message.error("Error updating profile");
     }
@@ -117,7 +124,6 @@ const UserProfile: React.FC = () => {
       </div>
     );
   }
-
 
   if (error) {
     return (
@@ -175,13 +181,13 @@ const UserProfile: React.FC = () => {
 
   const renderEditForm = () => (
     <Form form={form} onFinish={handleSubmit} className={styles.editForm}>
-      <div style={{display:"flex",justifyContent:"space-between",}}>
-      <Form.Item name="firstName">
-        <Input placeholder="First Name" />
-      </Form.Item>
-      <Form.Item name="lastName">
-        <Input placeholder="Last Name" />
-      </Form.Item>
+      <div className={styles.userNameDiv}>
+        <Form.Item className={styles.userNameFormItem} name="firstName">
+          <Input placeholder="First Name" />
+        </Form.Item>
+        <Form.Item className={styles.userNameFormItem} name="lastName">
+          <Input placeholder="Last Name" />
+        </Form.Item>
       </div>
       <Form.Item name="email">
         <Input placeholder="Email" />
@@ -235,6 +241,78 @@ const UserProfile: React.FC = () => {
     </div>
   );
 
+
+  const handlePasswordChange = async (values: PasswordChangeValues) => {
+    try {
+      const response = await updatePassword({
+        userId: userData.id,
+        currentPassword: values.currentPassword,
+        newPassword: values.newPassword,
+      });
+      form.resetFields(["currentPassword", "newPassword"]);
+  
+      if (response?.status === true) {
+        message.success("Password updated successfully");
+        form.resetFields(["currentPassword", "newPassword"]);
+      } else {
+        if (response?.fieldErrors) {
+          response.fieldErrors.forEach((error: any) => {
+            form.setFields([
+              {
+                name: error.field,
+                errors: [error.message],
+              },
+            ]);
+          });
+        } else {
+          message.error("Failed to update password");
+        }
+      }
+    } catch (error) {
+      message.error("Error updating password");
+    }
+  };
+  
+
+  const renderSecuritySettings = () => (
+    <div className={styles.securitySettings}>
+      <h3>
+        <LockOutlined /> Security Settings
+      </h3>
+      <Form form={form} className={styles.securityForm} onFinish={handlePasswordChange}>
+        <div className={styles.passwordChangeDiv}>
+          <Form.Item name="currentPassword">
+            <Input.Password placeholder="Enter Current Password" />
+          </Form.Item>
+          <Form.Item name="newPassword">
+            <Input.Password placeholder="Enter New Password" />
+          </Form.Item>
+        </div>
+
+        <Form.Item>
+          <Button type="link" className={styles.forgotPassword}>
+            Forgot Password?
+          </Button>
+        </Form.Item>
+        <Form.Item label="Two-Factor Authentication">
+          <Switch />
+        </Form.Item>
+           {/* New Change Password Button */}
+      <Form.Item>
+        <Button type="primary" htmlType="submit">
+          Change Password
+        </Button>
+      </Form.Item>
+      </Form>
+      <Button
+        onClick={() => setShowSecuritySettings(false)}
+        className={styles.secondaryButton}
+      >
+        Back to Profile
+      </Button>
+    </div>
+  );
+
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
@@ -285,29 +363,36 @@ const UserProfile: React.FC = () => {
 
             {/* Right Column */}
             <div className={styles.rightColumn}>
-              <div className={styles.settingsCard}>
-                <div className={styles.settingRow}>
-                  <span className={styles.settingLabel}>
-                    <BellOutlined /> Notifications
-                  </span>
-                  <Switch size="small" className={styles.switch} />
+              {showSecuritySettings ? (
+                renderSecuritySettings()
+              ) : (
+                <div className={styles.settingsCard}>
+                  <div className={styles.settingRow}>
+                    <span className={styles.settingLabel}>
+                      <BellOutlined /> Notifications
+                    </span>
+                    <Switch size="small" className={styles.switch} />
+                  </div>
+
+                  <div className={styles.settingRow}>
+                    <span className={styles.settingLabel}>
+                      <GlobalOutlined /> Language
+                    </span>
+                    <span className={styles.settingValue}>English</span>
+                  </div>
+
+                  <button
+                    className={styles.secondaryButton}
+                    onClick={() => setShowSecuritySettings(true)}
+                  >
+                    <LockOutlined /> Security Settings
+                  </button>
+
+                  <button className={styles.secondaryButton}>
+                    <FileOutlined /> Theme Preferences
+                  </button>
                 </div>
-
-                <div className={styles.settingRow}>
-                  <span className={styles.settingLabel}>
-                    <GlobalOutlined /> Language
-                  </span>
-                  <span className={styles.settingValue}>English</span>
-                </div>
-
-                <button className={styles.secondaryButton}>
-                  <LockOutlined /> Security Settings
-                </button>
-
-                <button className={styles.secondaryButton}>
-                  <FileOutlined /> Theme Preferences
-                </button>
-              </div>
+              )}
             </div>
           </div>
         </div>

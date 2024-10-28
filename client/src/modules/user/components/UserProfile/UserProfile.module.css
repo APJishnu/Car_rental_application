@@ -7,6 +7,7 @@
   align-items: center;
   justify-content: center;
   width: 100%;
+  
 
   }
   
@@ -131,9 +132,11 @@
   .leftColumn {
     display: flex;
     flex-direction: column;
-    gap: 2.5rem;
+    gap: 2.7rem;
     width: 100%;
   }
+
+ 
   
   .infoCard {
     background: white;
@@ -143,7 +146,7 @@
     transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 
   }
   
@@ -192,10 +195,26 @@
     line-height: 1.5;
   }
 
+  .editForm{
+    padding: 0px 30px;
+  }
+
   .editForm Input{
     padding: 10px;  
     width: 100%;
     gap: 0px;
+    border: 2px solid rgb(177, 177, 177);
+  }
+
+  .userNameDiv{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .userNameDiv .userNameFormItem{
+    width: 100%!important;
+    
   }
 
   .formActions{
@@ -286,7 +305,55 @@
     color: #4a5568;
     font-weight: 500;
   }
+
+
+  .securitySettings {
+    padding: 0px;
+    background-color: #ffffff; /* Light background for form container */
+    border-radius: 8px;
+    max-width: 100%;
+    margin: auto;
+   
+  }
   
+  .securitySettings h3 {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+    display: flex;
+    color: #333;
+  }
+  .securityForm .passwordChangeDiv{
+    width: 100%;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .securitySettings .securityForm {
+    margin-top: 0px;
+  }
+  
+  .securityForm .ant-form-item {
+    margin-bottom: 16px;
+  }
+  
+  .securityForm .ant-input-password {
+    padding: 10px;
+    border-radius: 4px;
+  }
+  
+  .securityForm .ant-form-item-label > label {
+    font-weight: 500;
+    color: #666;
+  }
+  
+  .forgotPassword {
+    margin-top: 0px;
+    color: #1890ff;
+    text-align: center;
+  }
+  
+  
+
   /* Modal Styles */
   .profileModal :global(.ant-modal-content) {
     background: transparent;

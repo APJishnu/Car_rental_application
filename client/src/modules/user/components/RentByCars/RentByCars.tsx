@@ -1,102 +1,248 @@
 "use client";
-import React, { useState } from 'react';
-import styles from './RentByCars.module.css';
-import { useRouter } from 'next/navigation';
-import { useQuery } from '@apollo/client';
-import { DatePicker } from 'antd';
-import { GET_MANUFACTURERS } from '@/graphql/admin-queries/manufacture';
-import moment from 'moment';
-import Modal from '../../../../themes/Modal/Modal'; // Import the modal
-import { FaCar, FaArrowRight } from 'react-icons/fa'; // Import car icon
-
+import React, { useState } from "react";
+import styles from "./RentByCars.module.css";
+import { useRouter } from "next/navigation";
+import { useQuery } from "@apollo/client";
+import { DatePicker, Input, Button, Checkbox } from "antd";
+import { EnvironmentOutlined, CalendarOutlined } from "@ant-design/icons";
+import axios from "axios";
+import { GET_MANUFACTURERS } from "@/graphql/admin-queries/manufacture";
+import moment from "moment";
+import Modal from "../../../../themes/Modal/Modal"; // Import the modal
 
 const { RangePicker } = DatePicker;
 
 const FilterOptions: React.FC = () => {
   const router = useRouter();
-  const [pickupDate, setPickupDate] = useState('');
-  const [dropoffDate, setDropoffDate] = useState('');
+  const [pickupDate, setPickupDate] = useState("");
+  const [dropoffDate, setDropoffDate] = useState("");
+  const [pickupLocation, setPickupLocation] = useState("");
+  const [dropoffLocation, setDropoffLocation] = useState("");
+  const [isDifferentLocation, setIsDifferentLocation] = useState(false);
+  const [pickupSuggestions, setPickupSuggestions] = useState<string[]>([]);
+  const [dropoffSuggestions, setDropoffSuggestions] = useState<string[]>([]);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [modalMessage, setModalMessage] = useState('');
-  const [modalStatus, setModalStatus] = useState<'success' | 'error'>('success');
+  const [modalMessage, setModalMessage] = useState("");
+  const [modalStatus, setModalStatus] = useState<"success" | "error">(
+    "success"
+  );
+  const [activeInput, setActiveInput] = useState<"pickup" | "dropoff" | null>(
+    null
+  ); // Track which input is active
 
-  // Function to show the modal with a message and status
-  const showModal = (message: string, status: 'success' | 'error') => {
-      setModalMessage(message);
-      setModalStatus(status);
-      setModalVisible(true);
+  const showModal = (message: string, status: "success" | "error") => {
+    setModalMessage(message);
+    setModalStatus(status);
+    setModalVisible(true);
   };
 
-  // Function to close the modal
   const closeModal = () => {
-      setModalVisible(false);
+    setModalVisible(false);
   };
-
 
   const handleDateChange = (dates: any, dateStrings: [string, string]) => {
     if (dates) {
       const [pickup, dropoff] = dateStrings;
       if (pickup === dropoff) {
-        showModal("Pick-up and Drop-off dates cannot be the same. Please select different dates.",'error');
+        showModal(
+          "Pick-up and Drop-off dates cannot be the same. Please select different dates.",
+          "error"
+        );
         return;
       }
-      setPickupDate(pickup); // Set the pickup date
-      setDropoffDate(dropoff); // Set the dropoff date
+      setPickupDate(pickup);
+      setDropoffDate(dropoff);
     } else {
-      setPickupDate(''); // Clear dates if none are selected
-      setDropoffDate('');
+      setPickupDate("");
+      setDropoffDate("");
     }
   };
 
-    // Disable past dates
-    const disabledDate = (current: any) => {
-      return current && current < moment().startOf('day');
-    };
-  
+  const disabledDate = (current: any) => {
+    return current && current < moment().startOf("day");
+  };
 
   const handleFindVehicle = () => {
-    if (pickupDate && dropoffDate) {
+    if (pickupDate && dropoffDate && pickupLocation) {
       if (pickupDate === dropoffDate) {
-        showModal("Pick-up and Drop-off dates cannot be the same. Please select different dates.",'error');
+        showModal(
+          "Pick-up and Drop-off dates cannot be the same. Please select different dates.",
+          "error"
+        );
         return;
       }
-      // Redirect to the find cars page with selected dates as query params
-      router.push(`/user/find-cars?pickupDate=${pickupDate}&dropoffDate=${dropoffDate}`);
+      const query = `pickupDate=${pickupDate}&dropoffDate=${dropoffDate}&pickupLocation=${pickupLocation}`;
+      const finalQuery = isDifferentLocation
+        ? `${query}&dropoffLocation=${dropoffLocation}`
+        : query;
+      router.push(`/user/find-cars?${finalQuery}`);
     } else {
-      showModal('Please select both pickup and dropoff dates','error');
+      showModal(
+        "Please select both pickup and dropoff dates and enter a pick-up location",
+        "error"
+      );
     }
+  };
+
+  // Fetch location suggestions from Nominatim
+  const fetchSuggestions = async (
+    input: string,
+    type: "pickup" | "dropoff"
+  ) => {
+    if (input) {
+      try {
+        const response = await axios.get(
+          `https://nominatim.openstreetmap.org/search?q=${input}&format=json&addressdetails=1&limit=5`
+        );
+        const results = response.data;
+        if (type === "pickup") {
+          setPickupSuggestions(
+            results.map((result: any) => result.display_name)
+          );
+          setDropoffSuggestions([]); // Clear dropoff suggestions if pickup is active
+        } else {
+          setDropoffSuggestions(
+            results.map((result: any) => result.display_name)
+          );
+          setPickupSuggestions([]); // Clear pickup suggestions if dropoff is active
+        }
+      } catch (error) {
+        console.error("Error fetching location suggestions:", error);
+      }
+    } else {
+      if (type === "pickup") {
+        setPickupSuggestions([]);
+      } else {
+        setDropoffSuggestions([]);
+      }
+    }
+  };
+
+  const handlePickupChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setPickupLocation(value);
+    setActiveInput("pickup"); // Set active input to pickup
+    fetchSuggestions(value, "pickup");
+  };
+
+  const handlePickupSelect = (location: string) => {
+    setPickupLocation(location);
+    setPickupSuggestions([]);
+  };
+
+  const handleDropoffChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setDropoffLocation(value);
+    setActiveInput("dropoff"); // Set active input to dropoff
+    fetchSuggestions(value, "dropoff");
+  };
+
+  const handleDropoffSelect = (location: string) => {
+    setDropoffLocation(location);
+    setDropoffSuggestions([]);
   };
 
   return (
     <div className={styles.filterSection}>
       <div className={styles.filterWrapper}>
-        <div className={styles.filterItem}>
-          <label htmlFor="pickup-date">Pick-up and Drop-off Date</label>
-          <RangePicker
-            format="YYYY-MM-DD" // Set the date format
-            onChange={handleDateChange} // Handle date changes
-            disabledDate={disabledDate} // Disable past dates
-            style={{ width: '100%' }} // Style to make it full width
-            className={styles.DatePicker}
-          />
+        <div className={styles.filteringSection}>
+          {/* Pick-Up Location Input */}
+          <div className={styles.filterItem}>
+            <label htmlFor="pickup-location">Pick-Up Location</label>
+            <Input
+              value={pickupLocation}
+              onChange={handlePickupChange}
+              placeholder="Enter Pick-Up Location"
+              className={styles.locationInput}
+              prefix={<EnvironmentOutlined />}
+            />
+            {activeInput === "pickup" && pickupSuggestions.length > 0 && (
+              <div className={styles.autocompleteDropdown}>
+                {pickupSuggestions.map((suggestion, index) => (
+                  <div
+                    key={index}
+                    onClick={() => handlePickupSelect(suggestion)}
+                    className={styles.suggestion}
+                  >
+                    <span>{suggestion}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Conditionally Render Drop-Off Location Input */}
+          {isDifferentLocation && (
+            <div className={styles.filterItem}>
+              <label htmlFor="dropoff-location">Drop-Off Location</label>
+              <Input
+                value={dropoffLocation}
+                onChange={handleDropoffChange}
+                placeholder="Enter Drop-Off Location"
+                className={styles.locationInput}
+                prefix={<EnvironmentOutlined />}
+              />
+              {activeInput === "dropoff" && dropoffSuggestions.length > 0 && (
+                <div className={styles.autocompleteDropdown}>
+                  {dropoffSuggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      onClick={() => handleDropoffSelect(suggestion)}
+                      className={styles.suggestion}
+                    >
+                      <span>{suggestion}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Pick-Up and Drop-Off Date */}
+          <div className={styles.filterItem}>
+            <label htmlFor="dates">Pick-Up and Drop-Off Date</label>
+            <RangePicker
+              format="YYYY-MM-DD"
+              onChange={handleDateChange}
+              disabledDate={disabledDate}
+              className={styles.datePicker}
+              suffixIcon={<CalendarOutlined />}
+            />
+          </div>
+
+          {/* Search Button */}
+          <Button
+            type="primary"
+            className={styles.findVehicleBtn}
+            onClick={handleFindVehicle}
+          >
+            Search
+          </Button>
         </div>
 
-        <div className={styles.arrowIcon}>
-          <FaArrowRight size={24} />
+        {/* Checkboxes */}
+        <div className={`${styles.filterItem} ${styles.checkboxContainer}`}>
+          <Checkbox
+            id="differentLocation"
+            checked={isDifferentLocation}
+            onChange={(e) => setIsDifferentLocation(e.target.checked)}
+          >
+            Return to Different Location
+          </Checkbox>
+          <Checkbox id="priceAlert">Alert me when prices change</Checkbox>
         </div>
-        <button className={styles.findVehicleBtn} onClick={handleFindVehicle}><FaCar className={styles.carIcon} /> Find a Vehicle</button>
       </div>
+
       {isModalVisible && (
-                <Modal
-                    message={modalMessage}
-                    status={modalStatus}
-                    onClose={closeModal} // Close modal when the close button is clicked
-                />
-            )}
+        <Modal
+          message={modalMessage}
+          status={modalStatus}
+          onClose={closeModal}
+        />
+      )}
     </div>
   );
 };
-
 
 const Brands: React.FC = () => {
   const { loading, error, data } = useQuery(GET_MANUFACTURERS);
@@ -111,17 +257,22 @@ const Brands: React.FC = () => {
     <div className={styles.rentSection}>
       <div className={styles.rentHeader}>
         <h2>Rent by Manufacturers</h2>
-
       </div>
       <div className={styles.brandGrid}>
         {limitedManufacturers.map((manufacturer: any) => (
           <div key={manufacturer.id} className={styles.brandCard}>
-            <img src={manufacturer.imageUrl} alt={manufacturer.name} className={styles.brandLogo} />
+            <img
+              src={manufacturer.imageUrl}
+              alt={manufacturer.name}
+              className={styles.brandLogo}
+            />
             <p>{manufacturer.name}</p>
           </div>
         ))}
       </div>
-      <a href="/user/all-manufacturers" className={styles.viewAll}>View all &rarr;</a>
+      <a href="/user/all-manufacturers" className={styles.viewAll}>
+        View all &rarr;
+      </a>
     </div>
   );
 };

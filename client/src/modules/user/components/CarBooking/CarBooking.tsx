@@ -37,13 +37,13 @@ const CarBooking: React.FC<CarBookingProps> = ({ carId }) => {
           onPrevImage={() => setCurrentImageIndex(Math.max(0, currentImageIndex - 1))}
           onNextImage={() => setCurrentImageIndex(currentImageIndex + 1)}
           onImageClick={(index) => setCurrentImageIndex(index)}
+          onRentClick={() => setIsBookingSectionVisible(true)}
+          showBookingButton={!!searchParams.get('pickupDate') && !!searchParams.get('dropoffDate')}
         />
 
         <div className={styles.rightSection}>
           <CarDetails
             car={car}
-            onRentClick={() => setIsBookingSectionVisible(true)}
-            showBookingButton={!!searchParams.get('pickupDate') && !!searchParams.get('dropoffDate')}
           />
           <ReviewSection reviews={reviews} />
         </div>
