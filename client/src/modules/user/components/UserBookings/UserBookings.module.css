@@ -21,8 +21,8 @@
   
   .tabButton {
     background-color: transparent;
-    border: 1px solid #1890ff; /* Ant Design primary color */
-    color: #1890ff;
+    border: 1px solid #000000; /* Ant Design primary color */
+    color: #000000;
     padding: 10px 20px;
     margin-right: 10px;
     margin-bottom: 10px; /* Space between wrapped buttons */

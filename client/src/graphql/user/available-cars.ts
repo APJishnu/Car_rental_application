@@ -4,6 +4,7 @@ export const GET_AVAILABLE_VEHICLES = gql`
   query GetAvailableVehicles(
     $pickupDate: String!
     $dropoffDate: String!
+    $inventoryId: ID
     $query: String
     $transmission: [String]
     $fuelType: [String]
@@ -14,6 +15,7 @@ export const GET_AVAILABLE_VEHICLES = gql`
     getAvailableVehicles(
       pickupDate: $pickupDate
       dropoffDate: $dropoffDate
+      inventoryId: $inventoryId
       query: $query
       transmission: $transmission
       fuelType: $fuelType
@@ -29,6 +31,7 @@ export const GET_AVAILABLE_VEHICLES = gql`
         vehicleId
         pricePerDay
         availableQuantity
+        inventoryId
         vehicle {
           id
           name

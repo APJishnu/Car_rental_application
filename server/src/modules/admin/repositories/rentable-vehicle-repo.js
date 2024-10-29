@@ -70,7 +70,6 @@ class RentableRepo {
       }
     
     } catch (error) {
-      console.error('Error finding vehicle:', error);
       throw new Error('Failed to find vehicle');
     }
   }

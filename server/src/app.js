@@ -42,7 +42,6 @@ const server = new ApolloServer({
 
 
   formatError: (err) => {
-    console.log("error in formatError");
 
     if (err) {
       console.log(err)

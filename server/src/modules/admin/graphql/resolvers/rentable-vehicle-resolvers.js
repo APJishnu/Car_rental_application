@@ -20,13 +20,29 @@ const RentableResolvers = {
   },
 
   Mutation: {
-    addRentable: async (_, { vehicleId, pricePerDay, availableQuantity }) => {
+    addRentable: async (_, { vehicleId, pricePerDay, availableQuantity, inventoryId }) => {
       try {
-        return await RentableVehicleHelper.addRentable({ vehicleId, pricePerDay, availableQuantity });
+        // Call the helper method to add the rentable vehicle
+        const response = await RentableVehicleHelper.addRentable({ 
+          vehicleId, 
+          pricePerDay, 
+          availableQuantity, 
+          inventoryId
+        });
+        // Check the response and throw an error if status is false
+        if (!response.status) {
+          throw new ApolloError(response.message, response.statusCode);
+        }
+    
+        // If successful, return the response data
+        return response;
       } catch (error) {
+        // Handle any unexpected errors
         throw new ApolloError(error.message || 'Error adding rentable vehicle', 'ADD_RENTABLE_ERROR');
       }
     },
+
+
     deleteRentableVehicle: async (_, { id }) => {
       try {
         const result = await RentableVehicleHelper.deleteRentableVehicle(id);
@@ -38,7 +54,6 @@ const RentableResolvers = {
           data: result.data                     // The actual data being returned (if applicable)
         };
       } catch (error) {
-        console.error('Error in deleteRentableVehicle resolver:', error);
         throw new ApolloError('Failed to delete vehicle: ' + error.message, 'DELETE_VEHICLE_ERROR');
       }
     }

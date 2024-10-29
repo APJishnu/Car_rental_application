@@ -2,35 +2,34 @@ import BookingsRepo from "../repositories/bookings-repo.js";
 
 class BookingsHelper {
   // New method to fetch all bookings for the admin
-  static async getAllBookings() {
+  static async getAllBookings(inventoryId) {
     try {
-      const bookings = await BookingsRepo.fetchAllBookings(); // Fetch all bookings
+        const bookings = await BookingsRepo.fetchAllBookings(inventoryId); // Pass inventoryLocation to repo
 
-      if (!bookings || bookings.length === 0) {
+        if (!bookings || bookings.length === 0) {
+            return {
+                status: true,
+                statusCode: 200,
+                message: "No bookings found.",
+                data: [],
+            };
+        }
+
         return {
-          status: true,
-          statusCode: 200,
-          message: "No bookings found.",
-          data: [],
+            status: true,
+            statusCode: 200,
+            message: "All bookings fetched successfully.",
+            data: bookings,
         };
-      }
-
-      return {
-        status: true,
-        statusCode: 200,
-        message: "All bookings fetched successfully.",
-        data: bookings,
-      };
     } catch (error) {
-      console.error("Error in BookingHelper:", error);
-      return {
-        status: false,
-        statusCode: 500,
-        message: "Failed to fetch all bookings.",
-        data: [],
-      };
+        return {
+            status: false,
+            statusCode: 500,
+            message: "Failed to fetch all bookings.",
+            data: [],
+        };
     }
-  }
+}
 
   static async releaseBooking(bookingId) {
     try {
@@ -59,7 +58,6 @@ class BookingsHelper {
         updatedBooking,
       };
     } catch (error) {
-      console.error(error);
       return {
         status: false,
         statusCode: 500,

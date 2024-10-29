@@ -159,11 +159,9 @@ export const useFetchUserData = () => {
         },
       });
 
-      console.log(result.data?.getUser);
 
       return result.data?.getUser || null;
     } catch (err) {
-      console.error("Error fetching user data:", err);
       throw new Error("Could not fetch user data.");
     }
   };
@@ -188,7 +186,6 @@ export const useUpdateProfileImage = () => {
     userId: string;
     profileImage: File | null;
   }) => {
-    console.log("Updating profile image:", profileImage); // Log the profile image to see what is being passed
     return updateProfileImage({
       variables: {
         userId,
@@ -242,11 +239,9 @@ export const useUpdateUserInfo = () => {
           pincode,
         },
       });
-      console.log(response);
 
       return response?.data.updateUserInfo || null;
     } catch (err) {
-      console.error("Error updating user profile:", err);
       throw new Error("Could not update user profile.");
     }
   };
@@ -280,7 +275,6 @@ export const useUpdatePassword = () => {
       });
       return response.data?.updatePassword || null;
     } catch (err) {
-      console.error("Error updating password:", err);
       throw new Error("Could not update password.");
     }
   };

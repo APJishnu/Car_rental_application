@@ -18,7 +18,6 @@ const vehicleResolvers = {
         return await ManufacturerHelper.getManufacturers();
 
       } catch (error) {
-        console.error('Error fetching manufacturers:', error);
         throw new Error('Failed to fetch manufacturers');
       }
     },
@@ -28,10 +27,8 @@ const vehicleResolvers = {
       try {
         const vehicles = await VehicleHelper.getVehicles(); // Create a helper function to fetch vehicles
         const rentedVehicleIds = await  RentableVehicleHelper.getAllRentableVehicles(); // Fetch the rented vehicle IDs
-        console.log("haiii",rentedVehicleIds)
         return vehicles
       } catch (error) {
-        console.error('Error fetching vehicles:', error);
         throw new Error('Failed to fetch vehicles');
       }
     },
@@ -41,7 +38,6 @@ const vehicleResolvers = {
       try {
         return await VehicleHelper.getVehicleById(id); // Fetch vehicle by ID
       } catch (error) {
-        console.error("Error fetching vehicle:", error.message);
         throw new Error("Failed to fetch vehicle");
       }
     },
@@ -71,7 +67,6 @@ const vehicleResolvers = {
 
         return vehicle;
       } catch (error) {
-        console.error('Error in addVehicle mutation:', error.message);
         // Throw the specific error message to the client
         throw new Error(error.message || 'Failed to add vehicle');
       }
@@ -113,7 +108,6 @@ const vehicleResolvers = {
             await VehicleHelper.createVehicle(vehicleData);
             processedVehiclesCount++;
           } catch (error) {
-            console.error('Error adding vehicle:', error.message);
             throw new Error(error.message || 'Failed to add vehicle');
           }
         }
@@ -124,7 +118,6 @@ const vehicleResolvers = {
           message: `Successfully processed ${processedVehiclesCount} vehicles.`,
         };
       } catch (error) {
-        console.error('Error processing Excel file:', error);
         return {
           success: false,
           message: 'Failed to process the Excel file: ' + error.message,
@@ -149,7 +142,6 @@ const vehicleResolvers = {
       const { name, description, quantity, year, primaryImage, otherImages } = input;
 
     
-      console.log("backend input", input)
       try {
         const updatedVehicle = await VehicleHelper.updateVehicle({
           id,

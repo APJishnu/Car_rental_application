@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-express';
+import { gql } from "apollo-server-express";
 
 const RentableTypeDefs = gql`
   scalar Float
@@ -18,7 +18,6 @@ const RentableTypeDefs = gql`
     data: String
   }
 
-
   type Vehicle {
     id: ID!
     name: String!
@@ -35,23 +34,34 @@ const RentableTypeDefs = gql`
     vehicleId: ID!
     pricePerDay: Float!
     availableQuantity: Int!
-    vehicle: Vehicle  # Include vehicle details
+    inventoryId: ID
+    vehicle: Vehicle
   }
 
-
+  type AddRentableResponse {
+    status: Boolean!
+    statusCode: Int!
+    message: String!
+    data: Rentable
+  }
   type RentableResponse {
     status: String!
     statusCode: Int!
     message: String!
     data: [Rentable!]!
   }
-   type Query {
-     getRentableVehicles(query: String): RentableResponse!  
+  type Query {
+    getRentableVehicles(query: String): RentableResponse!
   }
 
-
   type Mutation {
-    addRentable(vehicleId: ID!, pricePerDay: Float!, availableQuantity: Int!): Rentable
+    addRentable(
+      vehicleId: ID!
+      pricePerDay: Float!
+      availableQuantity: Int!
+      inventoryId: ID!
+    ): AddRentableResponse
+
     deleteRentableVehicle(id: ID!): DeleteStatus
   }
 `;

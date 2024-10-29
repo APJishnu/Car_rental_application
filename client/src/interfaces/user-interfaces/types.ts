@@ -64,6 +64,7 @@ export type RatingDistribution = {
 
 
 export interface RentableVehicle {
+  id: string;
   vehicleId: string;
   pricePerDay: string;
   availableQuantity: number;

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { useQuery, gql, useMutation, useApolloClient } from "@apollo/client";
-import { Card, Typography, Spin, Button, Empty, message, Tooltip } from "antd";
+import { gql, useApolloClient } from "@apollo/client";
+import { Card, Typography, Spin, Button, Empty, Tooltip } from "antd";
 import {
   DeleteOutlined,
   SearchOutlined,
@@ -137,7 +137,6 @@ const RentableVehiclesList: React.FC = () => {
         throw new Error(`(${statusCode}) ${fetchMessage}`);
       }
     } catch (err) {
-      console.error(err);
       Swal.fire({
         title: "Error!",
         text: "Error fetching vehicles. Please try again later.",

@@ -4,45 +4,40 @@ import BookingsHelper from "../../helpers/bookings-helper.js";
 const BookingsResolvers = {
   Query: {
     // New resolver for fetching all bookings (Admin only)
-    fetchAllBookings: async (_, __, { token }) => {
-
-        
-        console.log(token)
-        const decodedToken = verifyToken(token.replace('Bearer ', ''));
-        console.log(decodedToken)
-        try {
-        if (!token) {
+    fetchAllBookings: async (_, { inventoryId }, { token }) => {
+      
+      if (!token) {
           return {
-            status: false,
-            statusCode: 401,
-            message: "Authorization token is missing.",
-            data: [],
+              status: false,
+              statusCode: 401,
+              message: "Authorization token is missing.",
+              data: [],
           };
-        }
-
-        const decodedToken = verifyToken(token.replace('Bearer ', ''));
-
-        // Assuming that admin's role is verified via token
-        if (decodedToken.role !== "admin") {
-          return {
-            status: false,
-            statusCode: 403,
-            message: "You are not authorized to view all bookings.",
-            data: [],
-          };
-        }
-
-        return await BookingsHelper.getAllBookings(); // Fetch all bookings for admin
-      } catch (error) {
-        console.error("Error fetching all bookings:", error);
-        return {
-          status: false,
-          statusCode: 500,
-          message: "Failed to fetch all bookings.",
-          data: [],
-        };
       }
-    },
+  
+      try {
+          const decodedToken = verifyToken(token.replace('Bearer ', ''));
+  
+          // Check if the user is an admin
+          if (decodedToken.role !== "admin") {
+              return {
+                  status: false,
+                  statusCode: 403,
+                  message: "You are not authorized to view all bookings.",
+                  data: [],
+              };
+          }
+  
+          return await BookingsHelper.getAllBookings(inventoryId); // Pass inventoryLocation to helper
+      } catch (error) {
+          return {
+              status: false,
+              statusCode: 500,
+              message: "Failed to fetch all bookings.",
+              data: [],
+          };
+      }
+  }
   },
 
   Mutation: {
@@ -55,7 +50,6 @@ const BookingsResolvers = {
         // Return the result from the helper
         return result;
       } catch (error) {
-        console.error(error);
         return {
           status: false,
           statusCode: 500,

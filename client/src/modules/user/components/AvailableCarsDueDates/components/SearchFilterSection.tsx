@@ -1,4 +1,3 @@
-// components/SearchFilterSection/SearchFilterSection.tsx
 import React, { useEffect, useState } from "react";
 import { Input, Checkbox, Button, Slider } from "antd";
 import {
@@ -42,41 +41,51 @@ const SearchFilterSection: React.FC<SearchFilterProps> = ({
   onSearch,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [currentSort, setCurrentSort] = useState<"asc" | "desc" | undefined>(
-    undefined
-  );
-  const [localPriceRange, setLocalPriceRange] = useState<[number, number]>([
-    500, 10000,
-  ]); // Local state for price range
+  const [currentSort, setCurrentSort] = useState<"asc" | "desc" | undefined>(undefined);
+  const [currentPriceRange, setCurrentPriceRange] = useState<[number, number]>([500, 10000]);
+  const [debounceTimer, setDebounceTimer] = useState<NodeJS.Timeout | null>(null);
+
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 0); // Check if scrolled down
+      setIsScrolled(window.scrollY > 0);
     };
 
     window.addEventListener("scroll", handleScroll);
     return () => {
       window.removeEventListener("scroll", handleScroll);
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
     };
-  }, []);
+  }, [debounceTimer]);
 
   const handleSortChange = (value: "asc" | "desc") => {
     setCurrentSort(value);
-    handlePriceSortChange(value); // Pass the value to the parent component
+    handlePriceSortChange(value);
   };
 
-  const handlePriceSliderChange = (value: [number, number]) => {
-    setLocalPriceRange(value); // Update local price range
-  };
+  // Handle price range changes with debouncing
+  const handlePriceChange = (value: number[]) => {
+    // Ensure the value is treated as a tuple of two numbers
+    const priceRange: [number, number] = [value[0], value[1]];
+    setCurrentPriceRange(priceRange);
 
-  const handleApplyPriceRange = () => {
-    handlePriceRangeChange(localPriceRange); // Call parent handler only when user wants to apply
+    // Clear any existing timer
+    if (debounceTimer) {
+      clearTimeout(debounceTimer);
+    }
+
+    // Set a new timer to update the price range after a short delay
+    const timer = setTimeout(() => {
+      handlePriceRangeChange(priceRange);
+    }, 300);
+
+    setDebounceTimer(timer);
   };
 
   return (
     <>
-      <div
-        className={`${styles.filterPanel} ${isFilterOpen ? styles.filterPanelOpen : ""}`}
-      >
+      <div className={`${styles.filterPanel} ${isFilterOpen ? styles.filterPanelOpen : ""}`}>
         {isFilterOpen && (
           <Button
             className={styles.filterButtonPhone}
@@ -91,7 +100,7 @@ const SearchFilterSection: React.FC<SearchFilterProps> = ({
           <div className={styles.filterGroup}>
             <p>Fuel Type</p>
             <Checkbox.Group
-             className={styles.checkboxGroup} // Add this line
+              className={styles.checkboxGroup}
               options={[
                 { label: "Petrol", value: "petrol" },
                 { label: "Diesel", value: "diesel" },
@@ -105,7 +114,7 @@ const SearchFilterSection: React.FC<SearchFilterProps> = ({
           <div className={styles.filterGroup}>
             <p>Seats</p>
             <Checkbox.Group
-            className={styles.checkboxGroup} // Add this line
+              className={styles.checkboxGroup}
               options={[
                 { label: "4 Seats", value: 4 },
                 { label: "5 Seats", value: 5 },
@@ -120,7 +129,7 @@ const SearchFilterSection: React.FC<SearchFilterProps> = ({
           <div className={styles.filterGroup}>
             <p>Transmission</p>
             <Checkbox.Group
-            className={styles.checkboxGroup} // Add this line
+              className={styles.checkboxGroup}
               options={[
                 { label: "Automatic", value: "automatic" },
                 { label: "Manual", value: "manual" },
@@ -130,23 +139,19 @@ const SearchFilterSection: React.FC<SearchFilterProps> = ({
             />
           </div>
 
-          {/* Price Range Slider */}
+          {/* Price Range Slider with continuous updates */}
           <div className={styles.filterGroup}>
             <p>Price Range (per day)</p>
             <Slider
               range
-              min={100} // Set your minimum price range here
-              max={10000} // Set your maximum price range here
+              min={100}
+              max={10000}
               step={100}
-              value={localPriceRange}
-              onChange={
-                handlePriceSliderChange as (value: number | number[]) => void
-              } // Ensure proper typing
-              onAfterChange={handleApplyPriceRange} // Apply changes when user stops dragging the slider
+              value={currentPriceRange}
+              onChange={handlePriceChange}
             />
             <div className={styles.priceRangeDisplay}>
-              <span>{`₹${localPriceRange[0]}`}</span> -{" "}
-              <span>{`₹${localPriceRange[1]}`}</span>
+              <span>₹{currentPriceRange[0]}</span> - <span>₹{currentPriceRange[1]}</span>
             </div>
           </div>
 

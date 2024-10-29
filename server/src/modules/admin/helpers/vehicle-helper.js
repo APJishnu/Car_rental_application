@@ -32,7 +32,6 @@ class VehicleHelper {
 
       return vehicle;
     } catch (error) {
-      console.error('Error adding vehicle:', error.message);
       // Propagate specific errors for the front-end to handle
       throw new Error(error.message || 'Failed to add vehicle');
     }
@@ -64,7 +63,6 @@ class VehicleHelper {
 
       return imageUrl;
     } catch (error) {
-      console.error('Error uploading image:', error.message);
       throw new Error('Image upload failed');
     }
   }
@@ -74,7 +72,6 @@ class VehicleHelper {
     try {
       return await VehicleRepository.getAllVehicles();  // Fetch all vehicles from the database
     } catch (error) {
-      console.error('Error fetching vehicles:', error.message);
       throw new Error('Failed to fetch vehicles');
     }
   }
@@ -86,7 +83,6 @@ class VehicleHelper {
 
       const filePath = imageUrl.replace(`http://localhost:9000/${process.env.MINIO_BUCKET_NAME}/`, '');
 
-      console.log("minio extrated file path", filePath)
 
       await new Promise((resolve, reject) => {
         minioClient.removeObject(process.env.MINIO_BUCKET_NAME, filePath, (error) => {
@@ -96,9 +92,7 @@ class VehicleHelper {
           resolve();
         });
       });
-      console.log(`Image deleted successfully: ${filePath}`);
     } catch (error) {
-      console.error('Error deleting image from MinIO:', error.message);
       throw new Error('Failed to delete image from MinIO');
     }
   }
@@ -121,7 +115,6 @@ class VehicleHelper {
 
       return deletedVehicle;
     } catch (error) {
-      console.error('Error deleting vehicle:', error.message);
       throw new Error(error.message || 'Failed to delete vehicle');
     }
   }
@@ -133,13 +126,11 @@ class VehicleHelper {
       const vehicle = await VehicleRepository.getVehicleById(id);
       return vehicle; // Return the deleted vehicle
     } catch (error) {
-      console.error('Error getting vehicle:', error.message);
       throw new Error(error.message || 'Failed to get vehicle');
     }
   }
 
   static async updateVehicle({ id, name, description, primaryImage, otherImages, quantity, year }) {
-    console.log(primaryImage,otherImages)
     try {
       
       const vehicle = await VehicleRepository.getVehicleById(id);
@@ -161,7 +152,6 @@ class VehicleHelper {
       // Handle other images upload if new images are provided
       if (otherImages && otherImages.length > 0 &&!allNull) {
 
-        console.log("hai")
         otherImageUrls = await Promise.all(
           otherImages.map((image) => this.uploadToMinio(image, `vehicle/${name}/other`))
         );

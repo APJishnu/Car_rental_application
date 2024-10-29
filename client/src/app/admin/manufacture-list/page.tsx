@@ -6,7 +6,7 @@ import Manufacturer from '../../../modules/admin/components/ManuFacturerList/Man
 
 const ManufactureList: React.FC = () => {
   return (
-    <div style={{ padding: '60px 60px' }}>
+    <div style={{ padding: '20px 10px' }}>
       <Manufacturer /> {/* Call the Manufacturer component here */}
     </div>
   );

@@ -21,7 +21,6 @@ class VehicleRepository {
         otherImageUrls: vehicle.otherImageUrls,
       };
     } catch (error) {
-      console.error('Error creating vehicle:', error);
       throw new Error('Failed to create vehicle');
     }
   }
@@ -40,7 +39,6 @@ class VehicleRepository {
 
       return vehicle;
     } catch (error) {
-      console.error('Error finding vehicle:', error);
       throw new Error('Failed to find vehicle');
     }
   }
@@ -51,7 +49,6 @@ class VehicleRepository {
       const vehicles = await Vehicle.findAll();  // Fetch all vehicle data
       return vehicles;
     } catch (error) {
-      console.error('Error fetching vehicles:', error);
       throw new Error('Failed to fetch vehicles');
     }
   }
@@ -78,7 +75,6 @@ class VehicleRepository {
 
         return { id }; // Optionally return the ID of the deleted vehicle
     } catch (error) {
-        console.error('Error deleting vehicle and associated rentables:', error);
         throw new Error('Failed to delete vehicle and associated rentables');
     }
 }
@@ -113,14 +109,11 @@ class VehicleRepository {
  static async updateVehicleStatus(vehicleId, isRented) {
     try {
       const vehicle = await Vehicle.findByPk(vehicleId);
-      console.log(vehicle, "in update status")
       const statusUpdatedVehicle =await vehicle.update({
         isRented:isRented
       });
 
-      console.log("updated successfull",statusUpdatedVehicle)
     } catch (error) {
-      console.error("Error updating vehicle status:", error);
       throw new Error("Failed to update vehicle status");
     }
   }

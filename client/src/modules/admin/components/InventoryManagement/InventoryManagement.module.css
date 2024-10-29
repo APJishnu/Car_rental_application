@@ -1,0 +1,138 @@
+/* Overall Container */
+.inventoryManagement {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
+/* Header Styling */
+.inventoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.inventoryHeader h2 {
+  font-size: 26px;
+  color: #2a3a52;
+  font-weight: bold;
+}
+
+/* Button for Adding Inventory */
+.inventoryHeader button {
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 16px;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.inventoryHeader button:hover {
+  background-color: #40a9ff;
+}
+
+/* Form Styling */
+.inventoryForm {
+  padding: 20px;
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.inventoryForm .formInput {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #d1d1d1;
+  margin-bottom: 15px;
+}
+
+.formSelect{
+  height: 45px;
+}
+
+.submitButton {
+  background-color: #0077b6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-size: 16px;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #0096c7;
+}
+
+/* Inventory List Styling */
+.inventoryDetails {
+  margin-top: 30px;
+}
+
+.inventoryDetails h3 {
+  font-size: 22px;
+  color: #333;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+
+/* List Items */
+.inventoryItem {
+  padding: 25px 20px !important;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  background-color: #fff;
+  transition: box-shadow 0.3s, background-color 0.3s;
+  display: flex;
+  justify-content: space-between;
+}
+
+.inventoryItem:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #f4faff;
+}
+
+.inventoryItem strong {
+  font-size: 16px;
+  color: #2a3a52;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .inventoryManagement {
+    padding: 15px;
+  }
+
+  .inventoryHeader h2 {
+    font-size: 22px;
+  }
+
+  .inventoryHeader button {
+    font-size: 14px;
+    padding: 6px 12px;
+  }
+
+  .inventoryForm .formInput,
+  .submitButton {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .inventoryItem {
+    padding: 10px 15px;
+    font-size: 14px;
+  }
+
+  .inventoryDetails h3 {
+    font-size: 18px;
+  }
+}

@@ -1,43 +1,48 @@
-"use client"
+"use client";
 
 // Dashboard.tsx
 import React, { useEffect, useState } from "react";
 import { useLazyQuery, useMutation } from "@apollo/client";
-import { Spin, Alert, DatePicker, Modal } from "antd";
+import { Spin, Alert, DatePicker, Modal, Select } from "antd";
 import Cookies from "js-cookie";
 import dayjs, { Dayjs } from "dayjs";
 import isBetween from "dayjs/plugin/isBetween";
 import { PaymentMethodChart } from "./PaymentMethodChart";
 import { RevenueChart } from "./RevenueChart";
 import { BookingList } from "./BookingList";
-import { FETCH_ALL_BOOKINGS, RELEASE_BOOKING } from "../../../../graphql/admin-mutations/admin-dashborad";
-import { Booking } from "../../../../interfaces/admin/admin-dashboard";
-import styles from './Dashboard.module.css'
-
 import {
-    PieChart,
-    Pie,
-    Cell,
-    LabelList,
-    ResponsiveContainer,
-    
-  } from "recharts";
+  FETCH_ALL_BOOKINGS,
+  RELEASE_BOOKING,
+  FETCH_ALL_INVENTORIES,
+} from "../../../../graphql/admin-mutations/admin-dashborad";
+import { Booking } from "../../../../interfaces/admin/admin-dashboard";
+import styles from "./Dashboard.module.css";
+
+import { PieChart, Pie, Cell, LabelList, ResponsiveContainer } from "recharts";
 
 // Extend dayjs with the isBetween plugin
 dayjs.extend(isBetween);
 
 const Dashboard: React.FC = () => {
-  // Get admin token from cookies
   const token = Cookies.get("adminToken");
 
+  const { Option } = Select;
+
   // Apollo hooks
-  const [fetchBookings, { loading, data, error }] = useLazyQuery(FETCH_ALL_BOOKINGS);
+  const [fetchBookings, { loading, data, error }] =
+    useLazyQuery(FETCH_ALL_BOOKINGS);
   const [releaseBooking] = useMutation(RELEASE_BOOKING);
+  const [fetchInventories, { data: inventoryData }] = useLazyQuery(
+    FETCH_ALL_INVENTORIES
+  );
 
   // State management
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [showAll, setShowAll] = useState(false);
   const [filteredData, setFilteredData] = useState<Booking[]>([]);
+  const [selectedInventoryId, setSelectedInventoryId] = useState<
+    string | undefined
+  >(undefined);
 
   // Date range state
   const today = dayjs();
@@ -47,10 +52,21 @@ const Dashboard: React.FC = () => {
     today,
   ]);
 
+  useEffect(() => {
+    fetchInventories({
+      context: {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    });
+  }, [token]);
+
   // Fetch bookings on component mount
   useEffect(() => {
     if (token) {
       fetchBookings({
+        variables: { inventoryId: selectedInventoryId }, // Change to use inventoryId
         context: {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,7 +74,7 @@ const Dashboard: React.FC = () => {
         },
       });
     }
-  }, [token, fetchBookings]);
+  }, [token, selectedInventoryId, fetchBookings]);
 
   // Update bookings when data changes
   useEffect(() => {
@@ -66,10 +82,20 @@ const Dashboard: React.FC = () => {
       const { status, data: fetchedBookings } = data.fetchAllBookings;
       if (status) {
         setBookings(fetchedBookings);
-        setFilteredData(fetchedBookings);
+
+        // Adjust the filtering logic to use inventoryId
+        const filtered =
+          selectedInventoryId && selectedInventoryId !== "All"
+            ? fetchedBookings.filter(
+                (booking: any) =>
+                  booking.rentable?.inventoryId === selectedInventoryId // Filter based on inventoryId
+              )
+            : fetchedBookings;
+
+        setFilteredData(filtered);
       }
     }
-  }, [data]);
+  }, [data, selectedInventoryId]);
 
   // Handle date range change
   const handleDateChange = (dates: [Dayjs | null, Dayjs | null] | null) => {
@@ -91,10 +117,24 @@ const Dashboard: React.FC = () => {
 
       setFilteredData(filtered);
     } else {
-      // Reset to last 7 days if no date is selected
       setDateRange([lastWeek, today]);
       setFilteredData(bookings);
     }
+  };
+
+  // Handle location change
+
+  const handleLocationChange = (value: string) => {
+    const inventoryId = value === "All" ? undefined : value; // Set undefined for "All" to fetch all inventories
+    setSelectedInventoryId(inventoryId);
+    fetchBookings({
+      variables: { inventoryId }, // Pass `undefined` to fetch all
+      context: {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    });
   };
 
   // Handle booking release
@@ -114,8 +154,13 @@ const Dashboard: React.FC = () => {
           content: "Booking released successfully!",
         });
 
-        // Refresh bookings after releasing
+        // Re-fetch bookings after release
+        const variables =
+          selectedInventoryId !== "All"
+            ? { inventoryId: selectedInventoryId }
+            : {};
         fetchBookings({
+          variables,
           context: {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -208,7 +253,6 @@ const Dashboard: React.FC = () => {
     {}
   );
 
-
   const manufacturerChartData = Object.entries(manufacturerData).map(
     ([name, value]) => ({
       name,
@@ -227,13 +271,12 @@ const Dashboard: React.FC = () => {
   );
 
   const vehicleRevenueChartData = Object.entries(vehicleRevenueData)
-  .map(([name, value]) => ({
-    name,
-    value: Number(value.toFixed(2)),
-  }))
-  .sort((a, b) => b.value - a.value)
-  .slice(0, 5);
-
+    .map(([name, value]) => ({
+      name,
+      value: Number(value.toFixed(2)),
+    }))
+    .sort((a, b) => b.value - a.value)
+    .slice(0, 5);
 
   const SECONDCOLORS = ["#7B68EE", "#ADD8E6", "#4B0082", "#5F9EA0", "#00CED1"];
 
@@ -241,25 +284,40 @@ const Dashboard: React.FC = () => {
     <div className={styles.dashboard}>
       <div className={styles.dashboardHeader}>
         <h2>ADMIN DASHBOARD</h2>
-        <DatePicker.RangePicker 
-          value={dateRange} 
-          onChange={handleDateChange}
-          className={styles.datePicker} 
-        />
+        <div className={styles.dashBoardHeadingDiv}>
+          <Select
+            defaultValue="All"
+            onChange={handleLocationChange}
+            className={styles.selectOption}
+          >
+            <Option value="">All</Option>
+            {inventoryData?.fetchAllInventories.data.map((inventory: any) => (
+              <Option key={inventory.id} value={inventory.id}>
+                {inventory.name} - {inventory.location}
+              </Option>
+            ))}
+          </Select>
+
+          <DatePicker.RangePicker
+            value={dateRange}
+            onChange={handleDateChange}
+            className={styles.datePicker}
+          />
+        </div>
       </div>
 
-     <div className={styles.dashboardOverflowDiv}>
-     <div className={styles.chartsDiv}>
+      <div className={styles.dashboardOverflowDiv}>
+        <div className={styles.chartsDiv}>
           <PaymentMethodChart bookings={bookings} />
-         
-          <RevenueChart 
+
+          <RevenueChart
             bookings={bookings}
             dateRange={dateRange}
             generateRevenueData={generateRevenueData}
           />
         </div>
-        
-           <div className={styles.secondChartsDiv}>
+
+        <div className={styles.secondChartsDiv}>
           {/* New Manufacturer Distribution Chart */}
           <div className={styles.chartSection3}>
             <h3>Manufacturer Booking Distribution</h3>
@@ -275,7 +333,7 @@ const Dashboard: React.FC = () => {
                   innerRadius={30}
                 >
                   <LabelList
-                    className={styles.lablePie}
+                    className={styles.labelPie}
                     dataKey="name"
                     position="outside"
                     fontSize={10}
@@ -307,7 +365,7 @@ const Dashboard: React.FC = () => {
                   innerRadius={40}
                 >
                   <LabelList
-                    className={styles.lablePie}
+                    className={styles.labelPie}
                     dataKey="name"
                     position="outside"
                     fontSize={10}
@@ -335,6 +393,5 @@ const Dashboard: React.FC = () => {
     </div>
   );
 };
-
 
 export default Dashboard;

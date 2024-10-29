@@ -1,4 +1,13 @@
 // types.ts
+
+
+
+export interface Inventory {
+  id: string;
+  name: string;
+  location: string;
+}
+
 export interface Manufacturer {
     id: string;
     name: string;
@@ -27,7 +36,7 @@ export interface Manufacturer {
   
   export interface Booking {
     id: string;
-    vehicleId: string;
+    rentableId: string;
     userId: string;
     pickupDate: string;
     dropoffDate: string;

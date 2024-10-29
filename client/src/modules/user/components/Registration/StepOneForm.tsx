@@ -50,7 +50,6 @@ export const StepOneForm: React.FC<StepOneFormProps> = ({ next, setFormData }) =
         handleErrors(data.sendOTP.errors, form);
       }
     } catch (error) {
-      console.error("An unexpected error occurred:", error);
       message.error("An unexpected error occurred. Please try again later.");
     }
   };

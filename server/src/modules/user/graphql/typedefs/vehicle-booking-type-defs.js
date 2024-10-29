@@ -29,13 +29,14 @@ const VehicleBookingTypeDefs = gql`
     vehicleId: ID!
     pricePerDay: Float!
     availableQuantity: Int!
+    inventoryId:ID
     vehicle: Vehicle!
   }
 
-  # Booking Details Type
+
   type Booking {
     id: ID!
-    vehicleId: ID!
+    rentableId: ID!
     userId: ID!
     pickupDate: String!
     dropoffDate: String!
@@ -46,7 +47,7 @@ const VehicleBookingTypeDefs = gql`
   }
 
   input CreateBookingInput {
-    vehicleId: ID!
+    rentableId: ID!
     pickupDate: String!
     dropoffDate: String!
     totalPrice: Float!
@@ -74,7 +75,7 @@ const VehicleBookingTypeDefs = gql`
 
   type GetBooking {
     id: ID!
-    vehicleId: Int!
+    rentableId: ID!
     userId: Int!
     pickupDate: String!
     dropoffDate: String!
@@ -135,6 +136,7 @@ const VehicleBookingTypeDefs = gql`
     getAvailableVehicles(
     pickupDate: String!
     dropoffDate: String!
+    inventoryId: ID  
     query: String
     transmission: [String]         
     fuelType: [String]             
@@ -147,7 +149,6 @@ const VehicleBookingTypeDefs = gql`
     fetchReviews(vehicleId: ID!): [Review!]!
   }
 
-  # Mutation for creating a Razorpay payment order and verifying payment + booking creation
   type Mutation {
     createPaymentOrder(
       totalPrice: Float!

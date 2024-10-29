@@ -1,7 +1,6 @@
 // src/graphql/resolvers.js
 import authHelper from "../../helpers/auth-helper.js";
-import User from "../../models/auth-model.js";
-import { verifyToken } from "../../../../utils/jwt-helper.js";
+import authenticateUser from "../../middlewares/auth-middleware.js";
 import { GraphQLUpload } from "graphql-upload";
 import {
   additionalDetailsSchema,
@@ -17,39 +16,32 @@ const userAuthResolvers = {
 
   Query: {
     getUser: async (_, __, { token }) => {
-      if (!token) {
-        throw new Error("Authorization token is missing");
-      }
+      try {
+        const user = await authenticateUser(token);
 
-      const decodedToken = verifyToken(token.replace("Bearer ", "")); // Strip "Bearer "
-      const user = await User.findByPk(decodedToken.id);
-
-      console.log(decodedToken);
-
-      if (!user) {
+        return {
+          status: "success",
+          message: "User fetched successfully",
+          data: {
+            id: user.id,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            phoneNumber: user.phoneNumber,
+            email: user.email,
+            city: user.city,
+            state: user.state,
+            country: user.country,
+            pincode: user.pincode,
+            profileImage: user.profileImage || null, // Include profileImage if available
+          },
+        };
+      } catch (error) {
         return {
           status: "error",
-          message: "User not found",
+          message: error.message,
           data: null,
         };
       }
-
-      return {
-        status: "success",
-        message: "User fetched successfully",
-        data: {
-          id: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-          phoneNumber: user.phoneNumber,
-          email: user.email,
-          city: user.city,
-          state: user.state,
-          country: user.country,
-          pincode: user.pincode,
-          profileImage: user.profileImage || null, // Include profileImage if available
-        },
-      };
     },
   },
 
@@ -96,8 +88,6 @@ const userAuthResolvers = {
             }))
           : [];
 
-        console.log(validationErrors); // For debugging purposes
-
         // If there are validation errors, return them
         if (validationErrors.length > 0) {
           return {
@@ -112,7 +102,6 @@ const userAuthResolvers = {
         const response = await authHelper.sendOTP(phoneNumber);
         return { ...response, data: null };
       } catch (error) {
-        console.error("Error in sendOTP:", error); // Log the error for debugging
         return {
           status: "error",
           message: "An unexpected error occurred while sending OTP.",
@@ -123,8 +112,6 @@ const userAuthResolvers = {
     },
 
     async registerUser(_, { input }) {
-      console.log("hai", input);
-
       // Validate additional details using Joi
       const validationResult = additionalDetailsSchema.validate(
         input.additionalDetails,
@@ -165,7 +152,6 @@ const userAuthResolvers = {
           message: removeQuotes(error.message), // Custom message defined in the Joi schema
         }));
 
-        console.log(errors);
         return {
           status: "error",
           statusCode: 400,
@@ -175,14 +161,11 @@ const userAuthResolvers = {
       }
 
       const response = await authHelper.verifyOTP(phoneNumber, otp);
-      console.log(response);
       return response;
     },
 
     // User login resolver
     async loginUser(_, { email, password }) {
-      console.log(email);
-
       // Validate input
       const { error, value } = loginSchema.validate(
         { email, password },
@@ -197,8 +180,6 @@ const userAuthResolvers = {
           const fieldName = curr.path[0];
           fieldErrors[fieldName] = curr.message;
         });
-
-        console.log("fieldErrors", fieldErrors); // Log field errors for debugging
 
         return {
           status: false,
@@ -216,8 +197,6 @@ const userAuthResolvers = {
     },
 
     async updateProfileImage(_, { userId, profileImage }) {
-      console.log(profileImage, "file in update profile");
-
       try {
         const result = await authHelper.updateUserProfileImage(
           userId,
@@ -225,7 +204,6 @@ const userAuthResolvers = {
         );
         return result; // The result will contain status, message, and data
       } catch (error) {
-        console.error("Error updating profile image:", error.message);
         return {
           status: "error",
           message: "Failed to update profile image",
@@ -245,7 +223,6 @@ const userAuthResolvers = {
           message: err.message,
         }));
 
-        console.log(fieldErrors);
         return {
           status: false,
           statusCode: 400,
@@ -269,7 +246,6 @@ const userAuthResolvers = {
           message: err.message,
         }));
 
-        console.log(fieldErrors)
         return {
           status: false,
           statusCode: 400,

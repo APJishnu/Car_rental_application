@@ -48,9 +48,7 @@ const createSchema = async () => {
 
   try {
     await typesense.collections().create(schema);
-    console.log("Schema created successfully");
   } catch (error) {
-    console.error("Error creating schema:", error);
   }
 };
 
@@ -76,9 +74,7 @@ const addVehicleToTypesense = async (vehicle) => {
 
   try {
     await typesense.collections("cars").documents().upsert(document); // Upsert to handle adding or updating
-    console.log("Vehicle added to Typesense successfully!");
   } catch (error) {
-    console.error("Error adding vehicle to Typesense:", error);
   }
 };
 
@@ -86,9 +82,7 @@ const addVehicleToTypesense = async (vehicle) => {
 const deleteVehicleFromTypesense = async (id) => {
   try {
     await typesense.collections("cars").documents(id).delete(); // Delete document from Typesense using the vehicle ID
-    console.log(`Vehicle with ID ${id} deleted from Typesense successfully.`);
   } catch (error) {
-    console.error(`Error deleting vehicle from Typesense: ${error.message}`);
   }
 };
 

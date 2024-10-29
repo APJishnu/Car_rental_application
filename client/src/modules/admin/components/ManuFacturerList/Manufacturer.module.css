@@ -1,0 +1,105 @@
+/* Container Styling */
+.container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .manufactureHeadingDiv{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+  }
+
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  /* Table Styling */
+  .table {
+    max-height: 78vh;
+    scroll-behavior: smooth;
+    overflow-x: auto; /* Enable horizontal scroll on smaller screens */
+  }
+  
+  .imageColumn img {
+    max-width: 80px;
+    height: auto;
+    border-radius: 5px;
+  }
+  
+  .actionsColumn {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  /* Responsive Button Styling */
+  .buttonGroup {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+  }
+  
+  /* Add Manufacturer Button */
+  .addButton {
+    padding: 0px 20px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 250px;
+  }
+  
+  /* Modal Styling */
+  .modal {
+    max-width: 90%;
+    width: 100%;
+  }
+  
+  .modalHeader {
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  
+  /* Responsive Typography */
+  @media (max-width: 768px) {
+   
+    .title {
+      font-size: 1.1rem;
+    }
+  
+    .imageColumn img {
+      max-width: 50px;
+    }
+  
+    .addButton {
+      font-size: 0.9rem;
+      max-width: 150px;
+    }
+    .table{
+        max-height: 70vh;
+    }
+  }
+  
+  /* Responsive Typography */
+  @media (max-width: 768px) {
+   
+    .title {
+      font-size: 0.8rem;
+    }
+  
+    .imageColumn img {
+      max-width: 50px;
+    }
+  
+    .addButton {
+      font-size: 0.9rem;
+      max-width: 150px;
+    }
+    .table{
+        max-height: 65vh;
+    }
+  }
+  

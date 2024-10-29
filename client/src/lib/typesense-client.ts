@@ -24,7 +24,6 @@ export const searchVehicles = async (
     const filters: string[] = ['pricePerDay:=[1..2000]']; // Base price filter
 
     // Log incoming parameters for debugging
-    console.log("Search Parameters: ", { query, transmission, fuelType, seats, priceSort });
 
     if (availableCarIds.length > 0) {
       const carIdFilter = availableCarIds.map(id => `vehicle.id:=${id}`).join(" || ");
@@ -43,7 +42,6 @@ export const searchVehicles = async (
       filters.push(`vehicle.numberOfSeats:=${seats}`);
     }
 
-    console.log("Filters being used: ", filters.join(" && "));
 
     const searchResults = await typesenseClient.collections("cars").documents().search({
       q: query,
@@ -52,10 +50,8 @@ export const searchVehicles = async (
       sort_by: `pricePerDay:${priceSort}`, // Sort by price
     });
 
-    console.log("Search Results: ", searchResults); // Log the raw search results
     return searchResults?.hits?.map((hit: any) => hit.document) || [];
   } catch (error) {
-    console.error("Search error: ", error); // Log the error
     throw new Error("Error fetching vehicles");
   }
 };

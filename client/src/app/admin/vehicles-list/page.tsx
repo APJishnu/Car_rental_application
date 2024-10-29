@@ -1,7 +1,7 @@
 // Import necessary modules
 "use client";
 import React, { useState } from "react";
-import { useQuery, useMutation, gql } from "@apollo/client";
+import { useQuery, useMutation, gql, useLazyQuery } from "@apollo/client";
 import {
   Card,
   Button,
@@ -18,7 +18,6 @@ import styles from "./vehicle-list.module.css"; // Your CSS module
 import { useRouter } from "next/navigation";
 import {
   PlusOutlined,
-  CloseOutlined,
   EditOutlined,
   DeleteOutlined,
   PlusCircleOutlined,
@@ -26,11 +25,11 @@ import {
   LeftOutlined,
   RightOutlined,
   CarOutlined,
-  ToolOutlined,
   TeamOutlined,
   FireOutlined,
 } from "@ant-design/icons";
 import { ADD_VEHICLE_EXCEL } from "@/graphql/admin-mutations/vehicles";
+import { FETCH_ALL_INVENTORIES } from "@/graphql/admin-mutations/admin-dashborad";
 
 // Define the Vehicle type
 type Vehicle = {
@@ -103,16 +102,24 @@ const ADD_RENTABLE = gql`
     $vehicleId: ID!
     $pricePerDay: Float!
     $availableQuantity: Int!
+    $inventoryId: ID!
   ) {
     addRentable(
       vehicleId: $vehicleId
       pricePerDay: $pricePerDay
       availableQuantity: $availableQuantity
+      inventoryId: $inventoryId
     ) {
-      id
-      vehicleId
-      pricePerDay
-      availableQuantity
+      status
+      statusCode
+      message
+      data {
+        id
+        vehicleId
+        pricePerDay
+        availableQuantity
+        inventoryId
+      }
     }
   }
 `;
@@ -132,6 +139,7 @@ const VehicleListPage: React.FC = () => {
     setExcelFile(file);
     setShowUploadButton(true); // Show the button to add vehicles
   };
+
   const handleAddVehicles = async () => {
     if (!excelFile) return;
 
@@ -146,7 +154,6 @@ const VehicleListPage: React.FC = () => {
         },
       });
 
-      console.log("Response from Excel upload:", response);
 
       // Check if response.data is defined and if the operation was successful
       if (response && response.data && response.data.addVehicleExcel.success) {
@@ -171,7 +178,6 @@ const VehicleListPage: React.FC = () => {
         });
       }
     } catch (error: any) {
-      console.error("Error uploading Excel file:", error);
       const errorMessage = error.graphQLErrors?.[0]?.message || error.message;
 
       await Swal.fire({
@@ -188,11 +194,9 @@ const VehicleListPage: React.FC = () => {
   // Define the new mutation for uploading the Excel file
   const [addVehicleExcel] = useMutation(ADD_VEHICLE_EXCEL, {
     onCompleted: (data) => {
-      console.log("Excel file processed:", data);
       Swal.fire("Success!", "Excel file uploaded successfully.", "success");
     },
     onError: (error) => {
-      console.error("Error uploading Excel file:", error);
       Swal.fire({
         title: "Error!",
         text: error.message,
@@ -212,7 +216,6 @@ const VehicleListPage: React.FC = () => {
       refetch(); // Refetch vehicles after deletion
     },
     onError: (err) => {
-      console.error("Error deleting vehicle:", err);
       Swal.fire("Error!", err.message, "error"); // Display error message
     },
   });
@@ -224,18 +227,9 @@ const VehicleListPage: React.FC = () => {
       refetch();
     },
     onError: (err) => {
-      console.error("Error adding to rentable:", err);
       Swal.fire("Error!", err.message, "error"); // Display error message
     },
   });
-
-  // State for managing rentable modal
-  const [selectedRentableVehicle, setSelectedRentableVehicle] =
-    useState<Vehicle | null>(null);
-  const [pricePerDay, setPricePerDay] = useState<number | null>(null);
-  const [availableQuantity, setAvailableQuantity] = useState<number | null>(
-    null
-  );
 
   // Handle delete action with confirmation popup
   const handleDelete = (id: string) => {
@@ -276,32 +270,52 @@ const VehicleListPage: React.FC = () => {
     setSelectedRentableVehicle(vehicle);
   };
 
+  // State for managing rentable modal
+  const [selectedRentableVehicle, setSelectedRentableVehicle] =
+    useState<Vehicle | null>(null);
+  const [pricePerDay, setPricePerDay] = useState<number | null>(null);
+  const [availableQuantity, setAvailableQuantity] = useState<number | null>(
+    null
+  );
+  const [inventoryId, setInventoryId] = useState<string | null>(null);
+  const { data: inventoriesData, loading: loadingInventories } = useQuery(
+    FETCH_ALL_INVENTORIES
+  );
+
   const handleRentableSubmit = () => {
     if (
       pricePerDay !== null &&
       availableQuantity !== null &&
+      inventoryId && // Check that inventoryId is provided
       selectedRentableVehicle
     ) {
       addRentable({
         variables: {
-          vehicleId: selectedRentableVehicle.id, // Ensure this is the correct ID type
+          vehicleId: selectedRentableVehicle.id,
           pricePerDay,
           availableQuantity,
+          inventoryId: inventoryId, // Pass inventoryId instead of location
         },
-      }).catch((err) => {
-        console.error("Error adding to rentable:", err);
-        Swal.fire("Error!", err.message, "error"); // Display error message
-      });
+      })
+        .then((response) => {
+          if (response.data && response.data.addRentable) {
+            const rentableData = response.data.addRentable;
+          } else {
+            Swal.fire("Error!", "Rentable data is undefined.", "error");
+          }
+        })
+        .catch((err) => {
+          Swal.fire("Error!", err.message, "error");
+        });
     } else {
       Swal.fire(
         "Error!",
-        "Please provide both price per day and available quantity.",
+        "Please provide price per day, available quantity, and inventory location.",
         "error"
       );
     }
   };
 
-  console.log(selectedRentableVehicle);
 
   // Handle next image for a specific vehicle
   const handleNextImage = (index: number, otherImageUrls: string[]) => {
@@ -341,10 +355,8 @@ const VehicleListPage: React.FC = () => {
   if (loading) return <p>Loading vehicles...</p>;
   if (error) return <p>Error loading vehicles: {error.message}</p>;
 
-
-
   const handleAddVehicleClick = () => {
-    window.location.href = '/admin/add-vehicle'; // Navigate to the add-vehicle page
+    window.location.href = "/admin/add-vehicle"; // Navigate to the add-vehicle page
   };
 
   return (
@@ -352,10 +364,7 @@ const VehicleListPage: React.FC = () => {
       <h1 className={styles.title}>VEHICLE LIST</h1>
 
       {/* Filter Buttons */}
-      <div
-        className={styles.buttonsDiv}
-        style={{  textAlign: "center" }}
-      >
+      <div className={styles.buttonsDiv} style={{ textAlign: "center" }}>
         <div className={styles.andButtons}>
           <Button
             onClick={() => setFilter("all")}
@@ -379,70 +388,71 @@ const VehicleListPage: React.FC = () => {
           </Button>
         </div>
 
-        <div style={{display:'flex',gap:'20px',alignItems:'center'}}>
-        <Tooltip title="Add vehicles using the uploaded Excel file">
-          <div className={styles.excelUploadSection}>
-            <div className={styles.excelUploadContainer}>
-              {/* Show upload and add icon only if not processing */}
-              {!isProcessingExcel ? (
-                <div className={styles.flex}>
-                  <label
-                    className={styles.customFileUpload}
-                    htmlFor="excelUpload"
-                  >
-                    <div className={styles.iconWithText}>
-                      <img
-                        className={styles.icon}
-                        src="/microsoft-excel.svg"
-                        alt="Excel Icon"
-                      />
-                      <span className={styles.text}>
-                        {excelFile ? excelFile.name : "Upload Excel File"}
-                      </span>
-                    </div>
-                  </label>
+        <div style={{ display: "flex", gap: "20px", alignItems: "center" }}>
+          <Tooltip title="Add vehicles using the uploaded Excel file">
+            <div className={styles.excelUploadSection}>
+              <div className={styles.excelUploadContainer}>
+                {/* Show upload and add icon only if not processing */}
+                {!isProcessingExcel ? (
+                  <div className={styles.flex}>
+                    <label
+                      className={styles.customFileUpload}
+                      htmlFor="excelUpload"
+                    >
+                      <div className={styles.iconWithText}>
+                        <img
+                          className={styles.icon}
+                          src="/microsoft-excel.svg"
+                          alt="Excel Icon"
+                        />
+                        <span className={styles.text}>
+                          {excelFile ? excelFile.name : "Upload Excel File"}
+                        </span>
+                      </div>
+                    </label>
 
-                  <input
-                    type="file"
-                    id="excelUpload"
-                    accept=".xlsx,.xls"
-                    onChange={handleExcelUpload}
-                    style={{ display: "none" }}
-                  />
-
-                  {/* Show "+" icon to add vehicles if a file is selected */}
-                  {excelFile && (
-                    <PlusOutlined
-                      onClick={handleAddVehicles}
-                      className={styles.addIcon} // Custom class for styling
+                    <input
+                      type="file"
+                      id="excelUpload"
+                      accept=".xlsx,.xls"
+                      onChange={handleExcelUpload}
+                      style={{ display: "none" }}
                     />
-                  )}
-                </div>
-              ) : (
-                // Show progress bar while processing
-                <div className={styles.progressBar}>
-                  <div
-                    className={styles.progressFill}
-                    style={{
-                      width: `${(currentExcelRow / totalExcelRows) * 100}%`,
-                    }}
-                  />
-                  <span>
-                    Processing: {currentExcelRow} / {totalExcelRows}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-        </Tooltip>
 
-
-        <Tooltip title="add Vehicle Manualy">
-              <div className={styles.addVehicleDiv} style={{fontSize:'12px'}}>
-                <button onClick={handleAddVehicleClick}>Add vehicle<PlusOutlined  title="Add vehicle" className={styles.addIcon} /></button>
-  
+                    {/* Show "+" icon to add vehicles if a file is selected */}
+                    {excelFile && (
+                      <PlusOutlined
+                        onClick={handleAddVehicles}
+                        className={styles.addIcon} // Custom class for styling
+                      />
+                    )}
+                  </div>
+                ) : (
+                  // Show progress bar while processing
+                  <div className={styles.progressBar}>
+                    <div
+                      className={styles.progressFill}
+                      style={{
+                        width: `${(currentExcelRow / totalExcelRows) * 100}%`,
+                      }}
+                    />
+                    <span>
+                      Processing: {currentExcelRow} / {totalExcelRows}
+                    </span>
+                  </div>
+                )}
               </div>
-        </Tooltip>
+            </div>
+          </Tooltip>
+
+          <Tooltip title="add Vehicle Manualy">
+            <div className={styles.addVehicleDiv} style={{ fontSize: "12px" }}>
+              <button onClick={handleAddVehicleClick}>
+                Add vehicle
+                <PlusOutlined title="Add vehicle" className={styles.addIcon} />
+              </button>
+            </div>
+          </Tooltip>
         </div>
       </div>
 
@@ -605,6 +615,7 @@ const VehicleListPage: React.FC = () => {
             )
           )}
         </Select>
+
         <Input
           type="number"
           placeholder="Price per day"
@@ -612,6 +623,24 @@ const VehicleListPage: React.FC = () => {
           value={pricePerDay || ""}
           onChange={(e) => setPricePerDay(parseFloat(e.target.value))}
         />
+
+        <Select
+          placeholder="Select Inventory Location"
+          style={{ marginTop: "12px", width: "100%" }}
+          onChange={(value) => setInventoryId(value)} // Set inventoryId on change
+        >
+          {loadingInventories ? (
+            <Select.Option value="" disabled>
+              Loading...
+            </Select.Option>
+          ) : (
+            inventoriesData?.fetchAllInventories.data.map((inventory: any) => (
+              <Select.Option key={inventory.id} value={inventory.id}>
+                {inventory.location} {/* Display inventory location */}
+              </Select.Option>
+            ))
+          )}
+        </Select>
       </Modal>
     </div>
   );

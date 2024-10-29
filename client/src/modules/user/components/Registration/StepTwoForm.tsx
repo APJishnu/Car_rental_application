@@ -67,7 +67,6 @@ export const StepTwoForm: React.FC<StepTwoFormProps> = ({
         errorObj[error.field] = error.message;
       });
 
-      console.log("hai",errorObj)
       form.setFields(
         Object.entries(errorObj).map(([field, error]) => ({
           name: field,
@@ -101,7 +100,6 @@ export const StepTwoForm: React.FC<StepTwoFormProps> = ({
         next();
       } else {
 
-        console.log(data.verifyOTP.errors,"hai")
         if(!data.verifyOTP.errors){
             message.error(data.verifyOTP.message || "Failed to verify OTP");
         }

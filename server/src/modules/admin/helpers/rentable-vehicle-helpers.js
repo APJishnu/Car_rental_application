@@ -53,7 +53,7 @@
 //             await deleteVehicleFromTypesense(id);
 //             return true;
 //         } catch (error) {
-//             console.error(`Error deleting vehicle: ${error.message}`); // Log the error message
+//             .error(`Error deleting vehicle: ${error.message}`); // Log the error message
 //             throw error;
 //         }
 //     }

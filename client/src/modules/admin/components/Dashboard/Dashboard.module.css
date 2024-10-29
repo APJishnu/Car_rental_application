@@ -16,18 +16,39 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-  padding-bottom: 5px;
+  padding-bottom: 15px;
 }
 /* Header Styles */
 .dashboard h2 {
   font-size: 24px; /* Slightly smaller font for mobile */
   margin-bottom: 0px;
   color: #004a99; /* Primary color for headings */
+  width: 100%;
+}
+.dashBoardHeadingDiv{
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  justify-content: flex-end;
+  align-items: center;
+}
+.selectOption{
+  width: 100%;
+  max-width: 250px;
+  height: 45px;
+  border-radius: 7px;
+  border: 2px solid rgb(67, 67, 67);
 }
 
+
+
 .datePicker {
-  padding: 10px; /* Reduced padding for mobile */
-  margin-bottom: 10px;
+  height: 45px;
+  margin-bottom: 0px;
+  width: 100%!important;
+  max-width: 250px;
+  border-radius: 7px;
+  border: 2px solid rgb(67, 67, 67);
 }
 
 /* styles.module.css or your relevant CSS file */
@@ -43,12 +64,14 @@
 
 .dashboardOverflowDiv {
   max-height: 85vh; /* Set a maximum height for the div */
+  width: 100%;
   overflow-y: auto; /* Enable vertical scrolling */
   padding: 0px; /* Optional: Add some padding for aesthetics */
-  border: 1px solid #ccc; /* Light border for visibility */
-  border-radius: 8px; /* Rounded corners */
-  background-color: #f8f9fa; /* Light background for scrolling area */
+  /* border: 2px solid #000000; 
+  border-radius: 8px; 
+  background-color: #f8f9fa;  */
 }
+
 .chartsDiv {
   width: 100%;
   display: flex;
@@ -86,6 +109,7 @@
   display: flex;
   align-items: center; /* Center items horizontally */
   justify-content: center;
+
 }
 
 .chartSection3,
@@ -97,12 +121,13 @@
   text-align: center;
   color: #004a99;
 }
-/* BookingList.module.css */
 
+/* BookingList.module.css */
 .bookingList {
   padding: 15px;
   background: #f9f9f9; /* Light background for booking list */
   border-radius: 8px;
+  width: 100%;
 }
 
 .bookingList h3 {
@@ -120,6 +145,8 @@
   align-items: center; /* Center items vertically */
   padding: 10px;
   border-bottom: 1px solid #ddd; /* Light border between list items */
+  justify-content: space-between;
+  width: 100%;
 }
 
 .listItem:last-child {
@@ -127,47 +154,62 @@
 }
 
 .bookingId {
-  flex: 0 0 150px; /* Fixed width for Booking ID */
+  width: 100%;
 }
 
 .bookingDetails {
-  flex: 1;
   display: flex;
   flex-direction: column; /* Stack details vertically */
-  margin-left: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  width:100%;
 }
 
 .vehicleDetails {
-  flex: 0 0 170px; /* Fixed width for vehicle details */
   display: flex;
   flex-direction: column; /* Stack vehicle details vertically */
   align-items: center; /* Center items */
+  width: 100%;
 }
 
 .vehicleImage {
   width: 100%; /* Full width for images */
+  max-width: 200px;
+  max-height: 120px;
   border-radius: 8px; /* Rounded corners */
   height: auto; /* Maintain aspect ratio */
 }
 
 .vehicleName {
+  margin: 0px;
   text-align: center;
-  font-size: 0.9em; /* Slightly smaller font size */
-  color: #70003e; /* Custom color for vehicle name */
+  font-weight: 700;
+  letter-spacing: 1px;
+  font-size: 1em; /* Slightly smaller font size */
+  color: #6e5fc1; /* Custom color for vehicle name */
 }
 
 .paymentDetails {
-  flex: 1;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: flex-start; /* Align items to start */
-  margin-left: 20px;
+  justify-content: flex-start;
+  margin-left: 10px;
+  gap: 10px;
 }
 
+.returnNotification{
+  width: 100%;
+  max-width: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 /* Button and Tag Styles */
 .button {
   margin-top: 5px; /* Space above the button */
-  color: blue;
+  color: rgb(0, 0, 112);
   font-size: 12px;
 }
 
@@ -230,43 +272,35 @@
 
   .listItem {
     flex-direction: column; /* Stack items vertically on mobile */
-    align-items: flex-start; /* Align items to start */
     padding: 8px; /* Adjust padding for mobile list items */
   }
 
-  .bookingId {
-    flex: none; /* Allow booking ID to take only necessary space */
-    margin-bottom: 10px; /* Margin for spacing */
-  }
-
-  .BookingVehicleDetails {
-    align-items: center; /* Center items on mobile */
-    margin: 0; /* Reset margin */
+  .vehicleDetails {
+    width: 100%; /* Ensure full width for vehicle details */
   }
 
   .vehicleImage {
-    height: auto; /* Maintain aspect ratio on mobile */
     max-width: 100%; /* Ensure image does not overflow */
+    max-width: 150px;
   }
 
-  .userId,
-  .dateValue {
-    font-size: 0.9em; /* Smaller font size on mobile */
+  .bookingDetails {
+    font-size: 12px; /* Smaller font size on mobile */
+  }
+
+  .paymentDetails {
+    margin-left: 0; /* Reset margin for mobile */
+    gap: 5px; /* Adjust gap for mobile */
   }
 
   .button {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 100%; /* Full width for buttons */
     font-size: 10px; /* Smaller button text on mobile */
   }
 
   .pendingTag {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     font-size: 1.2em; /* Slightly smaller on mobile */
   }
+
+  
 }

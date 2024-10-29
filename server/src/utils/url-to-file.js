@@ -40,7 +40,6 @@ const urlToFile = async (url) => {
       mimetype: contentType,
     };
   } catch (error) {
-    console.error('Error converting URL to File:', error.message);
     throw error;
   }
 };

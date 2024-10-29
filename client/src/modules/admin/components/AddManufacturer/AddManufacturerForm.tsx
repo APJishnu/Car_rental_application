@@ -62,7 +62,6 @@ const AddManufacturerForm: React.FC = () => {
       setFileList([]);
       setImage(null);
     } catch (error: any) {
-      console.error('Error adding manufacturer:', error);
       setAlertType('error');
       setAlertMessage(error.message || 'Error adding manufacturer');
     }

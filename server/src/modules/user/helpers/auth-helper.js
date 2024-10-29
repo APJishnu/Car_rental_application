@@ -77,8 +77,6 @@ class AuthHelper {
         };
       }
     } catch (error) {
-      console.error("Error during OTP verification:", error);
-
       // Check for specific Twilio error codes
       if (error.code === 20404) {
         return {
@@ -175,7 +173,6 @@ class AuthHelper {
     try {
       const user = await User.findOne({ where: { email } });
 
-      console.log("Received Email:", email); // Check what's being received
       if (!user) {
         return {
           status: false,
@@ -215,7 +212,6 @@ class AuthHelper {
         fieldErrors: null,
       };
     } catch (err) {
-      console.error("Error during user authentication:", err); // Log unexpected errors for debugging
       return {
         status: false,
         statusCode: 500,
@@ -236,7 +232,6 @@ class AuthHelper {
         if (!user) {
           throw new Error("User not found");
         }
-        console.log(user);
 
         const existingImageUrl = user.profileImage;
 
@@ -254,8 +249,6 @@ class AuthHelper {
         if (imagePath) {
           await this.removeFromMinio(imagePath);
         }
-
-        console.log(imagePath);
 
         // Update user profile image in the database (set to null)
         const updatedUser = await authRepo.updateProfileImage(userId, null);
@@ -282,7 +275,6 @@ class AuthHelper {
         data: updatedUser,
       };
     } catch (error) {
-      console.error("Error updating user profile image:", error.message);
       throw new Error("Failed to update profile image");
     }
   }
@@ -318,7 +310,6 @@ class AuthHelper {
 
       return imageUrl;
     } catch (error) {
-      console.error("Error uploading image:", error.message);
       throw new Error("Image upload failed");
     }
   }
@@ -330,9 +321,7 @@ class AuthHelper {
         process.env.MINIO_BUCKET_NAME_PRIVATE,
         imagePath
       );
-    } catch (error) {
-      console.error("Error removing image from Minio:", error.message);
-    }
+    } catch (error) {}
   }
 
   async updateUserInfoHelper({
@@ -356,7 +345,6 @@ class AuthHelper {
 
     try {
       const updatedUser = await authRepo.updateUserInfo(userId, updateData);
-      console.log(updatedUser);
       return {
         status: true,
         statusCode: 200,
@@ -384,7 +372,12 @@ class AuthHelper {
         status: false,
         statusCode: 404,
         message: "Current password is incorrect",
-        fieldErrors: [{field: 'currentPassword',message: "Current password is incorrect" }],
+        fieldErrors: [
+          {
+            field: "currentPassword",
+            message: "Current password is incorrect",
+          },
+        ],
       };
     }
 

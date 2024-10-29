@@ -13,11 +13,9 @@ class RentableVehicleHelper {
     seats,
     priceSort
   ) {
-    console.log("haii", query);
     try {
       if (query || transmission || fuelType || seats || priceSort) {
         // If there is a search query or any filters, call the search function
-        console.log("haii", query);
         return await RentableVehicleHelper.searchRentableVehicles({
           query: query,
           transmission: transmission,
@@ -48,45 +46,50 @@ class RentableVehicleHelper {
         q: query || "*", // Fallback to all results if no query
         query_by: "vehicle.name,vehicle.manufacturer.name", // Search within these fields
         filter_by: [], // Will hold filters
-        sort_by: `pricePerDay:${priceSort || 'asc'}`,
+        sort_by: `pricePerDay:${priceSort || "asc"}`,
       };
-  
+
       // Transmission filter
-      if (transmission && Array.isArray(transmission) && transmission.length > 0) {
+      if (
+        transmission &&
+        Array.isArray(transmission) &&
+        transmission.length > 0
+      ) {
         searchParams.filter_by.push(
           `vehicle.transmission:=[${transmission.join(",")}]`
         );
       }
-  
+
       // Fuel type filter
       if (fuelType && Array.isArray(fuelType) && fuelType.length > 0) {
         searchParams.filter_by.push(
           `vehicle.fuelType:=[${fuelType.join(",")}]`
         );
       }
-  
+
       // Seats filter
       if (seats && Array.isArray(seats) && seats.length > 0) {
         searchParams.filter_by.push(
           `vehicle.numberOfSeats:=[${seats.join(",")}]`
         );
       }
-  
+
       // Price range filter
       if (priceRange && Array.isArray(priceRange) && priceRange.length === 2) {
         const [minPrice, maxPrice] = priceRange;
-        searchParams.filter_by.push(`pricePerDay:>=${minPrice} && pricePerDay:<=${maxPrice}`);
+        searchParams.filter_by.push(
+          `pricePerDay:>=${minPrice} && pricePerDay:<=${maxPrice}`
+        );
       }
-  
+
       // If there are filters, join them with '&&', otherwise, delete the filter key
       if (searchParams.filter_by.length > 0) {
         searchParams.filter_by = searchParams.filter_by.join(" && ");
       } else {
         delete searchParams.filter_by; // No filters, so remove the key
       }
-  
-      console.log("Search Params:", searchParams);
-  
+
+
       let vehicleIds;
       try {
         // Perform the search using Typesense
@@ -94,53 +97,83 @@ class RentableVehicleHelper {
           .collections("cars")
           .documents()
           .search(searchParams);
-  
+
         // Extract the vehicle IDs from the search results
         vehicleIds = typesenseResponse.hits.map((hit) => hit.document.id);
       } catch (error) {
         // If Typesense is unreachable, log the error and continue with fetching all data
-        console.error("Typesense error or network issue:", error.message);
         vehicleIds = null; // Set vehicleIds to null to fetch all vehicles
       }
-  
+
+      if (!vehicleIds || vehicleIds.length === 0) {
+      
+        return [];
+      }
       // Fetch vehicles based on IDs if found, otherwise fetch all
       const vehicles = await RentableRepo.findAllRentableByIds(vehicleIds);
-      console.log(vehicles, "Vehicles found in search");
       return vehicles;
-  
     } catch (error) {
-      console.error("Error searching for rentable vehicles:", error);
       throw new Error("Failed to search rentable vehicles");
     }
   }
-  
 
   static async addRentable(data) {
     try {
-      const { vehicleId, pricePerDay, availableQuantity } = data;
+      const { vehicleId, pricePerDay, availableQuantity, inventoryId } = data;
 
       // Add custom validation logic
-      if (!vehicleId || !pricePerDay || !availableQuantity) {
-        throw new Error(
-          "Missing required fields: vehicleId, pricePerDay, or availableQuantity"
-        );
+      if (!vehicleId || !pricePerDay || !availableQuantity || !inventoryId) {
+        return {
+          status: false,
+          statusCode: 400,
+          message:
+            "Missing required fields: vehicleId, pricePerDay, availableQuantity, or inventoryLocation",
+          data: null,
+        };
       }
 
       const existingVehicle = await RentableRepo.findRenatableVehicleById(
         vehicleId
       );
       if (existingVehicle) {
-        throw new Error("This Vehicle is already rented");
+        return {
+          status: false,
+          statusCode: 409, // Conflict
+          message: "This Vehicle is already rented",
+          data: null,
+        };
       }
 
-      const rentable = await RentableRepo.createRentable(data);
+      const rentable = await RentableRepo.createRentable({
+        vehicleId,
+        pricePerDay,
+        availableQuantity,
+        inventoryId, // Include inventory location in the data
+      });
+
       if (rentable) {
         await VehicleRepository.updateVehicleStatus(vehicleId, true);
+        return {
+          status: true,
+          statusCode: 201, // Created
+          message: "Rentable vehicle added successfully",
+          data: rentable, // Return the created rentable object
+        };
       }
 
-      return rentable;
+      return {
+        status: false,
+        statusCode: 500, // Internal Server Error
+        message: "Failed to add rentable vehicle",
+        data: null,
+      };
     } catch (error) {
-      throw new Error(error.message || "Failed to add rentable vehicle");
+      return {
+        status: false,
+        statusCode: 500, // Internal Server Error
+        message: error.message || "Failed to add rentable vehicle",
+        data: null,
+      };
     }
   }
 
@@ -165,7 +198,6 @@ class RentableVehicleHelper {
         data: null,
       }; // Return the deleted vehicle data if needed
     } catch (error) {
-      console.error("Error in RentableVehicleHelper:", error);
       throw new Error("Error occurred while deleting the vehicle");
     }
   }

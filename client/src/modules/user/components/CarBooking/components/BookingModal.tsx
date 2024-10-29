@@ -108,7 +108,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
     try {
       const bookingData = {
-        vehicleId: car.vehicleId,
+        rentableId: car.id,
         pickupDate: pickupDate!,
         dropoffDate: dropoffDate!,
         totalPrice,
@@ -153,7 +153,6 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         }
       }
     } catch (error) {
-      console.error("Error during booking:", error);
       setModalMessage("Error occurred while creating the booking.");
       setModalStatus("error");
     }

@@ -23,7 +23,6 @@ const authResolvers = {
         // Validate input with Joi
         const { error, value } = loginSchema.validate({ email, password }, { abortEarly: false });
     
-        console.log(email,password)
         const fieldErrors = {}; // Initialize an object to hold field-specific errors
     
         // Check for validation errors
@@ -35,7 +34,6 @@ const authResolvers = {
           });
         }
     
-        console.log(fieldErrors); // This will log all field errors
     
         // If there are field errors, return them immediately
         if (Object.keys(fieldErrors).length > 0) {

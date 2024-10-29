@@ -6,47 +6,47 @@ class Booking extends Model {}
 
 Booking.init(
   {
-    vehicleId: {
+    rentableId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-        model: "Vehicles", // This assumes there is a Vehicles table
+        model: "Rentables", // Referencing Rentables table
         key: "id",
       },
       onDelete: "CASCADE",
     },
     userId: {
       type: DataTypes.INTEGER,
-      allowNull: false, // Reference to the user who is booking
+      allowNull: false,
     },
     pickupDate: {
-      type: DataTypes.DATEONLY, // Store only date, not time
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     dropoffDate: {
-      type: DataTypes.DATEONLY, // Store only date, not time
+      type: DataTypes.DATEONLY,
       allowNull: false,
     },
     status: {
-      type: DataTypes.STRING, // Status of the booking (e.g., 'pending', 'booked', 'released', 'cancelled')
+      type: DataTypes.STRING,
       allowNull: false,
-      defaultValue: "pending", // Default status is 'pending'
+      defaultValue: "pending",
     },
     totalPrice: {
       type: DataTypes.FLOAT,
-      allowNull: false, // Total price for the booking
+      allowNull: false,
     },
     razorpayOrderId: {
-      type: DataTypes.STRING, // Store Razorpay order ID
-      allowNull: true, // Will be null until payment is initiated
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     paymentMethod: {
-      type: DataTypes.STRING, // Store Razorpay order ID
+      type: DataTypes.STRING,
       allowNull: true,
     },
     releaseDate: {
-      type: DataTypes.DATEONLY, // Date when the vehicle was released
-      allowNull: true, // This will be null until the vehicle is released
+      type: DataTypes.DATEONLY,
+      allowNull: true,
     },
   },
   {
@@ -55,6 +55,7 @@ Booking.init(
   }
 );
 
-Booking.belongsTo(Rentable, { foreignKey: "vehicleId", as: "rentable" });
+// Set up association with Rentable using rentableId
+Booking.belongsTo(Rentable, { foreignKey: "rentableId", as: "rentable" });
 
 export default Booking;

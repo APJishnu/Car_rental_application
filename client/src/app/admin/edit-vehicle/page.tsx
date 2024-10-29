@@ -54,7 +54,7 @@ const VehicleEditPage: React.FC = () => {
   });
 
 
-  console.log(data)
+  .log(data)
   // Update vehicle mutation
   const [updateVehicle] = useMutation(UPDATE_VEHICLE, {
     onCompleted: () => {
@@ -62,7 +62,7 @@ const VehicleEditPage: React.FC = () => {
       router.push("/admin/vehicles-list"); // Redirect after updating
     },
     onError: (err) => {
-      console.error("Error updating vehicle:", err);
+      .error("Error updating vehicle:", err);
       Swal.fire("Error!", err.message, "error");
     },
   });
@@ -89,7 +89,7 @@ const VehicleEditPage: React.FC = () => {
     otherImages: otherFiles.length > 0 ? otherFiles.map((file) => file.originFileObj ): [], // Set to empty array if no new other images
   };
 
-    console.log("updated values",updatedValues)
+    .log("updated values",updatedValues)
     updateVehicle({
       variables: {
         id,

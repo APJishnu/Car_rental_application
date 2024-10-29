@@ -28,16 +28,17 @@ const BookingsTypeDefs = gql`
     vehicleId: ID!
     pricePerDay: Float!
     availableQuantity: Int!
+    inventoryId: ID
     vehicle: Vehicle!
   }
 
   type GetBooking {
     id: ID!
-    vehicleId: Int!
+    rentableId: ID!
     userId: Int!
     pickupDate: String!
     dropoffDate: String!
-    status:String
+    status: String
     totalPrice: Float!
     razorpayOrderId: String
     paymentMethod: String!
@@ -66,7 +67,7 @@ const BookingsTypeDefs = gql`
   }
 
   type Query {
-    fetchAllBookings: FetchBookingsResponse!
+    fetchAllBookings(inventoryId: ID): FetchBookingsResponse!
   }
 
   type Mutation {

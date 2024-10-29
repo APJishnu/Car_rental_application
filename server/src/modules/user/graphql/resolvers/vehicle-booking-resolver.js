@@ -11,6 +11,7 @@ const VehicleBookingResolver = {
       {
         pickupDate,
         dropoffDate,
+        inventoryId,      // New parameter
         query,
         transmission,
         fuelType,
@@ -19,7 +20,8 @@ const VehicleBookingResolver = {
         priceRange,
       }
     ) => {
-      // Ensure the arrays are not empty
+
+      // Ensure arrays are only passed if they contain values
       const transmissionArray =
         Array.isArray(transmission) && transmission.length > 0
           ? transmission
@@ -28,16 +30,18 @@ const VehicleBookingResolver = {
         Array.isArray(fuelType) && fuelType.length > 0 ? fuelType : undefined;
       const seatsArray =
         Array.isArray(seats) && seats.length > 0 ? seats : undefined;
-
-      // Ensure priceRange is defined and is an array with two elements
+    
+      // Ensure priceRange is defined and has exactly two elements
       const priceRangeArray =
         Array.isArray(priceRange) && priceRange.length === 2
           ? priceRange
           : undefined;
-
+    
+      // Pass all parameters, including the optional pickupLocation
       return await VehicleBookingHelper.getAvailableVehicles(
         pickupDate,
         dropoffDate,
+        inventoryId,     // New argument passed to the helper function
         query,
         transmissionArray,
         fuelTypeArray,
@@ -50,7 +54,6 @@ const VehicleBookingResolver = {
     fetchBookings: async (_, __, { token }) => {
       try {
         if (!token) {
-          console.log("Authorization token is missing.");
           return {
             status: false,
             statusCode: 401,
@@ -66,7 +69,6 @@ const VehicleBookingResolver = {
         // Use helper to get bookings for the user
         return await VehicleBookingHelper.getBookingsByUser(userId);
       } catch (error) {
-        console.error("Error fetching bookings:", error);
         return {
           status: false,
           statusCode: 500,
@@ -99,9 +101,7 @@ const VehicleBookingResolver = {
           ],
         });
 
-        console.log(vehicleId);
 
-        console.log(reviews, "in resolver review fetching");
         return reviews;
       } catch (error) {
         return {
@@ -116,10 +116,8 @@ const VehicleBookingResolver = {
   Mutation: {
     // Mutation for creating a Razorpay payment order along with booking details
     createPaymentOrder: async (_, { totalPrice, bookingInput }, { token }) => {
-      console.log("Total price in payment order:", totalPrice);
       try {
         if (!token) {
-          console.log("Authorization token is missing.");
           return {
             status: false,
             message:
@@ -150,7 +148,6 @@ const VehicleBookingResolver = {
 
         return paymentResponse;
       } catch (error) {
-        console.error("Error creating payment order:", error);
         return {
           status: false,
           message: "Failed to create payment order.",
@@ -168,11 +165,7 @@ const VehicleBookingResolver = {
       { paymentDetails, bookingInput },
       { token }
     ) => {
-      console.log(
-        "Payment details and booking inputs:",
-        paymentDetails,
-        bookingInput
-      );
+     
       try {
         if (!token) {
           return {
@@ -201,7 +194,6 @@ const VehicleBookingResolver = {
           data: bookingResponse.data, // Ensure that the booking data is returned correctly
         };
       } catch (error) {
-        console.error("Error verifying payment and creating booking:", error);
         return {
           status: "error",
           message: "Payment verification and booking creation failed.",
@@ -235,7 +227,6 @@ const VehicleBookingResolver = {
         });
         return response;
       } catch (err) {
-        console.error(err);
         return {
           status: false,
           message: "Failed to add review.",

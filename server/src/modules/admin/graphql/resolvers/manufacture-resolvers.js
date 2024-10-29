@@ -12,7 +12,6 @@ const manufacturerResolver = {
       try {
         return await ManufacturerHelper.getManufacturers(); // Fetch manufacturers using the helper
       } catch (error) {
-        console.error('Error fetching manufacturers:', error);
         throw new Error('Failed to fetch manufacturers');
       }
     },
@@ -23,7 +22,6 @@ const manufacturerResolver = {
       try {
         return await ManufacturerHelper.addManufacturer(name, country, image);
       } catch (error) {
-        console.error('Error in addManufacturer mutation:', error);
         throw new Error(error.message || 'Failed to add manufacturer');
       }
     },
@@ -32,7 +30,6 @@ const manufacturerResolver = {
       try {
         return await ManufacturerHelper.editManufacturer(id, name, country, image);
       } catch (error) {
-        console.error('Error editing manufacturer:', error);
         throw new Error(error.message || 'Failed to edit manufacturer');
       }
     },
@@ -41,7 +38,6 @@ const manufacturerResolver = {
       try {
         return await ManufacturerHelper.deleteManufacturer(id); // Call the helper method
       } catch (error) {
-        console.error('Error in deleteManufacturer mutation:', error);
         throw new Error('Failed to delete manufacturer');
       }
     },

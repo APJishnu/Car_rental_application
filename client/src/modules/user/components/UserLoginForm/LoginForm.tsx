@@ -41,7 +41,6 @@ const LoginForm: React.FC = () => {
     setLoading(true);
     try {
       // Log submitted values before handling empty fields
-      console.log('Submitting:', values);
 
       // Default to empty strings if values are undefined
       const email = values.email || '';
@@ -74,7 +73,6 @@ const LoginForm: React.FC = () => {
       }
     } catch (error) {
       message.error("An error occurred during login.");
-      console.error('Login Error:', error); // Log the error for debugging
     } finally {
       setLoading(false);
     }

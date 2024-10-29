@@ -1,104 +1,401 @@
-
-  /* Modal Overlay */
-  .confirmOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: none;
-    /* Hidden by default */
-    justify-content: center;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
-    /* Semi-transparent background */
-  }
-
-  .cardDiv{
-    width: 100%;
-    max-width: 800px;
-    height: 100%;
-    max-height: 500px;
-  }
-  /* Modal Visibility */
-  .confirmOverlay.visible {
-    display: flex;
-    /* Show the modal when visible */
-    animation: fadeIn 0.3s;
-    /* Smooth fade-in effect */
-  }
-
-  /* Modal Content Container */
-  .confirmOverlayContent {
-    background-color: white;
-    padding: 20px;
-    padding-right: 0px;
-    width: 100%;
-    height: 100%;
-    position: relative;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 30px;
-
-  }
-
-
- 
-  .modalContent {
-    padding: 10px;
-    box-shadow:inset 0 4px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 20px;
-    /* Optional shadow */
-  }
-
-  .leftSection{
-    width: 100%;
-  }
-.rightSection{
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    justify-content: flex-start;
-    align-items: left;
-    padding: 15px;
-    padding-right: 0px;
-    gap: 0px;
-    height: 100%;
-    
+/* Modal Overlay */
+.confirmOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: none;
+  /* Hidden by default */
+  justify-content: center;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  /* Semi-transparent background */
 }
 
+.cardDiv {
+  width: 100%;
+  max-width: 800px;
+  height: 100%;
+  max-height: 500px;
+}
+/* Modal Visibility */
+.confirmOverlay.visible {
+  display: flex;
+  /* Show the modal when visible */
+  animation: fadeIn 0.3s;
+  /* Smooth fade-in effect */
+}
+
+/* Modal Content Container */
+.confirmOverlayContent {
+  background-color: white;
+  padding: 20px;
+  padding-right: 0px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+}
+
+.modalContent {
+  padding: 10px;
+  box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  /* Optional shadow */
+}
+
+.leftSection {
+  width: 100%;
+}
+.rightSection {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: flex-start;
+  align-items: left;
+  padding: 15px;
+  padding-right: 0px;
+  gap: 0px;
+  height: 100%;
+}
+
+.carImageContainer {
+  display: flex;
+  justify-content: center;
+}
+
+.carImage {
+  width: 100%;
+  border-radius: 8px;
+  object-fit: contain;
+}
+
+.secondCard {
+  padding-top: 0px;
+  margin-left: 0px;
+  width: 100%;
+  max-width: 590px;
+}
+.paymentSelection {
+  margin-top: 0px;
+}
+
+.payementMethodDiv {
+  padding-top: 20px;
+  padding-right: 20px;
+}
+.paymentOption {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  padding: 10px;
+  background-color: #eaebff;
+}
+
+.radioLabel {
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.paymentImage {
+  width: 80px; /* Adjust size as needed */
+}
+
+/* Agreement Checkbox */
+.agreementCheckbox {
+  margin: 0px 0;
+  padding-right: 20px;
+  display: flex;
+  align-items: center;
+  padding-bottom: 10px;
+  color: #002287;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 10px;
+}
+.rideInfo {
+  font-size: 16px;
+  color: #37383a;
+  margin-bottom: 15px;
+}
+
+.closeButton {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+}
+
+.confirmInput {
+  color: #000000;
+  border: 2px solid #646464;
+  border-radius: 15px;
+  padding: 10px;
+  width: 240px !important;
+}
+
+.confirmInput:hover {
+  background-color: #ffffff;
+  border: 1px solid #000000;
+  /* Dark border */
+}
+
+.confirmInput::placeholder {
+  color: #000000;
+  /* Light grey placeholder text */
+}
+
+.cardModal {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  height: 100%;
+}
+
+.dateModalMainDiv {
+  position: relative;
+  width: 80%;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  background: linear-gradient(240deg, black, rgb(0, 0, 122));
+  border-radius: 40px 0px 0px 0px;
+  padding-left: 20px;
+  margin-left: 90px;
+  overflow: hidden;
+  padding: 15px;
+  padding-right: 0px;
+}
+.dateModal {
+  height: 100% !important;
+  max-height: 100px !important;
+  width: 100%;
+  padding: 10px;
+  border-top: 2px dashed rgb(0, 91, 160);
+  border-left: 2px dashed rgb(0, 91, 160);
+  border-bottom: 2px dashed rgb(0, 91, 160);
+  border-radius: 30px 0px 0px 0px;
+  /* Optional shadow */
+}
+
+.dateModalDotDiv {
+  width: 100%;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0px;
+
+  height: inherit;
+}
+
+.dateModal p span {
+  font-size: 17px;
+  font-weight: 700;
+  color: rgb(255, 255, 255);
+}
+
+.rideInfo {
+  margin: 0px 0;
+  font-family: Arial, sans-serif;
+}
+
+.priceTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.priceTable td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.priceTable td:first-child {
+  text-align: left;
+}
+
+.priceTable td:last-child {
+  text-align: right;
+}
+
+.priceTable strong {
+  letter-spacing: 1px;
+  font-weight: 800;
+  color: white;
+  padding: 0px;
+  font-size: 20px !important;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+.priceTable .totalPrice {
+  background-color: #00034d;
+  border-radius: 3px;
+}
+
+/* DatePicker Styling */
+.datePicker {
+  width: 100%;
+  /* Full width for the date picker */
+  margin-bottom: 20px;
+  /* Spacing below the date picker */
+}
+
+.inputWithButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0px;
+  padding-left: 0px;
+  padding-right: 20px;
+}
+
+/* Confirm Button */
+.confirmButton {
+  width: 100%;
+  max-width: 100px;
+  height: 40px;
+  border-radius: 25px;
+  background-color: #000000;
+  border: 1px solid black;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.confirmButton:hover {
+  background-color: #0d0735;
+  border: 1px solid black !important;
+  color: black !important;
+}
+
+/* Close Button */
+.closeButton {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 20px;
+  color: #555;
+  cursor: pointer;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive Styles for max-width: 786px */
+@media (max-width: 786px) {
+  .cardDiv {
+    width: 100%;
+    max-height: 100%;
+    position: relative;
+    padding: 0px;
+
+  }
+
+  .confirmOverlayContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0px; /* Adds space between left and right sections */
+    height: 100%;
+  }
+
+  .leftSection,
+  .rightSection {
+    width: 100%;
+    max-width: 100%; /* Limits the section width */
+  }
+
+  /* Adjustments for left section */
+  .leftSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
   .carImageContainer {
+    width: 100%;
+    max-width: 200px; /* Restricts image width */
+    margin-bottom: 0px;
+    justify-content: flex-start;
+  }
+.cardModal{
+  justify-content: flex-start;
+}
+
+.secondCard{
+  padding-right: 20px;
+  width: 100%;
+}
+  .priceTable td {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .priceTable .totalPrice {
+    background-color: #00034d;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+  }
+
+  /* Adjustments for right section */
+  .rightSection {
     display: flex;
-    justify-content: center;
-  }
-
-  .carImage {
-    width: 100%;
-    border-radius: 8px;
-    object-fit: contain;
-  }
-
-  .secondCard{
+    flex-direction: column;
+    align-items: center;
     padding-top: 0px;
-    margin-left: 0px;
-    width: 100%;
-    max-width: 590px;
+    padding-left: 0px;
   }
-  .paymentSelection {
-    margin-top: 0px;
-  }
-  
-  .payementMethodDiv{
-    padding-top: 20px;
-    padding-right: 20px;
 
+  .paymentSelection {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .dateModalMainDiv{
+    max-height: 100px;
+    max-width: 150px;
+    position: absolute;
+    top: 30px;
+    right:0;
+  }
+
+  .dateModal{
+    height: 60px;
+  }
+  .dateModalDotDiv{
+    height: 60px;
+  }
+  .dateModal p span {
+    font-size: 14px;
+    font-weight: 700;
+    color: rgb(255, 255, 255);
+  }
+
+  .payementMethodDiv {
+    padding-top: 0px;
+    padding-right: 20px;
   }
   .paymentOption {
     display: flex;
@@ -114,293 +411,87 @@
   }
   
   .paymentImage {
-    width: 80px; /* Adjust size as needed */
+    width: 60px; /* Adjust size as needed */
   }
-
-/* Agreement Checkbox */
-.agreementCheckbox {
-  margin: 0px 0;
-  padding-right: 20px;
-  display: flex;
-  align-items: center;
-  padding-bottom: 10px;
-  color: #002287;
-}
-
-.errorMessage{
-  color: red;
-  font-size: 10px;
   
-}
-  .rideInfo {
-    font-size: 16px;
-    color: #37383a;
-    margin-bottom: 15px;
+
+  .agreementCheckbox,
+  .inputWithButton {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 5px;
+    margin-top: 10px;
   }
 
-  .closeButton {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    cursor: pointer;
+  .inputWithButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
   }
 
   .confirmInput {
-    color: #000000;
-    border: 2px solid #646464;
-    border-radius: 15px;
-    padding: 10px;
-    width: 240px!important;
-
-  }
-
-  .confirmInput:hover {
-    background-color: #ffffff;
-    border: 1px solid #000000;
-    /* Dark border */
-  }
-
-  .confirmInput::placeholder {
-    color: #000000;
-    /* Light grey placeholder text */
-  }
-
-
-  .cardModal {
     width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    height: 100%;
+    max-width: 200px; /* Sets max-width for input */
+  }
+
+  .confirmButton {
+    width: 100%;
+    max-width: 150px;
+  }
+}
+
+/* Mobile Specific Styles for max-width: 486px */
+@media (max-width: 486px) {
+  .cardDiv {
+    padding: 0px;
+  }
+
+  .confirmOverlayContent {
+    gap: 0px;
+  }
+
+  .carImageContainer {
+    max-width: 130px;
   }
 
   .dateModalMainDiv{
-    position: relative;
-    width: 80%;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-    background:linear-gradient(240deg,black ,rgb(0, 0, 122));
-    border-radius: 40px 0px 0px 0px;
-    padding-left:20px;
-    margin-left: 90px;
-    overflow: hidden;
-    padding: 15px;
-    padding-right: 0px;
-
-  }
-  .dateModal {
-    height: 100%!important;
-    max-height:100px!important;
-    width: 100%;
-    padding: 10px;
-    border-top:2px dashed rgb(0, 91, 160);
-    border-left:2px dashed rgb(0, 91, 160);
-    border-bottom:2px dashed rgb(0, 91, 160);
-    border-radius: 30px 0px 0px 0px;
-    /* Optional shadow */
+    max-height: 70px;
+    max-width: 130px;
+    position: absolute;
+    top: 30px;
+    right:0;
   }
 
-  .dateModalDotDiv {
-    width: 100%;
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding:0px;
-   
-    height: inherit;
+  .dateModal{
+    height: 40px;
+    gap: 0px;
+    padding: 0;
+    border: 0;
   }
-
+  .dateModalDotDiv{
+    height: 40px;
+  }
   .dateModal p span {
-    font-size: 17px;
+    font-size: 12px;
+    gap: 0;
     font-weight: 700;
     color: rgb(255, 255, 255);
   }
 
-
-  .rideInfo {
-    margin: 0px 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  .priceTable {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
   .priceTable td {
-    padding: 8px 10px;
-    border-bottom: 1px solid #ccc;
-    font-size: 15px;
-
-  }
-  
-  .priceTable td:first-child {
-    text-align: left;
-  }
-  
-  .priceTable td:last-child {
-    text-align: right;
-  }
-  
-  .priceTable strong {
-    letter-spacing: 1px;
-    font-weight: 800;
-   color: white;
-    padding: 0px;
-    font-size: 20px!important;
-    font-family:Verdana, Geneva, Tahoma, sans-serif;
-  }
-  .priceTable .totalPrice{
-    background-color: #00034d;
-    border-radius: 3px;
+    font-size: 10px;
   }
 
-
-  /* DatePicker Styling */
-  .datePicker {
-    width: 100%;
-    /* Full width for the date picker */
-    margin-bottom: 20px;
-    /* Spacing below the date picker */
-  }
-
-  .inputWithButton{
-    width: 100%;
-    display: flex;
-    align-items:center ;
-    justify-content: space-between;
-    gap: 0px;
-    padding-left: 0px;
-    padding-right: 20px;
-  }
-
-  
-  /* Confirm Button */
-  .confirmButton {
-    width: 100%;
-    max-width: 100px;
-    height: 40px;
-    border-radius: 25px;
-    background-color: #000000;
-    border: 1px solid black;
+  .paymentSelection h3,
+  .agreementCheckbox label,
+  .inputWithButton label {
     font-size: 12px;
-    font-weight: bold;
-    color: white;
   }
-
-  .confirmButton:hover {
-    background-color: #0d0735;
-    border: 1px solid black !important;
-    color: black !important;
-  }
-
-  /* Close Button */
-  .closeButton {
-    position: absolute;
-    top: 2px;
-    right: 2px;
-    font-size: 20px;
-    color: #555;
-    cursor: pointer;
-  }
-
-  /* Fade-in animation */
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-    }
-
-    to {
-      opacity: 1;
-    }
-  }
-
-
   
-  /* Responsive Styles for max-width: 786px */
-  @media (max-width: 786px) {
-
-
-    /* Mobile Booking Overlay */
-    .overlay {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background-color: #fff;
-      box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-      z-index: 1000;
-      width: 100%;
-      border-radius: 20px;
-      /* Full width */
-    }
-
-    .overlay.visible {
-      transform: translateY(30px);
-      /* Slide up */
-    }
-
-    .overlayContent {
-      padding: 20px 40px;
-      padding-bottom: 40px;
-    }
-
-
-    .dateModal{
-      max-width: 250px;
-    }
-
-    .dateModal p{
-      font-size: 10px;
-    }
-
-    .dateModal p span {
-      font-size: 15px;
-      font-weight: 700;
-      color: rgb(0, 0, 0);
-    }
+  .confirmButton {
+    font-size: 14px;
   }
-
-
-  @media (max-width:486px) {
-  
-    
-
-    .dateModal{
-      max-width: 100px;
-      max-height: 150px;
-    }
-
-    .dateModal p{
-      font-size: 7px;
-      font-weight: 200;
-    }
-
-    .dateModal p span {
-      font-size: 10px;
-      font-weight: 700;
-      color: rgb(0, 0, 0);
-    }
-
-    .modalContent {
-      padding: 10px;
-      background-color: #e8e8e8;
-      clip-path: polygon(3% 0, 97% 0, 100% 3%, 100% 97%, 97% 100%, 3% 100%, 0 97%, 0 3%);
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      max-height: 150px;
-      /* Optional shadow */
-    }
-  
-
-    .carImage {
-      width: 100%;
-      max-width: 200px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-  }
+}

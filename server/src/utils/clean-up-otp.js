@@ -12,7 +12,6 @@ const CleanupHelper = {
                 },
             },
         });
-        console.log('Expired OTPs deleted successfully.');
     },
 };
 

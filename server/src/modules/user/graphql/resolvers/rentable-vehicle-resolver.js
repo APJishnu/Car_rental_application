@@ -12,7 +12,6 @@ const RentableVehicleResolvers = {
     getRentableVehiclesUser: async () => {
       try {
           const vehicles = await RentableVehicleHelperUser.getAllRentableVehicles();
-     console.log(vehicles,"in rentale user")
         return {
           status: "success",                  // Indicate the status of the response
           statusCode: 200,                    // HTTP status code
@@ -27,10 +26,8 @@ const RentableVehicleResolvers = {
 
   Mutation: {
     addVehicleToTypesense: async (_, { vehicle }) => {
-      console.log(vehicle);
       try {
         // Prepare the document to be added to Typesense
-        console.log(vehicle);
         const typesenseVehicle = {
           id: vehicle.id,
           name: vehicle.name,
@@ -49,7 +46,6 @@ const RentableVehicleResolvers = {
         await addVehicleToTypesense(typesenseVehicle);
         return "Vehicle added to Typesense successfully";
       } catch (error) {
-        console.error("Error adding vehicle to Typesense:", error);
         throw new Error("Failed to add vehicle");
       }
     },

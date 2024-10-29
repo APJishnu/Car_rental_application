@@ -30,6 +30,7 @@ const AvailableCarsDueDates: React.FC = () => {
 
   const pickupDate = searchParams.get("pickupDate");
   const dropoffDate = searchParams.get("dropoffDate");
+  const inventoryId = searchParams.get("inventoryId");
 
   const handleRentNow = (carId: string) => {
     if (checkLogin()) {
@@ -38,7 +39,6 @@ const AvailableCarsDueDates: React.FC = () => {
           `/user/car-booking?carId=${carId}&pickupDate=${pickupDate}&dropoffDate=${dropoffDate}`
         );
       } else {
-        console.error("Pickup date or dropoff date is not set.");
       }
     }
   };
@@ -65,6 +65,7 @@ const AvailableCarsDueDates: React.FC = () => {
         <CarListSection
           pickupDate={pickupDate}
           dropoffDate={dropoffDate}
+          inventoryId={inventoryId}
           query={query}
           transmission={transmission}
           fuelType={fuelType}

@@ -1,6 +1,4 @@
-
-// components/CarListSection/CarListSection.tsx
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_AVAILABLE_VEHICLES } from '../../../../../graphql/user/available-cars';
 import CarCard from '../../CarCardsSection/CarCards';
@@ -9,6 +7,7 @@ import styles from '../AvailableCarsDueDates.module.css';
 interface CarListSectionProps {
   pickupDate: string | null;
   dropoffDate: string | null;
+  inventoryId?: string | null;
   query: string;
   transmission: string[];
   fuelType: string[];
@@ -21,6 +20,7 @@ interface CarListSectionProps {
 const FindCarCollection: React.FC<CarListSectionProps> = ({
   pickupDate,
   dropoffDate,
+  inventoryId,
   query,
   transmission,
   fuelType,
@@ -37,19 +37,28 @@ const FindCarCollection: React.FC<CarListSectionProps> = ({
     return pricePerDay * days;
   };
 
-  const { loading, error, data } = useQuery(GET_AVAILABLE_VEHICLES, {
+
+  const { loading, error, data, refetch } = useQuery(GET_AVAILABLE_VEHICLES, {
     variables: {
       pickupDate: pickupDate || "",
       dropoffDate: dropoffDate || "",
+      inventoryId: inventoryId || undefined, 
       query: query || undefined,
       transmission: transmission.length > 0 ? transmission : undefined,
       fuelType: fuelType.length > 0 ? fuelType : undefined,
       seats: seats.length > 0 ? seats : undefined,
       priceSort: priceSort || undefined,
-       priceRange: priceRange || undefined, 
+      priceRange: priceRange || undefined, 
     },
     skip: !pickupDate || !dropoffDate,
   });
+
+  // Effect to refetch when price range changes
+  useEffect(() => {
+    if (pickupDate && dropoffDate) {
+      refetch();
+    }
+  }, [priceRange, refetch, pickupDate, dropoffDate]);
 
   if (loading) return <p>Loading available cars...</p>;
   if (error) return <p>Error: {error.message}</p>;

@@ -42,7 +42,6 @@ const AddVehicles = () => {
   
   const [addVehicle] = useMutation(ADD_VEHICLE, {
     onCompleted: (data) => {
-      console.log("Vehicle added:", data);
       setFormData({
         name: "",
         description: "",
@@ -58,7 +57,6 @@ const AddVehicles = () => {
       Swal.fire("Success!", "Vehicle added successfully.", "success");
     },
     onError: (error) => {
-      console.error("Error adding vehicle:", error);
       Swal.fire({
         title: "Error!",
         text: error.message, // Display specific error message from the backend
@@ -160,9 +158,7 @@ const AddVehicles = () => {
     }
 
     const { primaryImage, otherImages, ...vehicleInput } = formData;
-    console.log("formDaaaaata", formData);
 
-    console.log("vgfjsdvfva", primaryImage.file);
 
     try {
       const response = await addVehicle({
@@ -181,25 +177,10 @@ const AddVehicles = () => {
             .filter((file) => file !== null), // array of additional image files
         },
       });
-      console.log(response);
-      console.log("formDaaaaata", formData);
     } finally {
       setLoading(false); // Reset loading state
     }
-    console.log("Submitting vehicle data:", {
-      name: vehicleInput.name,
-      description: vehicleInput.description,
-      transmission: vehicleInput.transmission,
-      fuelType: vehicleInput.fuelType,
-      numberOfSeats: vehicleInput.numberOfSeats,
-      quantity: vehicleInput.quantity,
-      manufacturerId: vehicleInput.manufacturerId,
-      year: vehicleInput.year,
-      primaryImage: primaryImage?.file,
-      otherImages: otherImages
-        .map((img) => img.file)
-        .filter((file) => file !== null),
-    });
+    
   };
 
 

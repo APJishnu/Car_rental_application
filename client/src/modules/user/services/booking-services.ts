@@ -34,7 +34,7 @@ const VERIFY_PAYMENT_AND_CREATE_BOOKING_MUTATION = gql`
       message
       data {
         id
-        vehicleId
+        rentableId
         userId
         pickupDate
         dropoffDate
@@ -67,7 +67,7 @@ interface PaymentOrderResponse {
 
 // Define the input variables for verifying payment and creating the booking
 interface BookingVariables {
-  vehicleId: string;
+  rentableId: string;
   pickupDate: string;
   dropoffDate: string;
   totalPrice: number;
@@ -81,7 +81,7 @@ interface BookingResponse {
     message: string;
     data: {
       id: string;
-      vehicleId: string;
+      rentableId: string;
       pickupDate: string;
       dropoffDate: string;
       totalPrice: number;
@@ -169,7 +169,6 @@ export const useBooking = () => {
           currency: currency,
           order_id: razorpayOrderId,
           handler: async (response: any) => {
-            console.log("Razorpay Response:", response);
             try {
               const bookingResponse = await verifyPaymentAndCreateBooking({
                 variables: {
@@ -205,7 +204,6 @@ export const useBooking = () => {
                 };
               }
             } catch (error) {
-              console.error("Error during payment verification:", error);
               return {
                 status: "error",
                 message: "Payment verification failed.",
@@ -263,7 +261,6 @@ export const useBooking = () => {
         };
       }
     } catch (error) {
-      console.error("Error handling booking:", error);
       const Error = error as Error;
       return {
         status: "error",

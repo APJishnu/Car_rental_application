@@ -29,7 +29,6 @@ class ManufacturerHelper {
           'Content-Disposition': 'inline', // Allow inline rendering in the browser
         }, (error) => {
           if (error) {
-            console.error("Error uploading to MinIO:", error);
             return reject(new Error('MinIO upload failed'));
           }
 
@@ -40,9 +39,7 @@ class ManufacturerHelper {
       // Generate a presigned URL (expires in 24 hours)
       const imageUrl = `http://localhost:9000/${process.env.MINIO_BUCKET_NAME}/${uniqueFilename}`;
 
-      console.log(imageUrl)
 
-      console.log("Image url", imageUrl)
       // Use the repository to create a new manufacturer in the database
       const manufacturer = await ManufacturerRepository.createManufacturer({
         name,
@@ -52,7 +49,6 @@ class ManufacturerHelper {
 
       return manufacturer; // Return the newly created manufacturer
     } catch (error) {
-      console.error('Error adding manufacturer:', error);
       throw new Error(error.message || 'Failed to add manufacturer');
     }
   }
@@ -62,7 +58,6 @@ class ManufacturerHelper {
     try {
       return await ManufacturerRepository.findAll(); // Use the repository to fetch manufacturers
     } catch (error) {
-      console.error('Error in helper while fetching manufacturers:', error);
       throw new Error('Failed to fetch manufacturers in helper');
     }
   }
@@ -72,7 +67,6 @@ class ManufacturerHelper {
       const result = await ManufacturerRepository.deleteManufacturer(id); // Call the repository
       return result; // Return true if deletion was successful
     } catch (error) {
-      console.error('Error deleting manufacturer:', error);
       throw new Error('Failed to delete manufacturer');
     }
   }
@@ -102,7 +96,6 @@ class ManufacturerHelper {
             'Content-Disposition': 'inline', // Allow inline rendering in the browser
           }, (error) => {
             if (error) {
-              console.error("Error uploading to MinIO:", error);
               return reject(new Error('MinIO upload failed'));
             }
 
@@ -123,7 +116,6 @@ class ManufacturerHelper {
 
       return updatedManufacturer; // Return the updated manufacturer
     } catch (error) {
-      console.error('Error editing manufacturer:', error);
       throw new Error(error.message || 'Failed to edit manufacturer');
     }
   }

@@ -13,10 +13,8 @@ class ManufacturerRepository {
         imageUrl,
       });
 
-      console.log('manufacture saved')
       return manufacturer; // Return the newly created manufacturer
     } catch (error) {
-      console.error('Error creating manufacturer in the database:', error);
       throw new Error('Failed to create manufacturer');
     }
   }
@@ -26,7 +24,6 @@ class ManufacturerRepository {
     try {
       return await Manufacturer.findAll(); // Fetch all manufacturers from the database
     } catch (error) {
-      console.error('Error fetching manufacturers from repository:', error);
       throw new Error('Failed to fetch manufacturers from repository');
     }
   }
@@ -42,7 +39,6 @@ class ManufacturerRepository {
       }
       return manufacturer;
     } catch (error) {
-      console.error('Error fetching manufacturer by ID:', error);
       throw new Error('Failed to fetch manufacturer');
     }
   }
@@ -59,7 +55,6 @@ class ManufacturerRepository {
 
       return manufacture;
     } catch (error) {
-      console.error('Error finding Manufacturer:', error);
       throw new Error('Failed to find Manufacturer');
     }
   }
@@ -71,7 +66,6 @@ class ManufacturerRepository {
       const vehicles = await Vehicle.findAll({ where: { manufacturerId: id } });
   
       if (vehicles.length === 0) {
-        console.warn(`No vehicles found for manufacturer ID: ${id}`);
       }
   
       // Step 2: For each vehicle, find and soft delete associated rentables
@@ -98,7 +92,6 @@ class ManufacturerRepository {
   
       return true; // Return true if a manufacturer was deleted
     } catch (error) {
-      console.error('Error deleting manufacturer and associated vehicles/rentables:', error);
       throw new Error('Failed to delete manufacturer and associated data');
     }
   }
@@ -116,7 +109,6 @@ class ManufacturerRepository {
 
       return manufacturer;
     } catch (error) {
-      console.error('Error updating manufacturer:', error);
       throw new Error('Failed to update manufacturer in the repository');
     }
   }
