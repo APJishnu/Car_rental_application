@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+      }
+      .invoice-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .invoice-title {
+        color: #2c3e50;
+        font-size: 24px;
+        margin-bottom: 10px;
+      }
+      .invoice-details {
+        margin-bottom: 30px;
+      }
+      .invoice-details table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .invoice-details th,
+      .invoice-details td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+      }
+      .invoice-details th {
+        background-color: #f5f5f5;
+      }
+      .invoice-summary {
+        margin-top: 30px;
+        border-top: 2px solid #ddd;
+        padding-top: 20px;
+      }
+      .total {
+        font-size: 18px;
+        font-weight: bold;
+        text-align: right;
+      }
+      .signature {
+        margin-top: 40px;
+        text-align: center;
+        font-style: italic;
+        font-size: 16px;
+        margin-bottom: 10px;
+      }
+      .signature img {
+        width: 150px; /* Adjust signature image size as needed */
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="invoice-header">
+      <h1 class="invoice-title">Rental Invoice</h1>
+      <p>Invoice #: {{invoiceNumber}}</p>
+      <p>Date: {{date}}</p>
+    </div>
+
+    <div class="invoice-details">
+      <h2>Customer Details</h2>
+      <table>
+        <tr>
+          <th>Name</th>
+          <td>{{customerName}}</td>
+        </tr>
+        <tr>
+          <th>Email</th>
+          <td>{{customerEmail}}</td>
+        </tr>
+      </table>
+
+      <h2>Vehicle Details</h2>
+      <table>
+        <tr>
+          <th>Vehicle</th>
+          <td>{{vehicleName}} ({{year}})</td>
+        </tr>
+        <tr>
+          <th>Manufacturer</th>
+          <td>{{manufacturer}}</td>
+        </tr>
+        <tr>
+          <th>Pickup Date</th>
+          <td>{{pickupDate}}</td>
+        </tr>
+        <tr>
+          <th>Drop-off Date</th>
+          <td>{{dropoffDate}}</td>
+        </tr>
+        <tr>
+          <th>Duration</th>
+          <td>{{days}} days</td>
+        </tr>
+      </table>
+
+      <h2>Payment Details</h2>
+      <table>
+        <tr>
+          <th>Price per Day</th>
+          <td>₹{{pricePerDay}}</td>
+        </tr>
+        <tr>
+          <th>Total Days</th>
+          <td>{{days}}</td>
+        </tr>
+        <tr>
+          <th>Payment Method</th>
+          <td>{{paymentMethod}}</td>
+        </tr>
+        <tr>
+          <th>Status</th>
+          <td>{{bookingStatus}}</td>
+        </tr>
+      </table>
+
+      <div class="invoice-summary">
+        <p class="total">Total Amount: ₹{{totalPrice}}</p>
+      </div>
+    </div>
+
+    <!-- Signature Section -->
+    <div class="signature">
+      <p>Signed by: jishnu AP</p>
+      <img src="/signature.jpg" alt="Signature" />
+    </div>
+  </body>
+</html>

@@ -38,7 +38,11 @@ const GET_RENTABLE_VEHICLES = gql`
   }
 `;
 
-const CarCollection: React.FC = () => {
+interface CarCollectionProps {
+  onViewMore: () => void; // Function to handle scrolling
+}
+
+const CarCollection: React.FC<CarCollectionProps> = ({ onViewMore }) => {
   const router = useRouter();
   const { loading, error, data } = useQuery(GET_RENTABLE_VEHICLES); // Use Apollo Client to fetch data
 
@@ -87,7 +91,9 @@ const CarCollection: React.FC = () => {
         </div>
 
         <div className={styles.viewMore}>
-          <button className={styles.viewMoreButton}>See all Cars &rarr;</button>
+          <button className={styles.viewMoreButton} onClick={onViewMore}>
+            Rent a Cars &rarr;
+          </button>
         </div>
       </div>
     </div>

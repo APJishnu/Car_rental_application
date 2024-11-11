@@ -162,7 +162,7 @@ export const useBooking = () => {
 
         // Step 2: Process the Razorpay payment on the frontend
         const razorpay = new (window as any).Razorpay({
-          key: "rzp_test_37TZNY8cnWgUm8",
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID||"rzp_test_37TZNY8cnWgUm8",
           amount: amount,
           name: "LUXEDRIVE", // Updated company name
           description: "Book your favorite vehicle for a smooth ride!",

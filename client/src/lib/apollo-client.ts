@@ -4,7 +4,7 @@ import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
 const uploadLink = createUploadLink({
   uri: `${BASE_URL}/graphql`,
-  credentials: 'same-origin',
+  credentials: 'same-origin', 
 });
 
 const client = new ApolloClient({

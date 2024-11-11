@@ -28,7 +28,6 @@ export const BookingList: React.FC<BookingListProps> = ({
 }) => {
   const today = dayjs();
 
-
   return (
     <div className={styles.bookingList}>
       {" "}
@@ -49,11 +48,10 @@ export const BookingList: React.FC<BookingListProps> = ({
           return (
             <List.Item>
               <div className={styles.listItem}>
-                <div className={styles.bookingId}> 
+                <div className={styles.bookingId}>
                   Booking ID: <strong>{booking.id}</strong>
                 </div>
                 <div className={styles.bookingDetails}>
-                 
                   <div className={styles.userInfo}>
                     <UserOutlined /> User ID: {booking.userId}
                   </div>
@@ -63,23 +61,23 @@ export const BookingList: React.FC<BookingListProps> = ({
                   <div className={styles.dateInfo}>
                     <CalendarTwoTone /> Dropoff: {booking.dropoffDate}
                   </div>
-                  
                 </div>
                 <div className={styles.vehicleDetails}>
-                  {" "}
-                  <img
-                    src={
-                      booking.rentable?.vehicle?.primaryImageUrl ||
-                      "/empty-car.svg"
-                    }
-                    alt={
-                      booking.rentable?.vehicle?.name || "Default vehicle name"
-                    }
-                    className={styles.vehicleImage} // Use CSS module class name
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement; // Cast e.target to HTMLImageElement
-                      target.onerror = null; // Prevents infinite loop if default image fails
-                      target.src = "/empty-car.svg"; // Path to your default image
+                  <img  src={booking.rentable?.vehicle?.primaryImageUrl ||"/empty-car.svg"}
+                        alt={booking.rentable?.vehicle?.name || "Default vehicle name"}
+                        className={styles.vehicleImage} // Use CSS module class name
+                        onError={(e) => {
+                        const target = e.target as HTMLImageElement; // Cast e.target to HTMLImageElement
+
+                      if (!target.dataset.hasError) {
+                        // Check if error has already been handled
+                        target.dataset.hasError = "true"; // Set a flag to indicate error handling
+                        target.src = "/empty-car.svg"; // Path to your default image
+                      } else {
+                        console.error(
+                          "Failed to load both primary and default images."
+                        );
+                      }
                     }}
                   />
                 </div>
@@ -98,18 +96,20 @@ export const BookingList: React.FC<BookingListProps> = ({
                   </Tag>
                 </div>
                 <div className={styles.returnNotification}>
-                {isBookingBooked && isDropoffDueOrPassed && (
-                  <Button type="link" onClick={() => handleRelease(booking.id)}>
-                    Release
-                  </Button>
-                )}
-                {!isBookingBooked && (
-                  <Tag color="cyan">
-                    <CheckCircleOutlined />
-                  </Tag>
-                )}
+                  {isBookingBooked && isDropoffDueOrPassed && (
+                    <Button
+                      type="link"
+                      onClick={() => handleRelease(booking.id)}
+                    >
+                      Release
+                    </Button>
+                  )}
+                  {!isBookingBooked && (
+                    <Tag color="cyan">
+                      <CheckCircleOutlined />
+                    </Tag>
+                  )}
                 </div>
-                
               </div>
             </List.Item>
           );

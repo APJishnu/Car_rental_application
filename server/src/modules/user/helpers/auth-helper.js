@@ -1,6 +1,6 @@
 // src/helpers/auth-helper.js
 import authRepo from "../repositories/auth-repo.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import User from "../models/auth-model.js"; // Ensure the path is correct
 import twilio from "twilio"; // Make sure to install twilio
 import { generateToken } from "../../../utils/jwt-helper.js"; // Import the token utility

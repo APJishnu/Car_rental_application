@@ -16,17 +16,19 @@
 /* Modal Content */
 .modalContent {
     background-color: #fff;
-    padding: 20px;
+    padding: 10px;
     border-radius: 8px;
     text-align: center;
-    width: 300px;
+    width: 100%;
+    max-width: 350px;
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
     animation: slideIn 0.4s ease;
+    position: relative;
 }
 
 /* Icon styling */
 .modalIcon {
-    margin-bottom: 20px;
+    margin-bottom: 0px;
 }
 
 .success {
@@ -34,31 +36,37 @@
 }
 
 .error {
-    color: #ff1744;
+    color: #eb0000;
 }
 
 /* Modal Title */
 .modalTitle {
     font-size: 1.5rem;
-    margin-bottom: 10px;
+    margin-bottom: 0px;
     color: black;
 }
 
 /* Modal Message */
 .modalMessage {
     color: black;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    letter-spacing: 1px;
 }
 
 /* Close Button */
 .modalCloseBtn {
-    background-color: black;
-    color: white;
+    background-color: transparent;
+    color: rgb(0, 0, 0);
     border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
+    font-size: 20px;
+    padding:0px;
+    border-radius:15px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    position: absolute;
+    right: 10px;
+    top: 10px;
 }
 
 .modalCloseBtn:hover {

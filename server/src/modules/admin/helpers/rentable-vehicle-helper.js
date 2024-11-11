@@ -89,7 +89,6 @@ class RentableVehicleHelper {
         delete searchParams.filter_by; // No filters, so remove the key
       }
 
-
       let vehicleIds;
       try {
         // Perform the search using Typesense
@@ -106,7 +105,6 @@ class RentableVehicleHelper {
       }
 
       if (!vehicleIds || vehicleIds.length === 0) {
-      
         return [];
       }
       // Fetch vehicles based on IDs if found, otherwise fetch all

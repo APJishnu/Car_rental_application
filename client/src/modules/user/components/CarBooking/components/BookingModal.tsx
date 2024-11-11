@@ -117,6 +117,15 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
       const handleBookingSuccess = (data: any) => {
         if (data?.verifyPaymentAndCreateBooking?.status === "success") {
+          setTimeout(() => {
+            window.location.href='/user/user-bookings'; 
+        }, 500);
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+          }); // Show confetti on success
+          onClose();
           setModalMessage(
             data.verifyPaymentAndCreateBooking.message ||
               "Booking created successfully!"
@@ -135,17 +144,9 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
       if (response) {
         if (response.status === "success") {
-            onClose();
+         
           setModalMessage(response.message || "Booking created successfully!");
           setModalStatus("success");
-          confetti({
-            particleCount: 100,
-            spread: 70,
-            origin: { y: 0.6 },
-          }); // Show confetti on success
-          setTimeout(() => {
-            window.history.go(-1); 
-        }, 1000);
         
         } else {
           setModalMessage(response.message || "Something went wrong!");

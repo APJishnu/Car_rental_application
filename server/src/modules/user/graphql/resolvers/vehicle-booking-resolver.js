@@ -4,6 +4,7 @@ import User from "../../models/auth-model.js";
 import Booking from "../../models/booking-model.js";
 import Review from "../../models/review-model.js";
 
+
 const VehicleBookingResolver = {
   Query: {
     getAvailableVehicles: async (
@@ -230,6 +231,18 @@ const VehicleBookingResolver = {
         return {
           status: false,
           message: "Failed to add review.",
+        };
+      }
+    },
+    generateBookingInvoice: async (_, { bookingId }) => {
+      try {
+        return await VehicleBookingHelper.generateInvoice(bookingId);
+      } catch (error) {
+        console.error('Resolver error:', error);
+        return {
+          status: false,
+          message: error.message,
+          data: null
         };
       }
     },

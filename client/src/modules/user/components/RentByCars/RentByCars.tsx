@@ -3,8 +3,8 @@ import React, { useState } from "react";
 import styles from "./RentByCars.module.css";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@apollo/client";
-import { DatePicker, Input, Button, Checkbox, Select } from "antd";
-import { EnvironmentOutlined, CalendarOutlined } from "@ant-design/icons";
+import { DatePicker, Button, Checkbox, Select , Spin } from "antd";
+import { EnvironmentOutlined, CalendarOutlined ,SearchOutlined} from "@ant-design/icons";
 import { GET_MANUFACTURERS } from "@/graphql/admin-queries/manufacture";
 import { FETCH_ALL_INVENTORIES } from "../../../../graphql/admin-mutations/admin-dashborad";
 import moment from "moment";
@@ -20,10 +20,9 @@ const FilterOptions: React.FC = () => {
   const [inventoryId, setInventoryId] = useState<string | undefined>(undefined); // Store selected inventory ID
   const [isModalVisible, setModalVisible] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
-  const [modalStatus, setModalStatus] = useState<"success" | "error">(
-    "success"
-  );
+  const [modalStatus, setModalStatus] = useState<"success" | "error">( "success");
   const [activeInput, setActiveInput] = useState<"pickup" | null>(null); // Track which input is active
+  const [isSearching, setIsSearching] = useState(false);
 
   const showModal = (message: string, status: "success" | "error") => {
     setModalMessage(message);
@@ -33,6 +32,7 @@ const FilterOptions: React.FC = () => {
 
   const closeModal = () => {
     setModalVisible(false);
+    setIsSearching(false);
   };
 
   const handleDateChange = (dates: any, dateStrings: [string, string]) => {
@@ -51,14 +51,18 @@ const FilterOptions: React.FC = () => {
   };
 
   const handleFindVehicle = () => {
+    setIsSearching(true); 
     if (pickupDate && dropoffDate && inventoryId) {
+      setIsSearching(true); 
       const query = `pickupDate=${pickupDate}&dropoffDate=${dropoffDate}&inventoryId=${inventoryId}`;
       router.push(`/user/find-cars?${query}`);
+      setIsSearching(false);
     } else {
       showModal(
         "Please select both pickup and drop-off dates and an inventory.",
         "error"
       );
+      
     }
   };
 
@@ -78,7 +82,7 @@ const FilterOptions: React.FC = () => {
         <div className={styles.filteringSection}>
           {/* Pick-Up Location Input */}
           <div className={styles.filterItem}>
-            <div>Inventory Location</div>
+            <div className={styles.filterLabel}>INVENTORY LOCATION</div>
             <Select
               value={inventoryId}
               onChange={handleInventoryChange}
@@ -96,7 +100,7 @@ const FilterOptions: React.FC = () => {
 
           {/* Pick-Up and Drop-Off Date */}
           <div className={styles.filterItem}>
-            <label htmlFor="dates">Pick-Up and Drop-Off Date</label>
+            <div className={styles.filterLabel}>PICK UP AND DROP OFF DATE</div>
             <RangePicker
               format="YYYY-MM-DD"
               onChange={handleDateChange}
@@ -111,8 +115,14 @@ const FilterOptions: React.FC = () => {
             type="primary"
             className={styles.findVehicleBtn}
             onClick={handleFindVehicle}
+            disabled={isSearching} // Disable button while loading
           >
-            Search
+            {isSearching ?  <Spin
+                style={{ color: "white" }} // Set spinner color to white
+                indicator={<div className={styles.spinner}></div>} // Custom spinner
+              /> :  <>
+              <SearchOutlined /> Search
+            </>}
           </Button>
         </div>
 

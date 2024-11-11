@@ -155,12 +155,8 @@ const Navbar: React.FC = () => {
           {menuOpen ? <FaTimes /> : <FaBars />}
         </button>
         <div className={styles.logoContainer}>
-          <div className={styles.logo}>
-            <img
-              src="/Navbar/Heading-logo.svg" // Replace with your actual logo image
-              alt="LuxeDrive Logo"
-              className={styles.logoImage}
-            />
+        <div className={styles.logo}>
+            LUXEDRIVE
           </div>
         </div>
         <div className={`${styles.menu} ${menuOpen ? styles.showMenu : ""}`}>

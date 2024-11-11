@@ -21,8 +21,8 @@ import {
   ExclamationCircleOutlined,
   InfoCircleOutlined,
   QuestionCircleOutlined,
-  HistoryOutlined,
   EditOutlined,
+  DownloadOutlined,
 } from "@ant-design/icons";
 import Cookies from "js-cookie";
 import styles from "./UserBookings.module.css";
@@ -91,6 +91,17 @@ const ADD_REVIEW = gql`
   }
 `;
 
+const GENERATE_INVOICE = gql`
+  mutation GenerateBookingInvoice($bookingId: ID!) {
+    generateBookingInvoice(bookingId: $bookingId) {
+      status
+      statusCode
+      message
+      data
+    }
+  }
+`;
+
 interface Booking {
   id: string;
   pickupDate: string;
@@ -119,6 +130,7 @@ const BookingList: React.FC = () => {
   const [fetchBookings, { loading, data, error }] =
     useLazyQuery(FETCH_BOOKINGS);
   const [addReview] = useMutation(ADD_REVIEW);
+  const [generateInvoice] = useMutation(GENERATE_INVOICE);
   const [dateRange, setDateRange] = useState<[string, string]>([
     "Aug 20, 2022",
     "Oct 20, 2022",
@@ -300,6 +312,52 @@ const BookingList: React.FC = () => {
 
   const tabCounts = getTabCounts();
 
+  const handleDownloadInvoice = async (bookingId: string) => {
+    try {
+        const { data } = await generateInvoice({
+            variables: { bookingId },
+            context: {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    Accept: "application/pdf"
+                },
+                responseType: "json", // Make sure you expect JSON
+            }
+        });
+
+        if (data.generateBookingInvoice.status && data.generateBookingInvoice.data) {
+            const pdfData = data.generateBookingInvoice.data; // This should now be a byte array
+
+            // Log the byte array for debugging
+            console.log("PDF Data Array:", pdfData);
+
+            // Convert the byte array to Uint8Array
+            const byteArray = new Uint8Array(pdfData);
+
+            // Create a blob from the byte array
+            const blob = new Blob([byteArray], { type: "application/pdf" });
+
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = `invoice-${bookingId}.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+
+            antdMessage.success("Invoice downloaded successfully!");
+        } else {
+            antdMessage.error(data.generateBookingInvoice.message || "Failed to generate invoice");
+        }
+    } catch (error) {
+        console.error("Error downloading invoice:", error);
+        antdMessage.error("Error downloading invoice");
+    }
+};
+
+
   return (
     <div className={styles.bookingList}>
       <div className={styles.header}>
@@ -329,7 +387,6 @@ const BookingList: React.FC = () => {
               {dateRange[0]} - {dateRange[1]} <DownOutlined />
             </button>
           </Dropdown>
-          <button className={styles.primaryButton}>Request RTO</button>
         </div>
       </div>
 
@@ -353,9 +410,25 @@ const BookingList: React.FC = () => {
                     <div className={styles.imageWrapper}>
                       {booking.rentable?.vehicle?.manufacturer?.imageUrl ? (
                         <img
-                          src={booking.rentable.vehicle.manufacturer.imageUrl}
+                          src={
+                            booking.rentable.vehicle.manufacturer.imageUrl ||
+                            "/empty-car.svg"
+                          }
                           alt={booking.rentable.vehicle.manufacturer.name}
                           className={styles.manufacturerLogo}
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement; // Cast e.target to HTMLImageElement
+
+                            if (!target.dataset.hasError) {
+                              // Check if error has already been handled
+                              target.dataset.hasError = "true"; // Set a flag to indicate error handling
+                              target.src = "/empty-car.svg"; // Path to your default image
+                            } else {
+                              console.error(
+                                "Failed to load both primary and default images."
+                              );
+                            }
+                          }}
                         />
                       ) : (
                         <div>No Manufacturer Image</div>
@@ -455,9 +528,7 @@ const BookingList: React.FC = () => {
                     <button className={styles.actionButton}>
                       <QuestionCircleOutlined /> Report an Issue
                     </button>
-                    <button className={styles.actionButton}>
-                      <HistoryOutlined /> View History
-                    </button>
+
                     <button
                       className={styles.actionButton}
                       onClick={() =>
@@ -465,6 +536,12 @@ const BookingList: React.FC = () => {
                       }
                     >
                       <EditOutlined /> Add Review
+                    </button>
+                    <button
+                      className={styles.actionButton}
+                      onClick={() => handleDownloadInvoice(booking.id)}
+                    >
+                      <DownloadOutlined /> Download Invoice
                     </button>
                   </div>
                 </div>

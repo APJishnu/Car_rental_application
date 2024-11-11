@@ -1,4 +1,4 @@
-import { gql } from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const GET_RENTABLE_VEHICLE_BY_ID = gql`
   query GetRentableVehicleById($id: ID!) {

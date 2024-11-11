@@ -1,15 +1,19 @@
 // src/backend/typesenseConfig.js
 import Typesense from "typesense";
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config();
 
 const typesense = new Typesense.Client({
   nodes: [
     {
-      host: "e4usi1rjl26dtbacp-1.a1.typesense.net", // Replace with your Typesense host
+      host: "jpfax4c6omg1bntep-1.a1.typesense.net", // Replace with your Typesense host
       port: 443,
       protocol: "https",
     },
   ],
-  apiKey: "tiRPshalhWslNmaZA3WZVQgw2VJbxWiX", // Replace with your Typesense API key
+  apiKey: "xaOzHUtUuyS6LFki2Ufegdm9Pbgdz6fm", // Replace with your Typesense API key
   connectionTimeoutSeconds: 2,
 });
 
@@ -48,8 +52,7 @@ const createSchema = async () => {
 
   try {
     await typesense.collections().create(schema);
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 // createSchema()
@@ -74,16 +77,14 @@ const addVehicleToTypesense = async (vehicle) => {
 
   try {
     await typesense.collections("cars").documents().upsert(document); // Upsert to handle adding or updating
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 // Function to delete a vehicle from Typesense
 const deleteVehicleFromTypesense = async (id) => {
   try {
     await typesense.collections("cars").documents(id).delete(); // Delete document from Typesense using the vehicle ID
-  } catch (error) {
-  }
+  } catch (error) {}
 };
 
 export {

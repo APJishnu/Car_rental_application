@@ -1,5 +1,7 @@
 import React from "react";
 import { FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { CloseOutlined } from "@ant-design/icons";
+
 import styles from "./Modal.module.css"; // Import the CSS Module
 
 interface ModalProps {
@@ -14,12 +16,13 @@ const Modal: React.FC<ModalProps> = ({ message, status, onClose }) => {
     return (
         <div className={styles.modalOverlay} onClick={onClose}>
             <div className={styles.modalContent}>
+            <button className={styles.modalCloseBtn} onClick={onClose}> <CloseOutlined /></button>
                 <div className={`${styles.modalIcon} ${status === "success" ? styles.success : styles.error}`}>
                     {icon}
                 </div>
                 <h2 className={styles.modalTitle}>{status === "success" ? "Success!" : "Error!"}</h2>
                 <p className={styles.modalMessage}>{message}</p>
-                <button className={styles.modalCloseBtn} onClick={onClose}>Close</button>
+              
             </div>
         </div>
     );

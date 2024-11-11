@@ -64,11 +64,7 @@ const AdminNavbar: React.FC = () => {
       <div className={styles.logoContainer}>
         {!isSidebarCollapsed && (
           <div className={styles.logo}>
-            <img
-              className={styles.logoImg}
-              src="/Navbar/Heading-logo.svg"
-              alt="Logo"
-            />
+            LUXEDRIVE
           </div>
         )}
         <div className={styles.toggleButtonDiv}>

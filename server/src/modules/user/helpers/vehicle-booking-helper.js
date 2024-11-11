@@ -2,8 +2,14 @@
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import dotenv from "dotenv";
+import VehicleBookingRepo from "../repositories/vehicle-booking-repo.js";
+import RentableVehicleHelper from "../../admin/helpers/rentable-vehicle-helper.js";
 import sequelize from "../../../config/database.js";
-
+import { join } from "path";
+import { readFile } from "fs/promises";
+import handlebars from "handlebars";
+import puppeteer from "puppeteer";
+import authRepo from "../repositories/auth-repo.js";
 dotenv.config();
 
 function verifyPaymentSignature(paymentDetails) {
@@ -30,9 +36,6 @@ async function fetchPaymentDetails(paymentId) {
     throw new Error("Failed to fetch payment details");
   }
 }
-
-import VehicleBookingRepo from "../repositories/vehicle-booking-repo.js";
-import RentableVehicleHelper from "../../admin/helpers/rentable-vehicle-helper.js";
 
 class VehicleBookingHelper {
   static async getAvailableVehicles(
@@ -66,6 +69,16 @@ class VehicleBookingHelper {
             priceSort,
             priceRange,
           });
+
+        console.log(
+          rentableVehicles,
+          query,
+          transmission,
+          fuelType,
+          seats,
+          priceSort,
+          priceRange
+        );
 
         // Check availability for each rentable vehicle
         for (const rentable of rentableVehicles) {
@@ -281,6 +294,106 @@ class VehicleBookingHelper {
         status: false,
         message: "Error adding review.",
       };
+    }
+  }
+
+  static async generateInvoice(bookingId) {
+    try {
+      const bookingData = await VehicleBookingRepo.getBookingWithDetails(
+        bookingId
+      );
+      const userData = await authRepo.findById(bookingData.userId);
+      const invoiceData = await this.prepareInvoiceData(bookingData, userData);
+
+      // Generate PDF binary data
+      const pdfBuffer = await this.generatePDF(invoiceData);
+
+      // Convert the buffer to a Base64 string
+      const pdfBase64 = pdfBuffer.toString("base64");
+
+      return {
+        status: true,
+        message: "Invoice generated successfully",
+        data: Array.from(new Uint8Array(pdfBuffer)), // Return as Base64 string
+      };
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  static async prepareInvoiceData(booking, user) {
+    const pickupDate = new Date(booking.pickupDate);
+    const dropoffDate = new Date(booking.dropoffDate);
+    const days = Math.ceil((dropoffDate - pickupDate) / (1000 * 60 * 60 * 24));
+
+    return {
+      invoiceNumber: `INV-${booking.id}`,
+      date: new Date().toLocaleDateString(),
+      customerName: user.firstName + user.lastName,
+      customerEmail: user.email,
+      vehicleName: booking.rentable.vehicle.name,
+      manufacturer: booking.rentable.vehicle.manufacturer.name,
+      year: booking.rentable.vehicle.year,
+      pickupDate: pickupDate.toLocaleDateString(),
+      dropoffDate: dropoffDate.toLocaleDateString(),
+      days,
+      pricePerDay: booking.rentable.pricePerDay,
+      totalPrice: booking.totalPrice,
+      paymentMethod: booking.paymentMethod,
+      bookingStatus: booking.status,
+    };
+  }
+
+  static async generatePDF(invoiceData) {
+    try {
+      // Get and compile template
+      const templateContent = await this.getTemplate();
+      const template = handlebars.compile(templateContent);
+      const html = template(invoiceData);
+
+      // Generate PDF using puppeteer
+      // Generate PDF using puppeteer
+      const pdfBuffer = await this.createPDFFromHTML(html);
+      console.log(pdfBuffer);
+      // Return raw binary buffer instead of Base64
+      return pdfBuffer; // Remove the toString('base64') conversion
+    } catch (error) {
+      throw new Error("PDF generation failed: " + error.message);
+    }
+  }
+
+  static async getTemplate() {
+    try {
+      const templatePath = join(
+        process.cwd(),
+        "src",
+        "templates",
+        "invoice.html"
+      );
+      return await readFile(templatePath, "utf-8");
+    } catch (error) {
+      throw new Error("Template reading failed: " + error.message);
+    }
+  }
+
+  static async createPDFFromHTML(html) {
+    const browser = await puppeteer.launch({ headless: "new" });
+    try {
+      const page = await browser.newPage();
+      await page.setContent(html);
+
+      return await page.pdf({
+        format: "A4",
+        printBackground: true,
+        margin: {
+          top: "20px",
+          right: "20px",
+          bottom: "20px",
+          left: "20px",
+        },
+      });
+    } finally {
+      await browser.close();
     }
   }
 }

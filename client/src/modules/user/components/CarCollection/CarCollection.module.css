@@ -117,10 +117,12 @@
   .filterButton {
     background-color: #000;
     color: #fff;
-    padding: 10px 20px;
+    font-size: 8px;
+    padding: 5px;
     border-radius: 20px;
     border: none;
     cursor: pointer;
+    align-self: center;
   }
   
   .carsGrid {
@@ -130,8 +132,6 @@
     scroll-behavior: smooth; /* Smooth scrolling effect */
     gap: 10px; /* Adjust the gap between items */
     scroll-snap-type: x mandatory; /* Enable scroll snap for better UX */
-  
-
   }
 
   .carsGrid::-webkit-scrollbar {

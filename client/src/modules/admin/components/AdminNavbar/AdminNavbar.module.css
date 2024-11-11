@@ -2,23 +2,19 @@
 .navbar {
   height: 100%;
   width: 250px;
-  /* Width of the sidebar */
   display: flex;
   flex-direction: column;
   position: relative;
-  /* Fixed sidebar */
   top: 0;
   left: 0;
   background: linear-gradient(to right, rgb(0, 0, 0), rgb(0, 0, 73));
   padding: var(--spacing);
   z-index: 100;
   transition: all 0.4s ease;
-  /* Smooth transition */
 }
 
 .collapsed {
   width: 60px;
-  /* Width when collapsed */
 }
 
 .logoContainer {
@@ -34,10 +30,14 @@
 .logo {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding-top: 5px;
+  justify-content: flex-start;
+  padding-top: 0px;
   width: 100%;
-
+  font-size: 20px;
+  font-weight: 500;
+  color: aliceblue;
+  letter-spacing: 4px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .logoImg {
@@ -48,10 +48,8 @@
   width: 100%;
 }
 
-
 .iconScale {
   transform: scale(1.2);
-  /* Scale up the icon on swipe or click */
 }
 
 .menu {
@@ -64,31 +62,24 @@
   color: var(--admin-accent-color);
   text-align: left;
   display: flex;
-  /* Make links flexible */
   align-items: center;
-  /* Center align icons and text */
   transition: all 0.5s ease;
-  /* Smooth transition */
 }
 
 .navLink:hover {
   color: rgb(2, 169, 235);
-  /* Change color on hover */
   text-shadow: 1px 0px 10px rgb(255, 255, 255);
 }
 
 /* Icons */
 .icon {
-  font-size: 1.20rem;
-  /* Size for the icons */
+  font-size: 1.2rem;
   margin-right: 8px;
-  /* Space between icon and text */
 }
 
 /* Adjustments to Logout Button Container */
 .logoutButtonContainer {
   margin-top: auto;
-  /* Push to the bottom */
 }
 
 /* Logout Button Styles */
@@ -103,22 +94,21 @@
 
 .logoutButton:hover {
   color: rgb(2, 169, 235);
-  /* Change color on hover */
   text-shadow: 1px 0px 10px rgb(255, 255, 255);
 }
 
 .menuIcon {
   display: none;
 }
+.toggleButtonDiv {
+  display: flex;
+  justify-content: flex-end;
+}
 
 .toggleIcon {
   display: none;
-  /* Hidden by default */
   transition: transform 0.3s ease;
-  /* Smooth transition for scaling */
-
 }
-
 
 .active {
   color: rgb(96, 181, 255); /* Active text color */
@@ -135,11 +125,17 @@
     /* Auto height */
     position: relative;
     /* Relative positioning */
-    padding: 0.6rem;
+    padding: 0rem;
   }
 
   .logoContainer {
     justify-content: space-between;
+    align-items: center;
+    padding: 0px 10px;
+  }
+  .toggleButtonDiv {
+    display: flex;
+    justify-content: flex-end;
   }
 
   .menuIcon {
@@ -149,10 +145,8 @@
     border: none;
     color: var(--admin-accent-color);
     font-size: 1.5rem;
-    /* Use an icon for better UX */
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
+    right: 0rem;
+    align-self: flex-end;
   }
 
   .menu {
@@ -163,12 +157,22 @@
 
   .showMenu {
     display: flex;
+    position: fixed;
+    background-color: black;
     /* Show menu when toggled */
+    padding: 10px;
+    border-radius: 10px;
+    padding-bottom: 30px;
   }
 
   .navLink {
     padding: 0.5rem 1rem;
     /* Add padding for mobile links */
+  }
+
+  .logoutButton{
+    display: flex;
+    padding-left: 15px;
   }
 }
 

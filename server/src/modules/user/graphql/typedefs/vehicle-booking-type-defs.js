@@ -3,6 +3,7 @@ import { gql } from "apollo-server-express";
 const VehicleBookingTypeDefs = gql`
   scalar Float
   scalar Int
+   scalar Base64
 
   # Define the Manufacturer type
   type Manufacturer {
@@ -129,7 +130,12 @@ const VehicleBookingTypeDefs = gql`
     data: [Rentable]
   }
 
-  
+  type InvoiceResponse {
+    status: Boolean!
+    statusCode:Int
+    message: String
+     data: Base64   
+  }
 
   type Query {
 
@@ -166,6 +172,9 @@ const VehicleBookingTypeDefs = gql`
       comment: String!
       rating: Float!
     ): ReviewResponse
+
+    generateBookingInvoice(bookingId: ID!): InvoiceResponse!
+
   }
 `;
 

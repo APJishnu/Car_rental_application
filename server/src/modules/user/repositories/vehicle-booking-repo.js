@@ -201,6 +201,47 @@ class VehicleBookingRepo {
       return null;
     }
   }
+
+  static async getBookingWithDetails(bookingId) {
+    try {
+      // Fetch all bookings by userId and include Rentable, Vehicle, and Manufacturer
+      return await Booking.findOne({
+        where: {
+          id:bookingId,
+          status: ["booked","released"], // Filter to only get bookings with 'Booked' status
+        },
+        include: [
+          
+          {
+            model: Rentable,
+            as: "rentable",
+            required: false, // Ensure the join does not filter out soft-deleted records
+            paranoid: false, // Include soft-deleted records
+            include: [
+              {
+                model: Vehicle,
+                as: "vehicle",
+                required: false, // Ensure the join does not filter out soft-deleted records
+                paranoid: false, // Include soft-deleted records
+                include: [
+                  {
+                    model: Manufacturer,
+                    as: "manufacturer",
+                    required: false, // Ensure the join does not filter out soft-deleted records
+                    paranoid: false, // Include soft-deleted records
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+        logging: console.log,
+      });
+    } catch (error) {
+      throw new Error("Database query failed");
+    }
+  }
+
 }
 
 export default VehicleBookingRepo;

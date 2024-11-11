@@ -1,7 +1,7 @@
 // src/models/user-model.js
 
 import { Model, DataTypes } from 'sequelize';
-import sequelize from '../../../config/database.js'; // Assuming you have a configured sequelize instance
+import sequelize from '../../../config/database.js';
 
 class User extends Model { }
 
@@ -18,9 +18,9 @@ User.init({
     phoneNumber: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true, // Ensuring unique phone numbers
+        unique: true, 
         validate: {
-            is: /^[0-9]{10}$/, // Validate 10-digit phone number format
+            is: /^[0-9]{10}$/, 
         },
     },
     isPhoneVerified:{
@@ -34,9 +34,9 @@ User.init({
     email: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true, // Ensuring unique email addresses
+        unique: true,
         validate: {
-            isEmail: true, // Validate email format
+            isEmail: true,
         },
     },
     password: {
@@ -45,11 +45,11 @@ User.init({
     },
     profileImage: {
         type: DataTypes.STRING(1000),
-        allowNull: true, // Profile image is optional
+        allowNull: true,
     },
     city: {
         type: DataTypes.STRING,
-        allowNull: true, // This field comes after phone verification
+        allowNull: true, 
     },
     state: {
         type: DataTypes.STRING,
@@ -63,13 +63,13 @@ User.init({
         type: DataTypes.STRING,
         allowNull: true,
         validate: {
-            is: /^[0-9]{6}$/, // Validate 6-digit pincode
+            is: /^[0-9]{6}$/, 
         },
     },
 }, {
     sequelize,
     modelName: 'User',
-    timestamps: true, // Automatically adds createdAt and updatedAt fields
+    timestamps: true,
 });
 
 export default User;
